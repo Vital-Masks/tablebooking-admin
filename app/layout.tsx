@@ -29,13 +29,11 @@ export default function RootLayout({
       <body className={nunito.className}>
         <div className="main-section relative font-nunito text-sm font-normal antialiased">
           <div className="relative">
-            <div
-              className={`main-container min-h-screen text-black dark:text-white-dark`}
-            >
+            <div className={`main-container min-h-screen text-black`}>
               <Sidebar />
               <div className="flex flex-col min-h-screen main-content">
                 <Header />
-                <div className={`animate__animated p-6`}>
+                <div className={`animate__animated p-6 flex-1`}>
                   <MantineProvider>{children}</MantineProvider>
                 </div>
               </div>
