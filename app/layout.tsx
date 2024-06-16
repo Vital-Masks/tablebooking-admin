@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
 import { Nunito } from 'next/font/google';
-import './globals.css';
 
 import Sidebar from '@/components/Layouts/Sidebar';
 import Header from '@/components/Layouts/Header';
+import { MantineProvider } from '@mantine/core';
+
+import '@mantine/core/styles.layer.css';
+import 'mantine-datatable/styles.layer.css';
+import './globals.css';
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -30,9 +34,9 @@ export default function RootLayout({
             >
               <Sidebar />
               <div className="flex flex-col min-h-screen main-content">
-                <Header/>
+                <Header />
                 <div className={`animate__animated p-6`}>
-                  {children}
+                  <MantineProvider>{children}</MantineProvider>
                 </div>
               </div>
             </div>

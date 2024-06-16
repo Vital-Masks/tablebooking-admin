@@ -1,3 +1,5 @@
+@import '../styles/datatables.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -507,11 +509,11 @@
     }
 
     .dropdown>button {
-        @apply flex;
+        @apply flex items-center;
     }
 
     .dropdown ul {
-        @apply my-1 min-w-[120px] rounded bg-white p-0 py-2 text-black shadow dark:bg-[#1b2e4b] dark:text-white-dark;
+        @apply my-1 min-w-[120px] rounded bg-white p-0 py-2 text-black shadow;
     }
 
     .dropdown ul li>a,
@@ -553,7 +555,7 @@
     }
 
     table.table-hover tbody tr {
-        @apply hover: !bg-white-light/20;
+        @apply hover:!bg-white-light/20;
     }
 
     table.table-striped tbody tr:nth-child(odd) {
