@@ -1,10 +1,27 @@
 'use client';
+import { useState } from 'react';
+
+import FormComponent from '@/components/Common/Form';
 import Table from '@/components/Common/Table';
 import Button from '@/components/Elements/Button';
-import { IconEye, IconPencil, IconTrash } from '@/components/Icons';
+import { IconEye } from '@/components/Icons';
+
 import { formatDate } from '@/utils/table';
 
+import {
+  reservationFormField,
+  reservationFormSchema,
+} from '@/constants/FormsDataJs/ReservationFrom';
+
 export default function Home() {
+  const [initialValues, setInitialValues] = useState({
+    date: '',
+    time: '',
+    fullname: '',
+    contactNumber: '',
+    email: '',
+  });
+
   const rowData = [
     {
       id: 1,
@@ -41,7 +58,7 @@ export default function Home() {
     {
       accessor: 'createdOn',
       title: 'Created on',
-      render: ({ createdOn }: any) => <div>{formatDate(createdOn)}</div>
+      render: ({ createdOn }: any) => <div>{formatDate(createdOn)}</div>,
     },
     {
       accessor: 'action',
@@ -49,12 +66,6 @@ export default function Home() {
       titleClassName: '!text-center',
       render: () => (
         <div className="flex items-center gap-4 mx-auto w-max">
-          {/* <button>
-            <IconPencil />
-          </button>
-          <button>
-            <IconTrash />
-          </button> */}
           <button>
             <IconEye />
           </button>
@@ -63,16 +74,33 @@ export default function Home() {
     },
   ];
 
+  const handleSubmit = (values: any) => {
+    console.log('form submit >>>>', values);
+  };
+
   return (
     <main>
-      <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary">
-        <h2 className="text-lg text-black font-bold">Restaurants</h2>
-        <div className="flex items-center gap-2">
-          <Button type="outlined">Export</Button>
-          <Button type="filled">Create new</Button>
+      <div >
+        <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6">
+          <h2 className="text-lg text-black font-bold">Dashboard</h2>
+          <div className="flex items-center gap-2">
+            <Button type="outlined">Export</Button>
+            <Button type="filled">Create new</Button>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 items-start gap-5">
+          <div className="col-span-2">
+            <Table columns={columns} rowData={rowData} />
+          </div>
+          <FormComponent
+            title="Make a reservation"
+            fields={reservationFormField}
+            initialValues={initialValues}
+            validationSchema={reservationFormSchema}
+            handleSubmit={handleSubmit}
+          />
         </div>
       </div>
-      <Table columns={columns} rowData={rowData} />
     </main>
   );
 }
