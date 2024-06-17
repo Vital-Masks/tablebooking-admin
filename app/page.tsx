@@ -4,7 +4,7 @@ import { useState } from 'react';
 import FormComponent from '@/components/Common/Form';
 import Table from '@/components/Common/Table';
 import Button from '@/components/Elements/Button';
-import { IconEye } from '@/components/Icons';
+import { IconEye, IconTrash } from '@/components/Icons';
 
 import { formatDate } from '@/utils/table';
 
@@ -12,6 +12,7 @@ import {
   reservationFormField,
   reservationFormSchema,
 } from '@/constants/FormsDataJs/ReservationFrom';
+import Link from 'next/link';
 
 export default function Home() {
   const [initialValues, setInitialValues] = useState({
@@ -69,6 +70,9 @@ export default function Home() {
           <button>
             <IconEye />
           </button>
+          <button>
+            <IconTrash />
+          </button>
         </div>
       ),
     },
@@ -80,12 +84,14 @@ export default function Home() {
 
   return (
     <main>
-      <div >
+      <div>
         <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6">
           <h2 className="text-lg text-black font-bold">Dashboard</h2>
           <div className="flex items-center gap-2">
             <Button type="outlined">Export</Button>
-            <Button type="filled">Create new</Button>
+            <Link href="restaurant/new">
+              <Button type="filled">Create new</Button>
+            </Link>
           </div>
         </div>
         <div className="grid grid-cols-3 items-start gap-5">

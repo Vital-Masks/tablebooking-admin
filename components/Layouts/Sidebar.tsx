@@ -36,7 +36,8 @@ const Sidebar = () => {
               {menuItems.map(({id,childItems, Icon, title, route }) =>
                 childItems.length > 0 ? (
                   <li key={id} className="menu nav-item">
-                    <button
+                    <Link
+                      href={route}
                       type="button"
                       className={`nav-link group w-full`}
                       onClick={() => toggleMenu(id)}
@@ -53,7 +54,7 @@ const Sidebar = () => {
                       >
                         <IconCaretDown />
                       </div>
-                    </button>
+                    </Link>
 
                     <AnimateHeight
                       duration={300}

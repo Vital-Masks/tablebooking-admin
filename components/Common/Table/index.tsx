@@ -1,7 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { DataTable, DataTableSortStatus } from 'mantine-datatable';
-import sortBy from 'lodash/sortBy';
+import { DataTable } from 'mantine-datatable';
 
 import { IconFilter } from '@/components/Icons';
 import Dropdown from '@/components/Elements/Dropdown';
@@ -35,7 +34,7 @@ const Table = ({ columns, rowData }: any) => {
                 <span>
                   <IconFilter className="mr-2 inline-block w-4 h-4" />
                 </span>
-                Filter
+                <span>Filter</span>
               </>
             }
           >
