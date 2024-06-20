@@ -1,28 +1,26 @@
 'use client';
-import { useState } from 'react';
-
-import FormComponent from '@/components/Common/Form';
-import Table from '@/components/Common/Table';
-import Button from '@/components/Elements/Button';
+import React, { useState } from 'react';
 import { IconEye, IconTrash } from '@/components/Icons';
-
-import { formatDate } from '@/utils/table';
 
 import {
   userroleFormField,
   userroleFormSchema,
 } from '@/constants/FormsDataJs/UserRoleForm';
+import Button from '@/components/Elements/Button';
 import Link from 'next/link';
+import Table from '@/components/Common/Table';
+import FormComponent from '@/components/Common/Form';
 
-export default function UserRoles() {
+const UserRolePage = () => {
   const [initialValues, setInitialValues] = useState({
     firstname: '',
     lastname: '',
     role: '',
     contactNumber: '',
     email: '',
-    gender:'',
+    gender: '',
   });
+  const [isCreateForm, setIsCreateForm] = useState(false);
 
   const rowData = [
     {
@@ -33,8 +31,6 @@ export default function UserRoles() {
       email: 'carolinejensen@zidant.com',
       contactNumber: '+1 (821) 447-3782',
       gender: 'Male',
-      
-      
     },
     {
       id: 2,
@@ -44,8 +40,6 @@ export default function UserRoles() {
       email: 'carolinejensen@zidant.com',
       contactNumber: '+1 (821) 447-3782',
       gender: 'Female',
-      
-      
     },
   ];
 
@@ -84,24 +78,32 @@ export default function UserRoles() {
           <h2 className="text-lg text-black font-bold">User Role</h2>
           <div className="flex items-center gap-2">
             <Button type="outlined">Export</Button>
-            <Link href="restaurant/new">
-              <Button type="filled">Add New Users</Button>
-            </Link>
+
+            <Button
+              onClick={() => setIsCreateForm(!isCreateForm)}
+              type="filled"
+            >
+              Add New Users
+            </Button>
           </div>
         </div>
         <div className="grid grid-cols-3 items-start gap-5">
-          <div className="col-span-2">
+          <div className={`${isCreateForm ? 'col-span-2' : 'col-span-3'} transition-col-span duration-300`}>
             <Table columns={columns} rowData={rowData} />
           </div>
-          <FormComponent
-            title="Add User Roles"
-            fields={userroleFormField}
-            initialValues={initialValues}
-            validationSchema={userroleFormSchema}
-            handleSubmit={handleSubmit}
-          />
+          {isCreateForm && (
+            <FormComponent
+              title="Add User Roles"
+              fields={userroleFormField}
+              initialValues={initialValues}
+              validationSchema={userroleFormSchema}
+              handleSubmit={handleSubmit}
+            />
+          )}
         </div>
       </div>
     </main>
   );
-}
+};
+
+export default UserRolePage;

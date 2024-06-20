@@ -1,7 +1,19 @@
-// export const menuItems: MenuItem[] = []
-
-import { IconCoffee, IconMenuCalendar, IconMenuDashboard } from '@/components/Icons';
-import { ROUTE_DASHBOARD, ROUTE_RESERVATIONS, ROUTE_RESTAURANTS, ROUTE_SETTING, ROUTE_SUPPORT, ROUTE_USERROLE } from '../routes';
+import {
+  IconChat,
+  IconChefHat,
+  IconMenuCalendar,
+  IconMenuDashboard,
+  IconSettings,
+  IconUserRole,
+} from '@/components/Icons';
+import {
+  ROUTE_DASHBOARD,
+  ROUTE_RESERVATIONS,
+  ROUTE_RESTAURANTS,
+  ROUTE_SETTING,
+  ROUTE_SUPPORT,
+  ROUTE_USERROLE,
+} from '../routes';
 
 export const menuItems = [
   {
@@ -12,9 +24,9 @@ export const menuItems = [
     route: ROUTE_DASHBOARD,
   },
   {
-    id: 'restaurants',
-    title: 'Restaurants',
-    Icon: IconCoffee,
+    id: 'restaurant',
+    title: 'Restaurant',
+    Icon: IconChefHat,
     childItems: [
       {
         id: 'restaurant1',
@@ -25,30 +37,30 @@ export const menuItems = [
     route: ROUTE_RESTAURANTS,
   },
   {
-    id: 'reservations',
-    title: 'Reservations',
+    id: 'reservation',
+    title: 'Reservation',
     Icon: IconMenuCalendar,
     childItems: [],
     route: ROUTE_RESERVATIONS,
   },
   {
     id: 'userrole',
-    title: 'User Roles',
-    Icon: IconMenuCalendar,
+    title: 'User Role',
+    Icon: IconUserRole,
     childItems: [],
     route: ROUTE_USERROLE,
   },
   {
     id: 'support',
     title: 'Support',
-    Icon: IconMenuCalendar,
+    Icon: IconChat,
     childItems: [],
     route: ROUTE_SUPPORT,
   },
   {
     id: 'setting',
     title: 'Setting',
-    Icon: IconMenuCalendar,
+    Icon: IconSettings,
     childItems: [],
     route: ROUTE_SETTING,
   },
