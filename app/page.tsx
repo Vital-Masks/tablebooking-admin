@@ -13,6 +13,7 @@ import {
   reservationFormSchema,
 } from '@/constants/FormsDataJs/ReservationFrom';
 import Link from 'next/link';
+import AnalyticsCard from '@/components/Elements/AnalyticsCard';
 
 export default function Home() {
   const [initialValues, setInitialValues] = useState({
@@ -94,8 +95,14 @@ export default function Home() {
             </Link>
           </div>
         </div>
+
         <div className="grid grid-cols-3 items-start gap-5">
           <div className="col-span-2">
+            <div className="grid grid-cols-3 mb-5 gap-5">
+              <AnalyticsCard />
+              <AnalyticsCard />
+              <AnalyticsCard />
+            </div>
             <Table columns={columns} rowData={rowData} />
           </div>
           <FormComponent
