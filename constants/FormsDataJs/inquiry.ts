@@ -1,16 +1,16 @@
 import * as Yup from 'yup';
 
-export const userroleFormField = [
+export const inquiryFormField = [
   
   { id: 'firstname', name: 'firstname', label: 'First name', type: 'text' },
   { id: 'lastname', name: 'lastname', label: 'Last name', type: 'text' },
   { id: 'contactNumber',name: 'contactNumber',label: 'Contact number', type: 'text'},
   { id: 'email', name: 'email', label: 'Email address', type: 'email' },
-  { id: 'gender', name: 'gender', label: 'Gender', type: 'text' },
-  { id: 'role', name: 'role', label: 'Role/Designation', type: 'text' },
+  { id: 'restaurantName', name: 'restaurantName', label: 'Restaurant Name', type: 'text' },
+  { id: 'address', name: 'address', label: 'Address', type: 'text' },
 ];
 
-export const userroleFormSchema = {
+export const inquiryFormSchema = {
     firstname: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
@@ -23,10 +23,10 @@ export const userroleFormSchema = {
   email: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
-    gender: Yup.string()
+    restaurantName: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
-    role: Yup.string()
+    address: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
 };
