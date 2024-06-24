@@ -1,5 +1,7 @@
 
+import Link from 'next/link';
 import React from 'react';
+import Footer from '@/components/Layouts/Footer';
 
 const Login = () => {
   return (
@@ -8,7 +10,7 @@ const Login = () => {
         <div>
           
         </div>
-        <div className="hidden lg:block lg:w-1/2 bg-cover bg-center h-screen rounded-lg" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1573152958734-1922c188fba3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2232&q=80)' }}></div>
+        
         <div className="bg-white p-8 lg:w-1/2 px-14 ">
           <h2 className="text-3xl font-bold mb-6">Login</h2>
           <form>
@@ -42,21 +44,27 @@ const Login = () => {
             >
               Login
             </button>
-            <a href='/'
+            <Link href='/'
               className="text-blue font-bold px-4 hover:text-blue-700"
             >
               Forget Password ?
-            </a>
+            </Link>
+            
           
            
-          </form>
+          </form>   
         </div>
+        
+        <div className="hidden lg:block lg:w-1/2 bg-cover bg-center h-screen rounded-lg" 
+        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1573152958734-1922c188fba3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2232&q=80)' }}></div>
+        
+        
       </div>
-    
+
     </div>
-    
+
   );
-  
+
 };
 
 export default Login;

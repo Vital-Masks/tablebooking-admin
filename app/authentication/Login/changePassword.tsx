@@ -56,5 +56,4 @@ const changepasswordPage = () => {
   );
   
 };
-<Footer/>
 export default changepasswordPage;
