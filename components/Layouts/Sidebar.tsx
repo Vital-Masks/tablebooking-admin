@@ -101,7 +101,7 @@ const Sidebar = () => {
               )}
             </ul>
           </div>
-          <div className="border-t mt-auto mb-0 p-5">profile</div>
+          <div className="border-t mt-auto mb-0 p-5">Profile</div>
         </div>
       </nav>
     </div>

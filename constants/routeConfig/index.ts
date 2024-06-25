@@ -1,7 +1,10 @@
 // export const menuItems: MenuItem[] = []
 
 import { IconCoffee, IconMenuCalendar, IconMenuDashboard } from '@/components/Icons';
-import { ROUTE_DASHBOARD, ROUTE_RESERVATIONS, ROUTE_RESTAURANTS } from '../routes';
+import { ROUTE_DASHBOARD, ROUTE_RESERVATIONS, ROUTE_RESTAURANTS, ROUTE_PAYMENTS, ROUTE_CUSTOMERS } from '../routes';
+import IconSettings from '@/components/Icons/IconSetting';
+import IconCustomers from '@/components/Icons/IconCustomer';
+import IconPayments from '@/components/Icons/IconPayment';
 
 export const menuItems = [
   {
@@ -30,5 +33,19 @@ export const menuItems = [
     Icon: IconMenuCalendar,
     childItems: [],
     route: ROUTE_RESERVATIONS,
+  },
+  {
+    id: 'payments',
+    title: 'Payments',
+    Icon: IconPayments,
+    childItems: [],
+    route: ROUTE_PAYMENTS,
+  },
+  {
+    id: 'customers',
+    title: 'Customers',
+    Icon: IconCustomers,
+    childItems: [],
+    route: ROUTE_CUSTOMERS,
   },
 ];
