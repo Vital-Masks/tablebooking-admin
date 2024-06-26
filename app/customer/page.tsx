@@ -28,14 +28,16 @@ export default function Home() {
       fullname: 'Vethakulan Ananthakumar',
       contactno: '0712345678',
       emailaddress: 'johndoe@gmail.com',
-      latestreservation: 'International Buffet'
+      latestreservation: 'International Buffet',
+      createdOn: '2004-05-28'
     },
     {
       id: 2,
       fullname: 'Vethakulan Ananthakumar',
       contactno: '0712345678',
       emailaddress: 'johndoe@gmail.com',
-      latestreservation: 'International Buffet'
+      latestreservation: 'International Buffet',
+      createdOn: '2004-05-28'
     },
   ];
 
@@ -76,12 +78,15 @@ export default function Home() {
           <div className="col-span-2">
             <Table columns={columns} rowData={rowData} />
           </div>
+          <div>
           <FormComponent
             title="Customer"
             fields={customerFormField}
             initialValues={initialValues}
             validationSchema={customerFormSchema}
           />
+        <p className="mt-5">Member since May 12 2024</p>
+        </div>
         </div>
       </div>
     </main>
