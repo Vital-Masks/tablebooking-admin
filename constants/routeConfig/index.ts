@@ -1,10 +1,23 @@
-// export const menuItems: MenuItem[] = []
 
-import { IconCoffee, IconMenuCalendar, IconMenuDashboard } from '@/components/Icons';
-import { ROUTE_DASHBOARD, ROUTE_RESERVATIONS, ROUTE_RESTAURANTS, ROUTE_PAYMENTS, ROUTE_CUSTOMERS } from '../routes';
-import IconSettings from '@/components/Icons/IconSetting';
-import IconCustomers from '@/components/Icons/IconCustomer';
-import IconPayments from '@/components/Icons/IconPayment';
+import {
+  IconChat,
+  IconChefHat,
+  IconMenuCalendar,
+  IconMenuDashboard,
+  IconSettings,
+  IconUserRole,
+  IconPayment,
+  IconCustomer
+} from '@/components/Icons';
+
+import {
+  ROUTE_DASHBOARD,
+  ROUTE_RESERVATIONS,
+  ROUTE_RESTAURANTS,
+   ROUTE_PAYMENTS, ROUTE_CUSTOMERS, ROUTE_USERROLE,
+   ROUTE_SETTING,
+   ROUTE_SUPPORT
+} from '../routes';
 
 export const menuItems = [
   {
@@ -15,9 +28,9 @@ export const menuItems = [
     route: ROUTE_DASHBOARD,
   },
   {
-    id: 'restaurants',
-    title: 'Restaurants',
-    Icon: IconCoffee,
+    id: 'restaurant',
+    title: 'Restaurant',
+    Icon: IconChefHat,
     childItems: [
       {
         id: 'restaurant1',
@@ -28,8 +41,8 @@ export const menuItems = [
     route: ROUTE_RESTAURANTS,
   },
   {
-    id: 'reservations',
-    title: 'Reservations',
+    id: 'reservation',
+    title: 'Reservation',
     Icon: IconMenuCalendar,
     childItems: [],
     route: ROUTE_RESERVATIONS,
@@ -37,15 +50,36 @@ export const menuItems = [
   {
     id: 'payments',
     title: 'Payments',
-    Icon: IconPayments,
+    Icon: IconPayment,
     childItems: [],
     route: ROUTE_PAYMENTS,
   },
   {
     id: 'customers',
     title: 'Customers',
-    Icon: IconCustomers,
+    Icon: IconCustomer,
     childItems: [],
     route: ROUTE_CUSTOMERS,
+  },
+  {
+    id: 'userrole',
+    title: 'User Role',
+    Icon: IconUserRole,
+    childItems: [],
+    route: ROUTE_USERROLE,
+  },
+  {
+    id: 'support',
+    title: 'Support',
+    Icon: IconChat,
+    childItems: [],
+    route: ROUTE_SUPPORT,
+  },
+  {
+    id: 'setting',
+    title: 'Setting',
+    Icon: IconSettings,
+    childItems: [],
+    route: ROUTE_SETTING,
   },
 ];
