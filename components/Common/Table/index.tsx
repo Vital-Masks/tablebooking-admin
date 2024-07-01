@@ -20,7 +20,7 @@ const Table = ({ columns, rowData }: any) => {
     const from = (page - 1) * pageSize;
     const to = from + pageSize;
     setRecordsData(rowData.slice(from, to));
-  }, [page]);
+  }, [page, rowData]);
 
   return (
     <div className="panel h-full flex-1">

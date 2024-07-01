@@ -9,7 +9,7 @@ import FormComponent from '@/components/Common/Form';
 import { inquiryFormField, inquiryFormSchema } from '@/constants/FormsDataJs/inquiry';
 
 
-const inquiryPage = () => {
+const InquiryPage = () => {
   const [initialValues, setInitialValues] = useState({
     firstname: '',
     lastname: '',
@@ -106,4 +106,4 @@ const inquiryPage = () => {
   );
 };
 
-export default inquiryPage;
+export default InquiryPage;
