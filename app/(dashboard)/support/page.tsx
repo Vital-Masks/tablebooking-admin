@@ -86,9 +86,7 @@ const inquiryPage = () => {
             
           </div>
         </div>
-        <div className="flex items-center p-2 justify-between text-primary mb-2">
-          <h2 className="text-lg text-black">Inquiries</h2>
-          </div>
+      
         <div className="grid grid-cols-3 items-start gap-5">
           <div className={`${isCreateForm ? 'col-span-2' : 'col-span-3'} transition-col-span duration-300`}>
             <Table columns={columns} rowData={rowData} />

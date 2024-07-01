@@ -4,6 +4,6 @@ export const ROUTE_RESERVATIONS = '/reservation';
 export const ROUTE_NEW_RESERVATIONS = '/reservation/new';
 export const ROUTE_USERROLE = '/user-role';
 export const ROUTE_SUPPORT = '/support';
-export const ROUTE_SETTING = '/authentication/Login';
-export const ROUTE_OTP = '/authentication/OTP'
+export const ROUTE_SETTING = '/login';
+export const ROUTE_OTP = '/OTP'
 
