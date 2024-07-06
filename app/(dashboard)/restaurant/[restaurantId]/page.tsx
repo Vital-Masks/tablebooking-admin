@@ -1,17 +1,45 @@
 'use client';
 import React, { useState } from 'react';
-import { CousinMenu, GeneralDetails } from '@/components/Pages/RestaurantTabs';
+import { CousinMenu, DiningAreas, DiningTimings, GeneralDetails, UserRoles } from '@/components/Pages/RestaurantTabs';
+import Button from '@/components/Elements/Button';
+import Subscriptions from '@/components/Pages/RestaurantTabs/Subscriptions';
 
 const tabs = [
   {
     id: 'generalDetails',
     name: 'General Details',
-    component: (name:any) => <GeneralDetails name={name} />,
+    description: 'Update your general details here',
+    component: (name:any) => <GeneralDetails />,
   },
   {
-    id: 'cousinMenu',
-    name: 'Cousines & Menu',
+    id: 'cusinMenu',
+    name: 'Cuisines & Menu',
+    description: 'Update your Cuisine and Menu details here',
     component: () => <CousinMenu />,
+  },
+  {
+    id: 'diningAreas',
+    name: 'Dining Areas',
+    description: 'Update your Dining area details here',
+    component: () => <DiningAreas />,
+  },
+  {
+    id: 'diningTimings',
+    name: 'Dining Timings',
+    description: 'Update your Dining Timing details here',
+    component: () => <DiningTimings />,
+  },
+  {
+    id: 'userRoles',
+    name: 'User Roles',
+    description: 'Update your User details here',
+    component: () => <UserRoles />,
+  },
+  {
+    id: 'subscriptions',
+    name: 'Subscriptions',
+    description: 'Update your User Subscriptions here',
+    component: () => <Subscriptions />,
   },
 ];
 
@@ -58,9 +86,16 @@ const RestaurantForm = () => {
             <div className="flex flex-wrap-reverse items-center justify-between gap-4 p-4">
               <div className="flex w-full items-center sm:w-auto">
                 <div className="mr-4">
-                  {tabs.find((x) => x.id === selectedTab)?.name}
+                  <b>{tabs.find((x) => x.id === selectedTab)?.name}</b>
+                  <br></br>
+                  {tabs.find((x) => x.id === selectedTab)?.description}
                 </div>
+                
               </div>
+              <div className="flex items-center gap-2">
+                  <Button type="outlined">Cancel</Button>
+                  <Button type="filled">Save</Button>
+                </div>
             </div>
 
             <div className="h-px border-b border-white-light"></div>
