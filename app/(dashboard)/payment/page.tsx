@@ -24,6 +24,8 @@ export default function Home() {
     nextpayment:''
   });
 
+  const [isCreateForm, setIsCreateForm] = useState(false);
+
   const rowData = [
     {
       id: 1,
@@ -65,7 +67,7 @@ export default function Home() {
       titleClassName: '!text-center',
       render: () => (
         <div className="flex items-center gap-4 mx-auto w-max">
-          <button>
+          <button onClick={() => setIsCreateForm(!isCreateForm)} >
             <IconEye />
           </button>
         </div>
@@ -83,15 +85,17 @@ export default function Home() {
           </div>
         </div>
         <div className="grid grid-cols-3 items-start gap-5">
-          <div className="col-span-2">
+          <div className={`${isCreateForm ? 'col-span-2' : 'col-span-3'} transition-col-span duration-300`}>
             <Table columns={columns} rowData={rowData} />
           </div>
-          <FormComponent
-            title="Payment"
-            fields={paymentFormField}
-            initialValues={initialValues}
-            validationSchema={paymentFormSchema}
-          />
+          {isCreateForm && (
+            <FormComponent
+              title="Payment"
+              fields={paymentFormField}
+              initialValues={initialValues}
+              validationSchema={paymentFormSchema}
+            />
+          )}
         </div>
       </div>
     </main>

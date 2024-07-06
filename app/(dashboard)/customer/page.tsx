@@ -22,6 +22,8 @@ export default function Home() {
     latestreservation: ''
   });
 
+  const [isCreateForm, setIsCreateForm] = useState(false);
+
   const rowData = [
     {
       id: 1,
@@ -57,7 +59,7 @@ export default function Home() {
       titleClassName: '!text-center',
       render: () => (
         <div className="flex items-center gap-4 mx-auto w-max">
-          <button>
+          <button onClick={() => setIsCreateForm(!isCreateForm)}>
             <IconEye />
           </button>
         </div>
@@ -75,18 +77,20 @@ export default function Home() {
           </div>
         </div>
         <div className="grid grid-cols-3 items-start gap-5">
-          <div className="col-span-2">
+        <div className={`${isCreateForm ? 'col-span-2' : 'col-span-3'} transition-col-span duration-300`}>
             <Table columns={columns} rowData={rowData} />
           </div>
+          {isCreateForm && (
           <div>
-          <FormComponent
-            title="Customer"
-            fields={customerFormField}
-            initialValues={initialValues}
-            validationSchema={customerFormSchema}
-          />
-        <p className="mt-5">Member since May 12 2024</p>
+            <FormComponent
+              title="Customer"
+              fields={customerFormField}
+              initialValues={initialValues}
+              validationSchema={customerFormSchema}
+            />
+          <p className="mt-5">Member since May 12 2024</p>
         </div>
+          )}
         </div>
       </div>
     </main>

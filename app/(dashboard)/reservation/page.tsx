@@ -31,6 +31,8 @@ export default function Home() {
     status:''
   });
 
+  const [isCreateForm, setIsCreateForm] = useState(false);
+
   const rowData = [
     {
       id: 1,
@@ -84,7 +86,7 @@ export default function Home() {
       titleClassName: '!text-center',
       render: () => (
         <div className="flex items-center gap-4 mx-auto w-max">
-          <button>
+          <button onClick={() => setIsCreateForm(!isCreateForm)} >
             <IconEye />
           </button>
           <button>
@@ -106,22 +108,23 @@ export default function Home() {
           <h2 className="text-lg text-black font-bold">Reservations</h2>
           <div className="flex items-center gap-2">
             <Button type="outlined">Export</Button>
-            <Link href="restaurant/new">
-              <Button type="filled">Add New Reservation</Button>
-            </Link>
+            <Button onClick={() => setIsCreateForm(!isCreateForm)} type="filled">Add New Reservation</Button>
+            
           </div>
         </div>
         <div className="grid grid-cols-3 items-start gap-5">
-          <div className="col-span-2">
+          <div className={`${isCreateForm ? 'col-span-2' : 'col-span-3'} transition-col-span duration-300`}>
             <Table columns={columns} rowData={rowData} />
           </div>
-          <FormComponent
-            title="Make a Reservation"
-            fields={tableReservationFormField}
-            initialValues={initialValues}
-            validationSchema={tableReservationFormSchema}
-            handleSubmit={handleSubmit}
-          />
+          {isCreateForm && (
+            <FormComponent
+              title="Make a Reservation"
+              fields={tableReservationFormField}
+              initialValues={initialValues}
+              validationSchema={tableReservationFormSchema}
+              handleSubmit={handleSubmit}
+            />
+          )}
         </div>
       </div>
     </main>
