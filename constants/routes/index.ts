@@ -6,6 +6,6 @@ export const ROUTE_CUSTOMERS = '/customer';
 export const ROUTE_PAYMENTS = '/payment';
 export const ROUTE_USERROLE = '/user-role';
 export const ROUTE_SUPPORT = '/support';
-export const ROUTE_SETTING = '/login';
+export const ROUTE_SETTING = '/setting';
 export const ROUTE_OTP = '/OTP'
-
+export const ROUTE_LOGIN = '/login';
