@@ -5,9 +5,13 @@ import HeaderAuth from '@/components/Layouts/HeaderAuth';
 
 const Login = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="flex w-full max-w-screen-xl">
-        <div className="bg-white p-8 lg:w-1/2 px-14 ">
+    <div className="min-h-screen flex justify-center">
+      
+      <div className="flex w-full max-w-screen-xl flex-col main-content">
+      <div className="flex flex-col min-h-screen main-content">
+      <HeaderAuth />
+        <div className="bg-white w-full max-w-md px-4 mb-6 rounded-lg">
+        
           <h2 className="text-3xl font-bold mb-6">Login</h2>
           <form>
             <div className="mb-4">
@@ -46,14 +50,14 @@ const Login = () => {
               Login
             </button>
             <Link
-              href="/authentication/OTP"
+              href="/otp"
               className="text-blue font-bold px-4 hover:text-blue-700"
             >
               Forget Password ?
             </Link>
           </form>
         </div>
-
+        
         <div
           className="hidden lg:block lg:w-1/2 bg-cover bg-center h-screen rounded-lg"
           style={{
@@ -61,8 +65,12 @@ const Login = () => {
               'url(https://images.unsplash.com/photo-1573152958734-1922c188fba3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2232&q=80)',
           }}
         ></div>
+ 
+        
+        <Footer />
       </div>
-      {/* <Footer /> */}
+      
+    </div>
     </div>
   );
 };
