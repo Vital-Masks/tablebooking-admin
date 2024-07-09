@@ -94,7 +94,7 @@ export const generalFormSchema = Yup.object().shape({
   paymentOptions: Yup.string().required('This field cannot be empty'),
   timeZone: Yup.string().max(255, 'Max characters 255 only allowed').required('This field cannot be empty'),
   availabilityStatus: Yup.string().required('This field cannot be empty'),
-  promoted: Yup.boolean(),
+  promoted: Yup.boolean().oneOf([true, false]),
 });
 
 export const generalImageFormField = [

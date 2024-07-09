@@ -93,20 +93,35 @@ const PushNotifications = () => {
   return (
     <main>
       <div>
-        <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6">
-          <h2 className="text-lg text-black font-bold">Automative Notifications</h2>
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => setIsCreateForm(!isCreateForm)}
-              type="filled"
-            >
-              Add New
-            </Button>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 items-start gap-5">
-          <div className={`${isCreateForm ? 'col-span-2' : 'col-span-3'} transition-col-span duration-300`}>
+      <div className="grid grid-cols-3 items-start gap-5">
+          <div className={`${isCreateForm || isCustomForm ? 'col-span-2' : 'col-span-3'} transition-col-span duration-300`}>
+            <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6">
+              <h2 className="text-lg text-black font-bold">Automative Notifications</h2>
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={() => setIsCreateForm(!isCreateForm)}
+                  type="filled"
+                >
+                  Add New
+                </Button>
+              </div>
+            </div>
+
             <Table columns={columns} rowData={rowData} />
+
+            <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6 mt-5">
+              <h2 className="text-lg text-black font-bold">Custom Notifications</h2>
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={() => setIsCustomForm(!isCustomForm)}
+                  type="filled"
+                >
+                  Add New
+                </Button>
+              </div>
+            </div>
+
+             <Table columns={columns} rowData={rowData} />
           </div>
           
           {isCreateForm && (
@@ -117,24 +132,7 @@ const PushNotifications = () => {
               validationSchema={automativeSchema}
             />
           )}
-        </div>
 
-        <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6 mt-5">
-          <h2 className="text-lg text-black font-bold">Custom Notifications</h2>
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => setIsCustomForm(!isCustomForm)}
-              type="filled"
-            >
-              Add New
-            </Button>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 items-start gap-5">
-          <div className={`${isCustomForm ? 'col-span-2' : 'col-span-3'} transition-col-span duration-300`}>
-            <Table columns={columns} rowData={rowData} />
-          </div>
-          
           {isCustomForm && (
             <FormComponent
               title="Create Custom Notification"
