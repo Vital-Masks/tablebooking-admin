@@ -1,76 +1,107 @@
-import Link from 'next/link';
-import React from 'react';
-import Footer from '@/components/Layouts/Footer';
-import HeaderAuth from '@/components/Layouts/HeaderAuth';
+import IconMail from '@/components/Icons/IconMail';
+import IconLockDots from '@/components/Icons/IconLockDots';
+import { useActionState, useState } from 'react';
+import { authenticate } from '@/lib/actions';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const Login = () => {
-  return (
-    <div className="min-h-screen flex justify-center">
-      
-      <div className="flex w-full max-w-screen-xl flex-col main-content">
-      <div className="flex flex-col min-h-screen main-content">
-      <HeaderAuth />
-        <div className="bg-white w-full max-w-md px-4 mb-6 rounded-lg">
-        
-          <h2 className="text-3xl font-bold mb-6">Login</h2>
-          <form>
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="username"
-              >
-                Username
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="username"
-                type="text"
-                placeholder="Enter your username"
-              />
-            </div>
-            <div className="mb-6">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-              />
-            </div>
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, formAction, isPending] = useActionState(
+    authenticate,
+    undefined
+  );
+  const router = useRouter();
 
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
-            >
-              Login
-            </button>
-            <Link
-              href="/otp"
-              className="text-blue font-bold px-4 hover:text-blue-700"
-            >
-              Forget Password ?
-            </Link>
-          </form>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const result = await signIn('credentials', {
+      redirect: false,
+      username,
+      password,
+    });
+
+    if (result?.error) {
+      console.error(result.error);
+    } else {
+      router.push('/');
+    }
+  };
+
+  return (
+    <div className="bg-gray-200">
+      <div className="flex h-screen items-center justify-center bg-[url(/assets/images/auth/map.png)] bg-cover bg-center bg-no-repeat px-6 py-10 sm:px-16">
+        <div className="relative w-full max-w-[670px] rounded-md bg-[linear-gradient(45deg,#fff9f9_0%,rgba(255,255,255,0)_25%,rgba(255,255,255,0)_75%,_#fff9f9_100%)] p-2">
+          <div className="relative flex flex-col justify-center rounded-md bg-white/60 px-6 py-20 backdrop-blur-lg ">
+            <div className="mx-auto w-full max-w-[440px]">
+              <div className="mb-5">
+                <h1 className="text-xl font-extrabold uppercase !leading-snug text-primary">
+                  Sign in
+                </h1>
+              </div>
+              <form className="space-y-5" onSubmit={handleSubmit}>
+                <div>
+                  <label htmlFor="Email">Email</label>
+                  <div className="relative text-white-dark">
+                    <input
+                      id="Email"
+                      type="email"
+                      placeholder="Enter Email"
+                      className="form-input ps-10 placeholder:text-white-dark"
+                    />
+                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
+                      <IconMail fill={true} />
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="Password">Password</label>
+                  <div className="relative text-white-dark">
+                    <input
+                      id="Password"
+                      type="password"
+                      placeholder="Enter Password"
+                      className="form-input ps-10 placeholder:text-white-dark"
+                    />
+                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
+                      <IconLockDots fill={true} />
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
+                  aria-disabled={isPending}
+                >
+                  Sign in
+                </button>
+                <div
+                  className="flex h-8 items-end space-x-1"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  {errorMessage && (
+                    <>
+                      <p className="text-sm text-red-500">{errorMessage}</p>
+                    </>
+                  )}
+                </div>
+              </form>
+
+              {/* <div className="text-center">
+                Don't have an account ?&nbsp;
+                <Link
+                  href="/auth/boxed-signup"
+                  className="uppercase text-primary underline transition hover:text-black"
+                >
+                  SIGN UP
+                </Link>
+              </div> */}
+            </div>
+          </div>
         </div>
-        
-        <div
-          className="hidden lg:block lg:w-1/2 bg-cover bg-center h-screen rounded-lg"
-          style={{
-            backgroundImage:
-              'url(https://images.unsplash.com/photo-1573152958734-1922c188fba3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2232&q=80)',
-          }}
-        ></div>
- 
-        
-        <Footer />
       </div>
-      
-    </div>
     </div>
   );
 };

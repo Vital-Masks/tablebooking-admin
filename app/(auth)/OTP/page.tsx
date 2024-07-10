@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import React from 'react';
-import Footer from '@/components/Layouts/Footer';
-import HeaderAuth from '@/components/Layouts/HeaderAuth';
 
 const varificationPage = () => {
   return (
@@ -9,7 +7,7 @@ const varificationPage = () => {
       
       <div className="flex w-full max-w-screen-xl flex-col main-content">
       <div className="flex flex-col min-h-screen main-content">
-      <HeaderAuth />
+ 
         <div className="bg-white w-full max-w-md px-4 mb-6 rounded-lg">
         
           <h2 className="text-3xl font-bold mb-6">Verify it&apos;s You</h2>
@@ -68,7 +66,7 @@ const varificationPage = () => {
         ></div>
  
         
-        <Footer />
+
       </div>
       
     </div>

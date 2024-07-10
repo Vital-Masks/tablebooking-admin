@@ -1,3 +1,0 @@
-const isLoggedin = ( ) => {
-    return false;
-}
