@@ -1,5 +1,6 @@
 import IconMenuDashboard from './IconMenuDashboard';
 import IconCaretDown from './IconCaretDown';
+import IconCaretsDown from './IconCaretsDown';
 import IconMenuChat from './IconMenuChat';
 import IconMenu from './IconMenu';
 import IconCoffee from './IconCoffee';
@@ -9,11 +10,15 @@ import IconPencil from './IconPencil';
 import IconEye from './IconEye';
 import IconFilter from './IconFilter';
 import IconUserRole from './IconUserRole';
-import IconChefHat from './IconChefHat'
-import IconSettings from './IconSettings'
-import IconChat from "./IconChat";
-import IconCustomer from "./IconCustomer";
-import IconPayment from "./IconPayment";
+import IconChefHat from './IconChefHat';
+import IconSettings from './IconSettings';
+import IconChat from './IconChat';
+import IconCustomer from './IconCustomer';
+import IconPayment from './IconPayment';
+import IconBellBing from './IconBellBing';
+import IconXCircle from './IconXCircle';
+import IconInfoCircle from './IconInfoCircle';
+import IconLogout from './IconLogout'
 
 export {
   IconMenuDashboard,
@@ -31,5 +36,10 @@ export {
   IconSettings,
   IconChat,
   IconCustomer,
-  IconPayment
+  IconPayment,
+  IconCaretsDown,
+  IconBellBing,
+  IconXCircle,
+  IconInfoCircle,
+  IconLogout
 };
