@@ -67,7 +67,7 @@ export const generalFormField = [
     id: 'promoted', 
     name: 'promoted', 
     label: 'Promoted', 
-    type: 'checkbox' 
+    type: 'switch' 
   },
 ];
 

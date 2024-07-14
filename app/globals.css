@@ -1,5 +1,5 @@
 @import '../styles/datatables.css';
-
+@import '../styles/select2.css';
 
 @tailwind base;
 @tailwind components;

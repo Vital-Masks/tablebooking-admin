@@ -4,8 +4,9 @@ import { DataTable } from 'mantine-datatable';
 
 import { IconFilter } from '@/components/Icons';
 import Dropdown from '@/components/Elements/Dropdown';
+import Button from '@/components/Elements/Button';
 
-const Table = ({ columns, rowData }: any) => {
+const Table = ({ columns, rowData, onButtonClick }: any) => {
   const pageSize = 10;
   const initialRecords = rowData.slice(0, pageSize);
   const [page, setPage] = useState(1);
@@ -24,45 +25,52 @@ const Table = ({ columns, rowData }: any) => {
 
   return (
     <div className="panel h-full flex-1">
-      <div className="flex flex-col gap-5 mb-5 md:flex-row md:items-center">
-        <div className="dropdown">
-          <Dropdown
-            placement="bottom-start"
-            btnClassName="btn btn-primary dropdown-toggle shadow-none"
-            button={
-              <>
-                <span>
-                  <IconFilter className="mr-2 inline-block w-4 h-4" />
-                </span>
-                <span>Filter</span>
-              </>
-            }
-          >
-            <ul className="!min-w-[170px]">
-              <li>
-                <button type="button">Available</button>
-              </li>
-              <li>
-                <button type="button">Free plan</button>
-              </li>
-              <li>
-                <button type="button">Pro plan</button>
-              </li>
-              <li>
-                <button type="button">Restaurant</button>
-              </li>
-            </ul>
-          </Dropdown>
+      <div className="flex flex-col justify-between gap-5 mb-5 md:flex-row md:items-center">
+        <div className="flex gap-5">
+          <div className="dropdown">
+            <Dropdown
+              placement="bottom-start"
+              btnClassName="btn btn-primary dropdown-toggle shadow-none"
+              button={
+                <>
+                  <span>
+                    <IconFilter className="mr-2 inline-block w-4 h-4" />
+                  </span>
+                  <span>Filter</span>
+                </>
+              }
+            >
+              <ul className="!min-w-[170px]">
+                <li>
+                  <button type="button">Available</button>
+                </li>
+                <li>
+                  <button type="button">Free plan</button>
+                </li>
+                <li>
+                  <button type="button">Pro plan</button>
+                </li>
+                <li>
+                  <button type="button">Restaurant</button>
+                </li>
+              </ul>
+            </Dropdown>
+          </div>
+          <div>
+            <input
+              type="text"
+              className="w-auto form-input"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
         </div>
-        <div>
-          <input
-            type="text"
-            className="w-auto form-input"
-            placeholder="Search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+        {onButtonClick && (
+          <div className='shrink-0'>
+            <Button type="filled" onClick={() => onButtonClick()}>+ Create new</Button>
+          </div>
+        )}
       </div>
       <div className="datatables h-full">
         <DataTable
@@ -84,4 +92,3 @@ const Table = ({ columns, rowData }: any) => {
 };
 
 export default Table;
-

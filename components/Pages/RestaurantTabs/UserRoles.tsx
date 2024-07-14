@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { IconEye, IconTrash } from '@/components/Icons';
 
-
 import {
   userroleFormField,
   userroleFormSchema,
@@ -12,9 +11,7 @@ import Link from 'next/link';
 import Table from '@/components/Common/Table';
 import FormComponent from '@/components/Common/Form';
 
-
 const UserRoles = () => {
-  
   const [initialValues, setInitialValues] = useState({
     firstname: '',
     lastname: '',
@@ -77,29 +74,28 @@ const UserRoles = () => {
   return (
     <main>
       <div>
-        <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6">
-          <h2 className="text-lg text-black font-bold">User Role</h2>
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => setIsCreateForm(!isCreateForm)}
-              type="filled"
-            >
-              Add New
-            </Button>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 items-start gap-5">
-          <div className={`${isCreateForm ? 'col-span-2' : 'col-span-3'} transition-col-span duration-300`}>
-            <Table columns={columns} rowData={rowData} />
+        <div className="grid grid-cols-5 items-start gap-5">
+          <div
+            className={`${
+              isCreateForm ? 'col-span-3' : 'col-span-5'
+            } transition-col-span duration-300`}
+          >
+            <Table
+              columns={columns}
+              rowData={rowData}
+              onButtonClick={() => setIsCreateForm(!isCreateForm)}
+            />
           </div>
           {isCreateForm && (
-            <FormComponent
-              title="Add User Roles"
-              fields={userroleFormField}
-              initialValues={initialValues}
-              validationSchema={userroleFormSchema}
-              handleSubmit={handleSubmit}
-            />
+            <div className=" col-span-2">
+              <FormComponent
+                title="Add User Roles"
+                fields={userroleFormField}
+                initialValues={initialValues}
+                validationSchema={userroleFormSchema}
+                handleSubmit={handleSubmit}
+              />
+            </div>
           )}
         </div>
       </div>

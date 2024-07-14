@@ -19,6 +19,7 @@ import IconBellBing from './IconBellBing';
 import IconXCircle from './IconXCircle';
 import IconInfoCircle from './IconInfoCircle';
 import IconLogout from './IconLogout'
+import IconPhoto from './IconPhoto'
 
 export {
   IconMenuDashboard,
@@ -41,5 +42,6 @@ export {
   IconBellBing,
   IconXCircle,
   IconInfoCircle,
-  IconLogout
+  IconLogout,
+  IconPhoto
 };

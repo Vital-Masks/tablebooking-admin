@@ -2,13 +2,6 @@
 import { useState } from 'react';
 
 import FormComponent from '@/components/Common/Form';
-import Table from '@/components/Common/Table';
-import Button from '@/components/Elements/Button';
-import { IconEye, IconTrash } from '@/components/Icons';
-
-import { formatDate } from '@/utils/table';
-
-import Link from 'next/link';
 import { generalFormField, generalFormSchema, generalImageFormField, generalImageFormSchema } from '@/constants/FormsDataJs/GeneralDetailsForm';
 
 export default function GeneralDetails() {

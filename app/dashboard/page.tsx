@@ -16,6 +16,7 @@ import Link from 'next/link';
 import AnalyticsCard from '@/components/Elements/AnalyticsCard';
 
 export default function Home() {
+  const [isForm, setIsForm] = useState(false);
   const [initialValues, setInitialValues] = useState({
     date: '',
     time: '',
@@ -90,14 +91,14 @@ export default function Home() {
           <h2 className="text-lg text-black font-bold">Dashboard</h2>
           <div className="flex items-center gap-2">
             <Button type="outlined">Export</Button>
-            <Link href="restaurant/new">
-              <Button type="filled">Create new</Button>
-            </Link>
+            <Button type="filled" onClick={() => setIsForm(!isForm)}>
+              {isForm ? 'Close Form' : ' Make Reservation'}
+            </Button>
           </div>
         </div>
 
         <div className="grid grid-cols-3 items-start gap-5">
-          <div className="col-span-2">
+          <div className={`${isForm ? 'col-span-2' : 'col-span-3'}`}>
             <div className="grid grid-cols-3 mb-5 gap-5">
               <AnalyticsCard />
               <AnalyticsCard />
@@ -105,13 +106,15 @@ export default function Home() {
             </div>
             <Table columns={columns} rowData={rowData} />
           </div>
-          <FormComponent
-            title="Make a reservation"
-            fields={reservationFormField}
-            initialValues={initialValues}
-            validationSchema={reservationFormSchema}
-            handleSubmit={handleSubmit}
-          />
+          {isForm && (
+            <FormComponent
+              title="Make a reservation"
+              fields={reservationFormField}
+              initialValues={initialValues}
+              validationSchema={reservationFormSchema}
+              handleSubmit={handleSubmit}
+            />
+          )}
         </div>
       </div>
     </main>

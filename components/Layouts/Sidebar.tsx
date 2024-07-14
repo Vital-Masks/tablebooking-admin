@@ -87,7 +87,7 @@ const Sidebar = () => {
                               href={child.route}
                               onClick={() => toggleMenu(id)}
                               className={
-                                child.route === pathname ? 'active' : ''
+                                child.route.includes(pathname)  ? 'active' : ''
                               }
                             >
                               {child.title}
