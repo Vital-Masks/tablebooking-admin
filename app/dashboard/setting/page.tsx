@@ -1,21 +1,30 @@
 'use client';
 import React, { useState } from 'react';
-import { CousinMenu, GeneralDetails } from '@/components/Pages/RestaurantTabs';
+import Button from '@/components/Elements/Button';
+import { BannerImages, Promocodes, PushNotifications } from '@/components/Pages/SettingsTabs';
 
 const tabs = [
   {
-    id: 'generalDetails',
-    name: 'General Details',
-    component: (name:any) => <GeneralDetails name={name} />,
+    id: 'pushNotifications',
+    name: 'Push Notifications',
+    description: 'Update your Notification details here',
+    component: (name:any) => <PushNotifications />,
   },
   {
-    id: 'cousinMenu',
-    name: 'Cousines & Menu',
-    component: () => <CousinMenu />,
+    id: 'promocodes',
+    name: 'Promocodes',
+    description: 'Update your Promocodes details here',
+    component: () => <Promocodes />,
+  },
+  {
+    id: 'bannerImages',
+    name: 'Banner Images',
+    description: 'Update your Banner Images details here',
+    component: () => <BannerImages />,
   },
 ];
 
-const RestaurantForm = () => {
+const SettingPage = () => {
   const [selectedTab, setSelectedTab] = useState(tabs[0].id);
   const isEmpty = false;
 
@@ -58,9 +67,16 @@ const RestaurantForm = () => {
             <div className="flex flex-wrap-reverse items-center justify-between gap-4 p-4">
               <div className="flex w-full items-center sm:w-auto">
                 <div className="mr-4">
-                  {tabs.find((x) => x.id === selectedTab)?.name}
+                  <b>{tabs.find((x) => x.id === selectedTab)?.name}</b>
+                  <br></br>
+                  {tabs.find((x) => x.id === selectedTab)?.description}
                 </div>
+                
               </div>
+              <div className="flex items-center gap-2">
+                  <Button type="outlined">Cancel</Button>
+                  <Button type="filled">Save</Button>
+                </div>
             </div>
 
             <div className="h-px border-b border-white-light"></div>
@@ -81,4 +97,4 @@ const RestaurantForm = () => {
   );
 };
 
-export default RestaurantForm;
+export default SettingPage;

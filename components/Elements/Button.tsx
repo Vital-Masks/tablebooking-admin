@@ -3,9 +3,10 @@ import React from 'react';
 type ButtonType = {
   type: 'filled' | 'outlined';
   children: React.ReactNode;
+  onClick?: () => void;
 };
 
-const Button = ({ type, children }: ButtonType) => {
+const Button = ({ type, children, onClick }: ButtonType) => {
     const typeStyle = {
         filled: 'btn-primary',
         outlined: 'btn-outline-primary',
@@ -15,6 +16,7 @@ const Button = ({ type, children }: ButtonType) => {
     <button
       type="button"
       className={`btn shadow-none ${typeStyle[type]}`}
+      onClick={onClick}
     >
       {children}
     </button>

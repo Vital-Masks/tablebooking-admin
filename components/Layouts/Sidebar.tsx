@@ -1,13 +1,21 @@
 'use client';
 import Link from 'next/link';
 import AnimateHeight from 'react-animate-height';
+import { useDispatch, useSelector } from 'react-redux';
+import { IRootState } from '@/store';
 
-import { IconCaretDown } from '../Icons';
+import { IconCaretDown, IconCaretsDown } from '../Icons';
 import { menuItems } from '@/constants/routeConfig';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { toggleSidebar } from '@/store/themeSlice';
+import Profile from '../Elements/Profile';
 
 const Sidebar = () => {
+  const pathname = usePathname();
+  const dispatch = useDispatch();
+  const themeConfig = useSelector((state: IRootState) => state.themeConfig);
+
   const [currentMenu, setCurrentMenu] = useState<string>('');
 
   const toggleMenu = (value: string) => {
@@ -16,7 +24,11 @@ const Sidebar = () => {
     });
   };
 
-  const pathname = usePathname();
+  useEffect(() => {
+    if (window.innerWidth < 1024 && themeConfig.sidebar) {
+      dispatch(toggleSidebar());
+    }
+  }, [pathname]);
 
   return (
     <div>
@@ -30,10 +42,18 @@ const Sidebar = () => {
                 RESERVED
               </span>
             </Link>
+
+            <button
+              type="button"
+              className="collapse-icon flex h-8 w-8 items-center rounded-full transition duration-300 hover:bg-gray-500/10 rtl:rotate-180 dark:text-white-light dark:hover:bg-dark-light/10"
+              onClick={() => dispatch(toggleSidebar())}
+            >
+              <IconCaretsDown className="m-auto rotate-90" />
+            </button>
           </div>
           <div className="relative">
             <ul className="relative space-y-0.5 p-4 py-0 font-semibold">
-              {menuItems.map(({id,childItems, Icon, title, route }) =>
+              {menuItems.map(({ id, childItems, Icon, title, route }) =>
                 childItems.length > 0 ? (
                   <li key={id} className="menu nav-item">
                     <Link
@@ -67,7 +87,7 @@ const Sidebar = () => {
                               href={child.route}
                               onClick={() => toggleMenu(id)}
                               className={
-                                child.route === pathname ? 'active' : ''
+                                child.route.includes(pathname)  ? 'active' : ''
                               }
                             >
                               {child.title}
@@ -83,15 +103,11 @@ const Sidebar = () => {
                       <li className="nav-item">
                         <Link
                           href={route}
-                          className={`${
-                            route === pathname && 'active'
-                          }  group`}
+                          className={`${route === pathname && 'active'}  group`}
                         >
                           <div className="flex items-center">
                             <Icon className="shrink-0 group-hover:!text-primary" />
-                            <span className="text-black pl-3">
-                              {title}
-                            </span>
+                            <span className="text-black pl-3">{title}</span>
                           </div>
                         </Link>
                       </li>
@@ -101,7 +117,9 @@ const Sidebar = () => {
               )}
             </ul>
           </div>
-          <div className="border-t mt-auto mb-0 p-5">profile</div>
+          <div className="border-t mt-auto mb-0 p-4">
+            <Profile />
+          </div>
         </div>
       </nav>
     </div>

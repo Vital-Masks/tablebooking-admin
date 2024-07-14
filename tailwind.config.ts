@@ -73,6 +73,9 @@ module.exports = {
         '3xl':
           '0 2px 2px rgb(224 230 237 / 46%), 1px 6px 7px rgb(224 230 237 / 46%)',
       },
+      transitionProperty: {
+        'col-span': 'grid-column',
+      },
       typography: ({ theme }: any) => ({
         DEFAULT: {
           css: {
@@ -90,6 +93,11 @@ module.exports = {
           },
         },
       }),
+    },
+  },
+  variants: {
+    extend: {
+      gridColumn: ['responsive', 'hover', 'focus']
     },
   },
   plugins: [

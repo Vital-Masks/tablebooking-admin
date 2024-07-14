@@ -1,13 +1,8 @@
 import type { Metadata } from 'next';
 import { Nunito } from 'next/font/google';
 
-import Sidebar from '@/components/Layouts/Sidebar';
-import Header from '@/components/Layouts/Header';
-import { MantineProvider } from '@mantine/core';
-
-import '@mantine/core/styles.layer.css';
-import 'mantine-datatable/styles.layer.css';
 import './globals.css';
+import Provider from '@/context/Provider';
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -26,21 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={nunito.className}>
-        <div className="main-section relative font-nunito text-sm font-normal antialiased">
-          <div className="relative">
-            <div className={`main-container min-h-screen text-black`}>
-              <Sidebar />
-              <div className="flex flex-col min-h-screen main-content">
-                <Header />
-                <div className={`animate__animated p-6 flex-1`}>
-                  <MantineProvider>{children}</MantineProvider>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </body>
+      <Provider>
+        <body className={nunito.className}>{children}</body>
+      </Provider>
     </html>
   );
 }

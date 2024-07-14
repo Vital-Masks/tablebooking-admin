@@ -1,4 +1,5 @@
 @import '../styles/datatables.css';
+@import '../styles/select2.css';
 
 @tailwind base;
 @tailwind components;
@@ -749,3 +750,4 @@ pre.hljs {
 .swal2-container .swal2-popup.swal2-toast.color-success {
     @apply bg-success;
 }
+
