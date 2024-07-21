@@ -41,6 +41,7 @@ export default function GeneralDetails() {
     try {
       if (restaurantId) {
         await updateRestaurantGeneral(restaurantId, data);
+        fetchGeneralDetails(restaurantId);
       } else {
         await createRestaurantGeneral(data);
       }

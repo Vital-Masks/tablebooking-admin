@@ -1,5 +1,6 @@
 import { Field, Form, Formik } from 'formik';
 import { IconPhoto, IconXCircle } from '@/components/Icons';
+import IconLoading from '@/components/Icons/IconLoading';
 
 const options = [
   { value: 'orange', label: 'Orange' },
@@ -94,7 +95,12 @@ const FormComponent = ({
                 type="submit"
                 className="btn btn-primary !mt-6 shadow-none"
               >
-                Submit
+                <IconLoading
+                  className={`w-4 h-4 me-3 transition-opacity duration-300 animate-spin  ${
+                    isSubmitting ? 'opacity-100 inline' : 'opacity-0 hidden'
+                  }`}
+                />
+                <span>{isSubmitting ? 'Submitting...' : 'Submit'}</span>
               </button>
             </Form>
           )}

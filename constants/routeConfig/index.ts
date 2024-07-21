@@ -32,11 +32,11 @@ export const menuItems = [
     title: 'Restaurant',
     Icon: IconChefHat,
     childItems: [
-      {
-        id: 'restaurant1',
-        route: ROUTE_RESTAURANTS,
-        title: 'Restaurant 1',
-      },
+      // {
+      //   id: 'restaurant1',
+      //   route: ROUTE_RESTAURANTS,
+      //   title: 'Restaurant 1',
+      // },
     ],
     route: ROUTE_RESTAURANTS,
   },
