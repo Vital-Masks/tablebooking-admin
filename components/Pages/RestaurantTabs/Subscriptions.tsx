@@ -1,5 +1,5 @@
 'use client';
-import { formatPriceInLKR } from '@/utils/localize.';
+import { formatPriceInLKR } from '@/lib/utils';
 import React, { useState } from 'react';
 
 const Subscriptions = () => {

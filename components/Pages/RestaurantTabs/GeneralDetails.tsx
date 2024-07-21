@@ -1,46 +1,96 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 import FormComponent from '@/components/Common/Form';
-import { generalFormField, generalFormSchema, generalImageFormField, generalImageFormSchema } from '@/constants/FormsDataJs/GeneralDetailsForm';
+import {
+  generalFormField,
+  generalFormSchema,
+  generalImageFormField,
+  generalImageFormSchema,
+} from '@/constants/FormsDataJs/GeneralDetailsForm';
+import {
+  createRestaurantGeneral,
+  getRestaurantGeneral,
+  updateRestaurantGeneral,
+} from '@/lib/actions/restaurant.actions';
+import { handleError, returnCommonObject } from '@/lib/utils';
 
 export default function GeneralDetails() {
+  const pathname = usePathname();
+  const [restaurantId, setRestaurantId] = useState<string | null>(null);
   const [initialValues, setInitialValues] = useState({
     restaurantName: '',
     restaurantType: '',
-    contactNumber: '',
-    whatsappNumber: '',
+    contactNo: '',
+    whatsappNo: '',
     email: '',
     website: '',
     address: '',
     addressEmbedURL: '',
     description: '',
-    diningStyle: '',
+    dinningStyle: '',
     dressCode: '',
     paymentOptions: '',
     timeZone: '',
     availabilityStatus: '',
-    promoted: '',
-    coverUpload: '',
+    isPromoted: false,
   });
+
+  const onSubmit = async (data: CreateRestaurantGeneralParams) => {
+    try {
+      if (restaurantId) {
+        await updateRestaurantGeneral(restaurantId, data);
+      } else {
+        await createRestaurantGeneral(data);
+      }
+    } catch (error) {
+      handleError(
+        'An error occurred while submitting the restaurant (general) form:',
+        error
+      );
+    }
+  };
+
+  const fetchGeneralDetails = async (restaurantId: string) => {
+    try {
+      const response = await getRestaurantGeneral(restaurantId);
+      if (response) {
+        const data = returnCommonObject(initialValues, response);
+        setInitialValues(data);
+        setRestaurantId(response._id);
+      }
+    } catch (error) {
+      handleError(
+        'An error occurred while rendering the restaurant (general) details:',
+        error
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (pathname.split('/')[3] !== 'create') {
+      fetchGeneralDetails(pathname.split('/')[3]);
+    }
+  }, [pathname]);
 
   return (
     <main>
       <div>
-        
         <div className="grid grid-cols-3 items-start gap-5">
-        <div className="col-span-2">
+          <div className="col-span-2">
             <FormComponent
               fields={generalFormField}
-              initialValues={initialValues}
               validationSchema={generalFormSchema}
-            />
-            </div>
-            <FormComponent
-              fields={generalImageFormField}
               initialValues={initialValues}
-              validationSchema={generalImageFormSchema}
+              handleSubmit={onSubmit}
             />
+          </div>
+          <FormComponent
+            fields={generalImageFormField}
+            initialValues={initialValues}
+            validationSchema={generalImageFormSchema}
+          />
         </div>
       </div>
     </main>

@@ -1,7 +1,7 @@
 import GeneralDetails from './GeneralDetails';
-import CousinMenu from './CousinMenu';
+import CuisineMenu from './CuisineMenu';
 import DiningAreas from './DiningAreas';
 import DiningTimings from './DiningTimings';
 import UserRoles from './UserRoles';
 
-export { GeneralDetails, CousinMenu, DiningAreas, DiningTimings, UserRoles };
+export { GeneralDetails, CuisineMenu, DiningAreas, DiningTimings, UserRoles };

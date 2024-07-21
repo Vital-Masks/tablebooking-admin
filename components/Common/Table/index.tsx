@@ -6,7 +6,7 @@ import { IconFilter } from '@/components/Icons';
 import Dropdown from '@/components/Elements/Dropdown';
 import Button from '@/components/Elements/Button';
 
-const Table = ({ columns, rowData, onButtonClick }: any) => {
+const Table = ({ title, columns, rowData, onButtonClick }: any) => {
   const pageSize = 10;
   const initialRecords = rowData.slice(0, pageSize);
   const [page, setPage] = useState(1);
@@ -25,7 +25,8 @@ const Table = ({ columns, rowData, onButtonClick }: any) => {
 
   return (
     <div className="panel h-full flex-1">
-      <div className="flex flex-col justify-between gap-5 mb-5 md:flex-row md:items-center">
+      {title && <p className="mb-2 font-semibold">{title}</p>}
+      <div className="flex flex-col justify-between flex-wrap gap-5 mb-5 md:flex-row md:items-center">
         <div className="flex gap-5">
           <div className="dropdown">
             <Dropdown
@@ -67,8 +68,10 @@ const Table = ({ columns, rowData, onButtonClick }: any) => {
           </div>
         </div>
         {onButtonClick && (
-          <div className='shrink-0'>
-            <Button type="filled" onClick={() => onButtonClick()}>+ Create new</Button>
+          <div className="shrink-0">
+            <Button type="filled" onClick={() => onButtonClick()}>
+              + Create new
+            </Button>
           </div>
         )}
       </div>

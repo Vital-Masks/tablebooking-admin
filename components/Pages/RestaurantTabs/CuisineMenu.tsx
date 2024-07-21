@@ -9,7 +9,7 @@ import {
   foodFormSchema,
 } from '@/constants/FormsDataJs/CuisineForm';
 
-const CousinMenu = () => {
+const CuisineMenu = () => {
   const [initialValues, setInitialValues] = useState({
     foodName: '',
     category: '',
@@ -51,6 +51,8 @@ const CousinMenu = () => {
     },
   ];
 
+  // TODO: Check cuisine
+
   return (
     <main>
       <div>
@@ -82,4 +84,4 @@ const CousinMenu = () => {
   );
 };
 
-export default CousinMenu;
+export default CuisineMenu;

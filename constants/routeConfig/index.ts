@@ -69,17 +69,17 @@ export const menuItems = [
     route: ROUTE_USERROLE,
   },
   {
-    id: 'support',
-    title: 'Support',
-    Icon: IconChat,
-    childItems: [],
-    route: ROUTE_SUPPORT,
-  },
-  {
     id: 'setting',
     title: 'Setting',
     Icon: IconSettings,
     childItems: [],
     route: ROUTE_SETTING,
+  },
+  {
+    id: 'support',
+    title: 'Support',
+    Icon: IconChat,
+    childItems: [],
+    route: ROUTE_SUPPORT,
   },
 ];
