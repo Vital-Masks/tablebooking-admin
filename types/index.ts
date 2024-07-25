@@ -1,7 +1,7 @@
 declare type Status = 'pending' | 'scheduled' | 'cancelled';
 
 declare type Restaurant = {
-  _id: string;
+  _id?: string;
   id: string;
   name: string;
   type: string;
