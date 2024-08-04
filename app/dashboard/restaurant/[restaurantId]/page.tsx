@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { CousinMenu, DiningAreas, DiningTimings, GeneralDetails, UserRoles } from '@/components/Pages/RestaurantTabs';
+import { CuisineMenu, DiningAreas, DiningTimings, GeneralDetails, UserRoles } from '@/components/Pages/RestaurantTabs';
 import Button from '@/components/Elements/Button';
 import Subscriptions from '@/components/Pages/RestaurantTabs/Subscriptions';
 
@@ -15,7 +15,7 @@ const tabs = [
     id: 'cusinMenu',
     name: 'Cuisines & Menu',
     description: 'Update your Cuisine and Menu details here',
-    component: () => <CousinMenu />,
+    component: () => <CuisineMenu />,
   },
   {
     id: 'diningAreas',

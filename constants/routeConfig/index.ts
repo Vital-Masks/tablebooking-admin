@@ -1,4 +1,3 @@
-
 import {
   IconChat,
   IconChefHat,
@@ -7,16 +6,20 @@ import {
   IconSettings,
   IconUserRole,
   IconPayment,
-  IconCustomer
+  IconCustomer,
+  IconShop,
 } from '@/components/Icons';
 
 import {
   ROUTE_DASHBOARD,
   ROUTE_RESERVATIONS,
   ROUTE_RESTAURANTS,
-   ROUTE_PAYMENTS, ROUTE_CUSTOMERS, ROUTE_USERROLE,
-   ROUTE_SETTING,
-   ROUTE_SUPPORT
+  ROUTE_PAYMENTS,
+  ROUTE_CUSTOMERS,
+  ROUTE_USERROLE,
+  ROUTE_SETTING,
+  ROUTE_SUPPORT,
+  ROUTE_HOSPITAL_CHAIN,
 } from '../routes';
 
 export const menuItems = [
@@ -81,5 +84,12 @@ export const menuItems = [
     Icon: IconChat,
     childItems: [],
     route: ROUTE_SUPPORT,
+  },
+  {
+    id: 'hospitalChain',
+    title: 'Hospital Chain',
+    Icon: IconShop,
+    childItems: [],
+    route: ROUTE_HOSPITAL_CHAIN,
   },
 ];

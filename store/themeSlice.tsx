@@ -19,7 +19,7 @@ const themeConfigSlice = createSlice({
     },
 
     setPageTitle(state, { payload }) {
-      document.title = `${payload} | TICKETRAA`;
+      document.title = `${payload} | RESERVED`;
     },
   },
 });

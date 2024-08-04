@@ -56,10 +56,11 @@ export default function GeneralDetails() {
   const fetchGeneralDetails = async (restaurantId: string) => {
     try {
       const response = await getRestaurantGeneral(restaurantId);
+     
       if (response) {
         const data = returnCommonObject(initialValues, response);
         setInitialValues(data);
-        setRestaurantId(response._id);
+        setRestaurantId(response._id ?? null);
       }
     } catch (error) {
       handleError(
@@ -80,6 +81,9 @@ export default function GeneralDetails() {
       <div>
         <div className="grid grid-cols-3 items-start gap-5">
           <div className="col-span-2">
+            <div className='pt-2 pb-4 border-b'>
+              hello
+            </div>
             <FormComponent
               fields={generalFormField}
               validationSchema={generalFormSchema}

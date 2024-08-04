@@ -31,3 +31,27 @@ declare type CreateRestaurantGeneralParams = {
   promoted: string;
   coverUpload: string;
 };
+
+declare type HospitalChain = {
+  _id?: string;
+  id: string;
+  chainName: string;
+  address: string;
+  registrationNumber: string;
+  contactNumber: string;
+  firstName: string;
+  lastName?: string;
+  email: string;
+  mobileNumber?: string;
+};
+
+declare type CreateHospitalChainParams = {
+  chainName: string;
+  address: string;
+  registrationNumber: string;
+  contactNumber: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobileNumber: string;
+};

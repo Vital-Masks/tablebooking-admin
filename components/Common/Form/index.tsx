@@ -12,6 +12,7 @@ interface FormField {
   name: string;
   label?: string;
   type?: string;
+  content?: string;
   fields?: FormField[];
 }
 
@@ -24,9 +25,9 @@ const FormComponent = ({
   closeForm,
 }: any) => {
   return (
-    <div className="panel">
+    <div className="panel shadow-none">
       <div className="mb-5 flex items-start justify-between">
-        <h5 className="text-lg font-semibold dark:text-white-light">{title}</h5>
+        <h5 className="text-lg font-semibold">{title}</h5>
         {closeForm && (
           <button onClick={() => closeForm()}>
             <IconXCircle />
@@ -80,6 +81,8 @@ const FormComponent = ({
                           setFieldValue={setFieldValue}
                         />
                       ))
+                    ) : field.type === 'header' ? (
+                      <p key={field.id} className='text-md font-bold mt-2 border-t pt-3'>{field.content}</p>
                     ) : (
                       <RenderField
                         key={field.id}
