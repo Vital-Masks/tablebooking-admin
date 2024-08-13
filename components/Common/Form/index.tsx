@@ -14,6 +14,7 @@ interface FormField {
   type?: string;
   content?: string;
   fields?: FormField[];
+  options?: [{ value: string; label: string }];
 }
 
 const FormComponent = ({
@@ -82,7 +83,12 @@ const FormComponent = ({
                         />
                       ))
                     ) : field.type === 'header' ? (
-                      <p key={field.id} className='text-md font-bold mt-2 border-t pt-3'>{field.content}</p>
+                      <p
+                        key={field.id}
+                        className="text-md font-bold mt-2 border-t pt-3"
+                      >
+                        {field.content}
+                      </p>
                     ) : (
                       <RenderField
                         key={field.id}
@@ -132,11 +138,17 @@ const RenderField: React.FC<RenderFieldProps> = ({
 
           <Field name={field.name} as="select" className="form-input">
             <option key="0">Select</option>
-            {options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            {field.options
+              ? field.options?.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))
+              : options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
           </Field>
 
           <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>

@@ -37,14 +37,25 @@ export const generalFormField = [
       },
     ],
   },
-  // {
-  //   id: 'grid3',
-  //   name: 'grid',
-  //   fields: [
-  //     { id: 'registerationNumber', name: 'registerationNumber', label: 'Registeration Number', type: 'text' },
-  //     { id: 'hospitalChain', name: 'hospitalChain', label: 'Hospital Chain', type: 'select' },
-  //   ],
-  // },
+  {
+    id: 'grid3',
+    name: 'grid',
+    fields: [
+      {
+        id: 'registerationNumber',
+        name: 'registerationNumber',
+        label: 'Registeration Number',
+        type: 'text',
+      },
+      {
+        id: 'hospitalityChainId',
+        name: 'hospitalityChainId',
+        label: 'Hospital Chain',
+        type: 'select',
+        options: [],
+      },
+    ],
+  },
   {
     id: 'grid4',
     name: 'grid',
@@ -121,8 +132,8 @@ export const generalFormSchema = Yup.object().shape({
     .max(15, 'Max characters 15 only allowed')
     .required('This field cannot be empty'),
   whatsappNo: Yup.string().max(15, 'Max characters 15 only allowed'),
-  // registerationNumber: Yup.string().max(15, 'Max characters 15 only allowed'),
-  // hospitalChain: Yup.string().max(15, 'Max characters 15 only allowed'),
+  registerationNumber: Yup.string().max(15, 'Max characters 15 only allowed'),
+  hospitalityChainId: Yup.string(),
   email: Yup.string()
     .email('Invalid email format')
     .max(255, 'Max characters 255 only allowed')

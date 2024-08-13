@@ -1,85 +1,76 @@
-'use client';
 import { useState } from 'react';
-
+import CuisineTable from './CuisineMenu/CuisineTable';
+import FormSlider from '@/components/Common/Form/FormSlider';
 import FormComponent from '@/components/Common/Form';
-import Table from '@/components/Common/Table';
-import { IconEye } from '@/components/Icons';
 import {
   foodFormField,
   foodFormSchema,
 } from '@/constants/FormsDataJs/CuisineForm';
+import {  useSearchParams } from 'next/navigation';
+import { createRestaurantCuisineMenu } from '@/lib/actions/restaurant.actions';
+import { handleError } from '@/lib/utils';
 
 const CuisineMenu = () => {
+  const searchParam = useSearchParams();
+  const restaurantId = searchParam.get('restaurantId');
+  const hospitalityChainId = searchParam.get('hospitalityChainId');
+  const [isCreateForm, setIsCreateForm] = useState(false);
   const [initialValues, setInitialValues] = useState({
     foodName: '',
     category: '',
     price: '',
   });
+  
 
-  const [isCreateForm, setIsCreateForm] = useState(false);
+  const onSubmit = async (data: CreateCuisineMenuParams) => {
+    try {
+        if(hospitalityChainId && restaurantId){ 
+          data['hospitalityChainId'] = hospitalityChainId;
+          data['restaurantId'] = restaurantId;
+          await createRestaurantCuisineMenu(data);
+          setIsCreateForm(false)
+        }
 
-  const rowData = [
-    {
-      id: 1,
-      foodName: 'Cheese burger',
-      category: 'American',
-      price: '2500 LKR',
-    },
-    {
-      id: 2,
-      foodName: 'Fries',
-      category: 'American',
-      price: '1500 LKR',
-    },
-  ];
 
-  const columns = [
-    { accessor: 'foodName', title: 'Food Name' },
-    { accessor: 'category', title: 'Category' },
-    { accessor: 'price', title: 'Price' },
-    {
-      accessor: 'action',
-      title: '',
-      titleClassName: '!text-center',
-      render: () => (
-        <div className="flex items-center gap-4 mx-auto w-max">
-          <button onClick={() => setIsCreateForm(!isCreateForm)}>
-            <IconEye />
-          </button>
-        </div>
-      ),
-    },
-  ];
+      // if (hospitalityChainId && restaurantId) {
+      //   await updateRestaurantGeneral(restaurantId, data);
+      // } else {
+      
+        // data['hospitalityChainId'] = hospitalityChainId ?? undefined;
+        // data['restaurantId'] = restaurantId ?? undefined;
+
+        // const response = await createRestaurantCuisineMenu(data);
+
+        // if (response?.hospitalityChainId?._id && response?._id) {
+        //   params.set('hospitalityChainId', response?.hospitalityChainId?._id);
+        //   params.set('restaurantId', response?._id);
+        //   replace(`${pathname}?${params.toString()}`);
+        //   fetchGeneralDetails(response?.hospitalityChainId?._id, response?._id);
+        // }
+      // }
+    } catch (error) {
+      handleError(
+        'An error occurred while submitting the restaurant (general) form:',
+        error
+      );
+    }
+  };
 
   // TODO: Check cuisine
 
   return (
     <main>
-      <div>
-        <div className="grid grid-cols-5 items-start gap-5">
-          <div
-            className={`${
-              isCreateForm ? 'col-span-3' : 'col-span-5'
-            } transition-col-span duration-300`}
-          >
-            <Table
-              columns={columns}
-              rowData={rowData}
-              onButtonClick={() => setIsCreateForm(!isCreateForm)}
-            />
-          </div>
-          {isCreateForm && (
-            <div className="col-span-2">
-              <FormComponent
-                title="Edit Menu"
-                fields={foodFormField}
-                initialValues={initialValues}
-                validationSchema={foodFormSchema}
-              />
-            </div>
-          )}
-        </div>
-      </div>
+      <CuisineTable setIsCreateForm={setIsCreateForm} />
+      <FormSlider isOpen={isCreateForm}>
+        <FormComponent
+          title="Create cuisine menu"
+          fields={foodFormField}
+          initialValues={initialValues}
+          validationSchema={foodFormSchema}
+          closeForm={() => setIsCreateForm(false)}
+          handleSubmit={onSubmit}
+        />
+      </FormSlider>
     </main>
   );
 };

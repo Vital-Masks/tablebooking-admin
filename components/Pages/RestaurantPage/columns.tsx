@@ -22,9 +22,11 @@ export const columns = [
     accessor: 'action',
     title: '',
     titleClassName: '!text-center',
-    render: ({ id }: any) => (
+    render: ({ id, hospitalityChainId }: any) => (
       <div className="flex items-center gap-4 mx-auto w-max">
-        <Link href={`${ROUTE_RESTAURANTS}/${id}/general-detail`}>
+        <Link
+          href={`${ROUTE_RESTAURANTS}/general-detail?restaurantId=${id}&hospitalityChainId=${hospitalityChainId}`}
+        >
           <IconEye />
         </Link>
       </div>

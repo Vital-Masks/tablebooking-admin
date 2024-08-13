@@ -11,6 +11,7 @@ declare type Restaurant = {
   subscription: string;
   availability: string;
   createdOn: string;
+  hospitalityChainId?: string;
 };
 
 declare type CreateRestaurantGeneralParams = {
@@ -30,6 +31,7 @@ declare type CreateRestaurantGeneralParams = {
   availabilityStatus: Status;
   promoted: string;
   coverUpload: string;
+  hospitalityChainId?: string;
 };
 
 declare type HospitalChain = {
@@ -54,4 +56,22 @@ declare type CreateHospitalChainParams = {
   lastName: string;
   email: string;
   mobileNumber: string;
+};
+
+declare type CuisineMenu = {
+  _id?: string;
+  id: string;
+  foodName: string;
+  category: string;
+  price: string;
+};
+
+declare type CreateCuisineMenuParams = {
+  foodName: string;
+  category: string;
+  price: string;
+  description: string;
+  cuisine: string;
+  hospitalityChainId?: string;
+  restaurantId?: string;
 };

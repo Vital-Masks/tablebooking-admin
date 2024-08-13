@@ -11,7 +11,7 @@ const RestaurantPage = async () => {
     },
     button2: {
       title: 'create new',
-      action: ROUTE_RESTAURANTS + '/create/general-detail'
+      action: ROUTE_RESTAURANTS + '/general-detail'
     }
   }
 

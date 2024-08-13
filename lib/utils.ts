@@ -36,3 +36,19 @@ export const returnCommonObject = (existingObject: any, currentObject: any) => {
 
   return commonObject;
 };
+
+export const findField = (formFields: any, findString: string) => {
+  for (const fieldGroup of formFields) {
+    if (Array.isArray(fieldGroup.fields)) {
+      const field = fieldGroup.fields.find(
+        (field: any) => field.id === findString
+      );
+
+      if (field) {
+        return field;
+      }
+    }
+  }
+
+  return null;
+};

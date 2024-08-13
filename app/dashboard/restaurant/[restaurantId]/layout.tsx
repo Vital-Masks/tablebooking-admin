@@ -1,5 +1,5 @@
-import Button from '@/components/Elements/Button';
 import RestaurantSideNav from '@/components/Pages/RestaurantPage/RestaurantSideNav';
+import RestaurantProvider from '@/context/RestaurantProvider';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -14,15 +14,12 @@ export default function DashboardRootLayout({
 }>) {
   return (
     <div className="relative flex h-full sm:h-[calc(100vh_-_100px)]">
-      <RestaurantSideNav />
-
-      <div className="panel rounded-l-none h-full flex-1 overflow-x-hidden p-0">
-        <div className="flex h-full flex-col">
-          <div className="table-responsive min-h-[400px] grow overflow-y-auto sm:min-h-[300px] p-5">
-            {children}
-          </div>
+      <RestaurantProvider>
+        <RestaurantSideNav />
+        <div className="panel rounded-l-none h-full flex-1 overflow-x-hidden p-0">
+          <div className="flex h-full flex-col">{children}</div>
         </div>
-      </div>
+      </RestaurantProvider>
     </div>
   );
 }

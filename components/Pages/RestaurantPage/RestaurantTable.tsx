@@ -5,7 +5,6 @@ import { getRestaurantsList } from '@/lib/actions/restaurant.actions';
 const RestaurantTable = async () => {
   const rowData: Restaurant[] = [];
   const restaurants = await getRestaurantsList();
-
   restaurants?.map((res: any) => {
     rowData.push({
       id: res._id,
@@ -17,6 +16,7 @@ const RestaurantTable = async () => {
       subscription: 'Free plan',
       availability: res.availabilityStatus,
       createdOn: res.created_at,
+      hospitalityChainId: res.hospitalityChainId?._id,
     });
   });
 

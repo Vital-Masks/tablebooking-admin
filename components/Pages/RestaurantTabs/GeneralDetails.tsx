@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 import FormComponent from '@/components/Common/Form';
 import {
@@ -14,11 +14,18 @@ import {
   getRestaurantGeneral,
   updateRestaurantGeneral,
 } from '@/lib/actions/restaurant.actions';
-import { handleError, returnCommonObject } from '@/lib/utils';
+import { findField, handleError, returnCommonObject } from '@/lib/utils';
+import { getHospitalChainList } from '@/lib/actions/hospitalChain.action';
 
 export default function GeneralDetails() {
+  const searchParam = useSearchParams();
   const pathname = usePathname();
-  const [restaurantId, setRestaurantId] = useState<string | null>(null);
+  const { replace } = useRouter();
+  const params = new URLSearchParams(searchParam);
+  const restaurantId = searchParam.get('restaurantId');
+  const hospitalityChainId = searchParam.get('hospitalityChainId');
+
+  const [hospitalityChains, setHospitalityChains] = useState<any>([]);
   const [initialValues, setInitialValues] = useState({
     restaurantName: '',
     restaurantType: '',
@@ -35,15 +42,27 @@ export default function GeneralDetails() {
     timeZone: '',
     availabilityStatus: '',
     isPromoted: false,
+    registerationNumber: '',
   });
+
+  const fetchHospitalityChain = async () => {
+    const hospitalityChains = await getHospitalChainList();
+    setHospitalityChains(hospitalityChains);
+  };
 
   const onSubmit = async (data: CreateRestaurantGeneralParams) => {
     try {
-      if (restaurantId) {
+      if (hospitalityChainId && restaurantId) {
         await updateRestaurantGeneral(restaurantId, data);
-        fetchGeneralDetails(restaurantId);
       } else {
-        await createRestaurantGeneral(data);
+        const response: any = await createRestaurantGeneral(data);
+
+        if (response?.hospitalityChainId?._id && response?._id) {
+          params.set('hospitalityChainId', response?.hospitalityChainId?._id);
+          params.set('restaurantId', response?._id);
+          replace(`${pathname}?${params.toString()}`);
+          fetchGeneralDetails(response?.hospitalityChainId?._id, response?._id);
+        }
       }
     } catch (error) {
       handleError(
@@ -53,14 +72,22 @@ export default function GeneralDetails() {
     }
   };
 
-  const fetchGeneralDetails = async (restaurantId: string) => {
+  const fetchGeneralDetails = async (
+    hospitalityChainId: string,
+    restaurantId: string
+  ) => {
     try {
-      const response = await getRestaurantGeneral(restaurantId);
-     
+      const response: any = await getRestaurantGeneral(
+        hospitalityChainId,
+        restaurantId
+      );
+
       if (response) {
         const data = returnCommonObject(initialValues, response);
+        data['registerationNumber'] =
+          response?.hospitalityChainId?.registrationNumber;
+        data['hospitalityChainId'] = response?.hospitalityChainId?._id;
         setInitialValues(data);
-        setRestaurantId(response._id ?? null);
       }
     } catch (error) {
       handleError(
@@ -71,19 +98,29 @@ export default function GeneralDetails() {
   };
 
   useEffect(() => {
-    if (pathname.split('/')[3] !== 'create') {
-      fetchGeneralDetails(pathname.split('/')[3]);
+    if (hospitalityChainId && restaurantId) {
+      fetchGeneralDetails(hospitalityChainId, restaurantId);
     }
-  }, [pathname]);
+
+    fetchHospitalityChain();
+  }, [hospitalityChainId, restaurantId]);
+
+  useEffect(() => {
+    if (hospitalityChains) {
+      const options = hospitalityChains.map((chain: any) => ({
+        label: chain.chainName,
+        value: chain._id,
+      }));
+
+      findField(generalFormField, 'hospitalityChainId')['options'] = options;
+    }
+  }, [hospitalityChains]);
 
   return (
     <main>
       <div>
         <div className="grid grid-cols-3 items-start gap-5">
           <div className="col-span-2">
-            <div className='pt-2 pb-4 border-b'>
-              hello
-            </div>
             <FormComponent
               fields={generalFormField}
               validationSchema={generalFormSchema}
