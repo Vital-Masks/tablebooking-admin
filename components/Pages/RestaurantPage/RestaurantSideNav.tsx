@@ -1,14 +1,10 @@
 'use client';
-import { IRootState } from '@/store';
-import { setTab } from '@/store/restaurantSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { usePathname } from 'next/navigation';
 import { tabs } from './tabs';
+import Link from 'next/link';
 
 const RestaurantSideNav = () => {
-  const dispatch = useDispatch();
-  const tabName = useSelector(
-    (state: IRootState) => state.restaurantConfig.tab
-  );
+  const pathname = usePathname()
 
   return (
     <div
@@ -18,12 +14,12 @@ const RestaurantSideNav = () => {
         <div className="relative h-full grow -mr-3.5 pr-3.5">
           <div className="space-y-1">
             {tabs.map((tab) => (
-              <button
+              <Link
                 key={tab.id}
-                onClick={() => dispatch(setTab(tab.id))}
+                href={tab.id}
                 type="button"
                 className={`flex h-10 w-full items-center justify-between rounded-md p-2 font-medium hover:bg-white-dark/10 hover:text-primary ${
-                  tabName === tab.id
+                  pathname.split('/')[5] === tab.id
                     ? 'bg-gray-100 text-primary dark:bg-[#181F32] dark:text-primary'
                     : ''
                 }`}
@@ -31,7 +27,7 @@ const RestaurantSideNav = () => {
                 <div className="flex items-center">
                   <div className="ml-3">{tab.name}</div>
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { UserRoles } from '@/components/Pages/RestaurantTabs';
+import { UserRoles } from '@/components/Pages/RestaurantPage/RestaurantTabs';
 
 const UserRolePage = () => {
   return <UserRoles />;

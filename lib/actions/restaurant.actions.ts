@@ -62,9 +62,6 @@ export const updateRestaurantGeneral = async (
   return null;
 };
 
-
-
-
 // ** CUISINE & MENU ** //
 
 // GET RESTAURANT CUISINE MENU
@@ -80,12 +77,24 @@ export const getRestaurantCuisineMenu = async (
   );
 };
 
+export const getRestaurantCuisineMenuById = async (
+  hospitalityChainId: string,
+  restaurantId: string,
+  cuisineMenuId: string
+) => {
+  return await fetcher<CuisineMenu>(
+    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/cuisineMenu/${cuisineMenuId}`,
+    {
+      method: 'GET',
+    }
+  );
+};
 
 //  CREATE RESTAURANT CUISINE MENU
 export const createRestaurantCuisineMenu = async (
   general: CreateCuisineMenuParams
-): Promise<Restaurant | null> => {
-  const newRestaurant = await fetcher<Restaurant>(
+): Promise<CuisineMenu | null> => {
+  const newRestaurant = await fetcher<CuisineMenu>(
     `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/cuisineMenu`,
     {
       method: 'POST',
@@ -94,8 +103,68 @@ export const createRestaurantCuisineMenu = async (
   );
 
   if (newRestaurant) {
-    revalidate('/restaurant/general-detail');
+    revalidate(
+      `ROUTE_RESTAURANTS/${general?.hospitalityChainId}/${general?.restaurantId}/cuisine-menu`
+    );
     return parseStringify(newRestaurant);
+  }
+  return null;
+};
+
+//  UPDATE RESTAURANT CUISINE MENU
+export const updateRestaurantCuisineMenu = async (
+  id: string,
+  general: CreateCuisineMenuParams
+): Promise<Restaurant | null> => {
+  const newRestaurant = await fetcher<Restaurant>(
+    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/cuisineMenu/${id}`,
+    {
+      method: 'PUT',
+      body: general,
+    }
+  );
+
+  if (newRestaurant) {
+    revalidate(
+      `ROUTE_RESTAURANTS/${general?.hospitalityChainId}/${general?.restaurantId}/cuisine-menu`
+    );
+    return parseStringify(newRestaurant);
+  }
+  return null;
+};
+
+// ** DINING AREAS ** //
+
+// GET RESTAURANT CUISINE MENU
+export const getRestaurantDiningAreas = async (
+  hospitalityChainId: string,
+  restaurantId: string
+) => {
+  return await fetcher<DiningArea[]>(
+    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/diningArea/getAllDiningAreaForRestaurant`,
+    {
+      method: 'GET',
+    }
+  );
+};
+
+//  CREATE RESTAURANT CUISINE MENU
+export const createRestaurantDiningArea = async (
+  general: CreateDiningParams
+): Promise<DiningArea | null> => {
+  const newDining = await fetcher<Restaurant>(
+    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/diningArea`,
+    {
+      method: 'POST',
+      body: general,
+    }
+  );
+
+  if (newDining) {
+    revalidate(
+      `ROUTE_RESTAURANTS/${general?.hospitalityChainId}/${general?.restaurantId}/dining-areas`
+    );
+    return parseStringify(newDining);
   }
   return null;
 };

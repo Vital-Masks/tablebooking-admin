@@ -1,4 +1,4 @@
-import Subscriptions from '@/components/Pages/RestaurantTabs/Subscriptions';
+import Subscriptions from '@/components/Pages/RestaurantPage/RestaurantTabs/Subscriptions';
 
 const SubscriptionPage = () => {
   return <Subscriptions />;

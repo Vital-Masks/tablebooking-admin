@@ -7,13 +7,13 @@ const RestaurantPage = async () => {
     title: 'Restaurants',
     button1: {
       title: 'export',
-      action: ''
+      action: '',
     },
     button2: {
       title: 'create new',
-      action: ROUTE_RESTAURANTS + '/general-detail'
-    }
-  }
+      action: ROUTE_RESTAURANTS + '/c/n/general-detail',
+    },
+  };
 
   return (
     <main>

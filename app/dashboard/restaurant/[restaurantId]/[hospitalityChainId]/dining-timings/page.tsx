@@ -1,4 +1,4 @@
-import { DiningTimings } from '@/components/Pages/RestaurantTabs';
+import { DiningTimings } from '@/components/Pages/RestaurantPage/RestaurantTabs';
 
 const DiningTimingPage = () => {
   return <DiningTimings />;

@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-
+import { useRouter } from 'next/navigation';
 import FormComponent from '@/components/Common/Form';
 import {
   generalFormField,
@@ -15,17 +14,12 @@ import {
   updateRestaurantGeneral,
 } from '@/lib/actions/restaurant.actions';
 import { findField, handleError, returnCommonObject } from '@/lib/utils';
-import { getHospitalChainList } from '@/lib/actions/hospitalChain.action';
 
-export default function GeneralDetails() {
-  const searchParam = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-  const params = new URLSearchParams(searchParam);
-  const restaurantId = searchParam.get('restaurantId');
-  const hospitalityChainId = searchParam.get('hospitalityChainId');
+export default function GeneralDetails({ hospitalityChains, params }: any) {
+  const router = useRouter()
 
-  const [hospitalityChains, setHospitalityChains] = useState<any>([]);
+  const { restaurantId, hospitalityChainId } = params;
+
   const [initialValues, setInitialValues] = useState({
     restaurantName: '',
     restaurantType: '',
@@ -45,22 +39,15 @@ export default function GeneralDetails() {
     registerationNumber: '',
   });
 
-  const fetchHospitalityChain = async () => {
-    const hospitalityChains = await getHospitalChainList();
-    setHospitalityChains(hospitalityChains);
-  };
-
   const onSubmit = async (data: CreateRestaurantGeneralParams) => {
     try {
-      if (hospitalityChainId && restaurantId) {
+      if (hospitalityChainId !== 'n' && restaurantId !== 'c') {
         await updateRestaurantGeneral(restaurantId, data);
       } else {
         const response: any = await createRestaurantGeneral(data);
 
         if (response?.hospitalityChainId?._id && response?._id) {
-          params.set('hospitalityChainId', response?.hospitalityChainId?._id);
-          params.set('restaurantId', response?._id);
-          replace(`${pathname}?${params.toString()}`);
+          router.push(`/${response?._id}/${response?.hospitalityChainId?._id}/general-detail`)
           fetchGeneralDetails(response?.hospitalityChainId?._id, response?._id);
         }
       }
@@ -101,8 +88,6 @@ export default function GeneralDetails() {
     if (hospitalityChainId && restaurantId) {
       fetchGeneralDetails(hospitalityChainId, restaurantId);
     }
-
-    fetchHospitalityChain();
   }, [hospitalityChainId, restaurantId]);
 
   useEffect(() => {

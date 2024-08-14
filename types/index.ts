@@ -75,3 +75,19 @@ declare type CreateCuisineMenuParams = {
   hospitalityChainId?: string;
   restaurantId?: string;
 };
+
+declare type DiningArea = {
+  _id?: string;
+  id: string;
+  sectionName: string;
+  MaxSeatCount: string;
+  SeatingAreaType: string;
+};
+
+declare type CreateDiningParams = {
+  sectionName: string;
+  MaxSeatCount: string;
+  SeatingAreaType: string;
+  hospitalityChainId?: string;
+  restaurantId?: string;
+};
