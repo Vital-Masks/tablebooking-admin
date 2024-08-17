@@ -1,11 +1,11 @@
 "use client";
-import FormComponent from "@/components/Common/Form";
+import FormComponent from "@/components/Common/form";
 import FormSlider from "@/components/Common/Form/FormSlider";
 import Button from "@/components/Elements/Button";
 import {
-  seatingFormField,
-  seatingFormSchema,
-} from "@/constants/FormsDataJs/DiningAreaForm";
+  userroleFormField,
+  userroleFormSchema,
+} from "@/constants/FormsDataJs/UserRoleForm";
 import {
   createRestaurantDiningArea,
   getRestaurantDiningAreaById,
@@ -16,7 +16,7 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 import React, { useEffect, useMemo, useState } from "react";
 
-const DiningAreaForm = ({ params }: any) => {
+const UserRoleForm = ({ params }: any) => {
   const searchParams = useSearchParams();
   const diningId = searchParams.get("edit");
   const router = useRouter();
@@ -103,9 +103,9 @@ const DiningAreaForm = ({ params }: any) => {
       <FormSlider isOpen={isFormOpen}>
         <FormComponent
           title="Create dining area"
-          fields={seatingFormField}
+          fields={userroleFormField}
           initialValues={initialValues}
-          validationSchema={seatingFormSchema}
+          validationSchema={userroleFormSchema}
           closeForm={closeForm}
           handleSubmit={onSubmit}
         />
@@ -114,4 +114,4 @@ const DiningAreaForm = ({ params }: any) => {
   );
 };
 
-export default DiningAreaForm;
+export default UserRoleForm;

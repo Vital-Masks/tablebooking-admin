@@ -34,18 +34,18 @@ const MenuItem: React.FC<MenuItemProps> = ({
     setCurrentMenu((oldValue) => (oldValue === value ? '' : value));
   };
 
-  const isActive = (path: string) => (path === pathname ? true : false);
+  const isActive = (path: string) => (path === `/${pathname.split('/').splice(1, 2).join('/')}` ? true : false);
 
   return (
     <>
       <Link
         href={route}
-        className={`nav-link group w-full ${isActive(route) ? 'active' : ''}`}
+        className={`nav-link group w-full ${isActive(route) && 'active'}`}
         onClick={() => toggleMenu(id)}
       >
         <div className="flex items-center">
           {typeof Icon === 'function' && (
-            <Icon className="shrink-0 group-hover:!text-primary" />
+            <Icon className={`shrink-0 group-hover:!text-primary ${isActive(route) && '!text-primary'} `} />
           )}
           <span className="text-black pl-3">{title}</span>
         </div>

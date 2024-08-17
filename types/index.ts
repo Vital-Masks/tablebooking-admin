@@ -91,3 +91,14 @@ declare type CreateDiningParams = {
   hospitalityChainId?: string;
   restaurantId?: string;
 };
+
+declare type UserRole = {
+  _id?: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  email: string;
+  gender: string;
+  phoneNumber: string;
+};

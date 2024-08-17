@@ -14,8 +14,9 @@ import {
   updateRestaurantGeneral,
 } from '@/lib/actions/restaurant.actions';
 import { findField, handleError, returnCommonObject } from '@/lib/utils';
+import FilePicker from '@/components/Common/Fields/FilePicker';
 
-export default function GeneralDetails({ hospitalityChains, params }: any) {
+export default function GeneralDetailForm({ hospitalityChains, params }: any) {
   const router = useRouter()
 
   const { restaurantId, hospitalityChainId } = params;
@@ -104,8 +105,8 @@ export default function GeneralDetails({ hospitalityChains, params }: any) {
   return (
     <main>
       <div>
-        <div className="grid grid-cols-3 items-start gap-5">
-          <div className="col-span-2">
+        <div className="grid grid-cols-3 items-start">
+          <div className="col-span-2 border-r">
             <FormComponent
               fields={generalFormField}
               validationSchema={generalFormSchema}
@@ -113,11 +114,9 @@ export default function GeneralDetails({ hospitalityChains, params }: any) {
               handleSubmit={onSubmit}
             />
           </div>
-          <FormComponent
-            fields={generalImageFormField}
-            initialValues={initialValues}
-            validationSchema={generalImageFormSchema}
-          />
+          <div className='p-5'>
+            <FilePicker label="Cover photo" name="cover-photo" />
+          </div>
         </div>
       </div>
     </main>

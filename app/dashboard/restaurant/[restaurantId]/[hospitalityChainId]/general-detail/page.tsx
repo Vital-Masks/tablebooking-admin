@@ -1,13 +1,11 @@
-import { GeneralDetails } from '@/components/Pages/RestaurantPage/RestaurantTabs';
+import GeneralDetailForm from '@/components/Pages/RestaurantPage/GeneralDetail/GeneralDetailForm';
 import { getHospitalChainList } from '@/lib/actions/hospitalChain.action';
 
 const GeneralDetailPage = async ({ params }: any) => {
   const hospitalityChains = await getHospitalChainList();
 
   return (
-    <>
-      <GeneralDetails hospitalityChains={hospitalityChains} params={params} />
-    </>
+    <GeneralDetailForm hospitalityChains={hospitalityChains} params={params} />
   )
 };
 

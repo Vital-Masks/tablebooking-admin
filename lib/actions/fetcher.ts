@@ -39,5 +39,5 @@ export async function fetcher<T>(
 }
 
 export function revalidate(route: string) {
-  revalidatePath(route);
+  revalidatePath(route, 'page');
 }

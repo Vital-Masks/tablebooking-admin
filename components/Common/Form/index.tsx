@@ -1,6 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import { IconPhoto, IconXCircle } from '@/components/Icons';
 import IconLoading from '@/components/Icons/IconLoading';
+import FilePicker from '../Fields/FilePicker';
 
 const options = [
   { value: 'orange', label: 'Orange' },
@@ -27,14 +28,14 @@ const FormComponent = ({
 }: any) => {
   return (
     <div className="panel shadow-none">
-      <div className="mb-5 flex items-start justify-between">
-        <h5 className="text-lg font-semibold">{title}</h5>
-        {closeForm && (
+      {title || closeForm &&
+        <div className="mb-5 flex items-start justify-between">
+          <h5 className="text-lg font-semibold">{title}</h5>
           <button onClick={() => closeForm()}>
             <IconXCircle />
           </button>
-        )}
-      </div>
+        </div>
+      }
       <div className="mb-5">
         <Formik
           initialValues={initialValues}
@@ -67,11 +68,10 @@ const FormComponent = ({
                 fields?.map((field: FormField) => (
                   <div
                     key={field.id}
-                    className={`grid ${
-                      field.name === 'grid'
+                    className={`grid ${field.name === 'grid'
                         ? 'grid-cols-2 gap-4'
                         : 'grid-cols-1'
-                    }`}
+                      }`}
                   >
                     {field.name === 'grid' ? (
                       field.fields?.map((subField) => (
@@ -105,9 +105,8 @@ const FormComponent = ({
                 className="btn btn-primary !mt-6 shadow-none"
               >
                 <IconLoading
-                  className={`w-4 h-4 me-3 transition-opacity duration-300 animate-spin  ${
-                    isSubmitting ? 'opacity-100 inline' : 'opacity-0 hidden'
-                  }`}
+                  className={`w-4 h-4 me-3 transition-opacity duration-300 animate-spin  ${isSubmitting ? 'opacity-100 inline' : 'opacity-0 hidden'
+                    }`}
                 />
                 <span>{isSubmitting ? 'Submitting...' : 'Submit'}</span>
               </button>
@@ -140,15 +139,15 @@ const RenderField: React.FC<RenderFieldProps> = ({
             <option key="0">Select</option>
             {field.options
               ? field.options?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))
               : options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
           </Field>
 
           <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
@@ -187,34 +186,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
     case 'file':
       return (
         <div key={field.id} className="col-span-full">
-          <label
-            htmlFor="cover-photo"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Cover photo
-          </label>
-          <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-            <div className="text-center">
-              <IconPhoto
-                aria-hidden="true"
-                className="mx-auto h-7 w-7 text-gray-300"
-              />
-              <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                <label
-                  htmlFor="file-upload"
-                  className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                >
-                  <span>Upload a file</span>
-                  <input
-                    id="file-upload"
-                    name="file-upload"
-                    type="file"
-                    className="sr-only"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
+          <FilePicker />
         </div>
       );
 
