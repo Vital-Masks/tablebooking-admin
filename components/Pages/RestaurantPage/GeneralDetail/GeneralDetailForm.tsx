@@ -5,15 +5,13 @@ import FormComponent from '@/components/Common/Form';
 import {
   generalFormField,
   generalFormSchema,
-  generalImageFormField,
-  generalImageFormSchema,
 } from '@/constants/FormsDataJs/GeneralDetailsForm';
 import {
   createRestaurantGeneral,
   getRestaurantGeneral,
   updateRestaurantGeneral,
 } from '@/lib/actions/restaurant.actions';
-import { findField, handleError, returnCommonObject } from '@/lib/utils';
+import { base64ToBlob, convertImageToBase64, findField, handleError, returnCommonObject } from '@/lib/utils';
 import FilePicker from '@/components/Common/Fields/FilePicker';
 
 export default function GeneralDetailForm({ hospitalityChains, params }: any) {
@@ -39,9 +37,14 @@ export default function GeneralDetailForm({ hospitalityChains, params }: any) {
     isPromoted: false,
     registerationNumber: '',
   });
+  const [coverImage, setCoverImage] = useState<any[]>([])
 
   const onSubmit = async (data: CreateRestaurantGeneralParams) => {
     try {
+      convertImageToBase64(coverImage[0]).then((base64) => {
+        data.images = { "photo": base64}
+      })
+
       if (hospitalityChainId !== 'n' && restaurantId !== 'c') {
         await updateRestaurantGeneral(restaurantId, data);
       } else {
@@ -69,12 +72,13 @@ export default function GeneralDetailForm({ hospitalityChains, params }: any) {
         hospitalityChainId,
         restaurantId
       );
-
+      console.log(">>", response)
       if (response) {
         const data = returnCommonObject(initialValues, response);
         data['registerationNumber'] =
           response?.hospitalityChainId?.registrationNumber;
         data['hospitalityChainId'] = response?.hospitalityChainId?._id;
+        setCoverImage(response.images)
         setInitialValues(data);
       }
     } catch (error) {
@@ -115,7 +119,7 @@ export default function GeneralDetailForm({ hospitalityChains, params }: any) {
             />
           </div>
           <div className='p-5'>
-            <FilePicker label="Cover photo" name="cover-photo" />
+            <FilePicker label="Cover photo" name="cover-photo" files={coverImage} setFiles={(v: any) => setCoverImage(v)} />
           </div>
         </div>
       </div>

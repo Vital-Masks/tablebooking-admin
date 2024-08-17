@@ -12,6 +12,7 @@ declare type Restaurant = {
   availability: string;
   createdOn: string;
   hospitalityChainId?: string;
+  images?: any;
 };
 
 declare type CreateRestaurantGeneralParams = {
@@ -32,6 +33,7 @@ declare type CreateRestaurantGeneralParams = {
   promoted: string;
   coverUpload: string;
   hospitalityChainId?: string;
+  images: any;
 };
 
 declare type HospitalChain = {
