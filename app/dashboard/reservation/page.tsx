@@ -6,13 +6,13 @@ import Table from '@/components/Common/Table';
 import Button from '@/components/Elements/Button';
 import { IconEye, IconTrash } from '@/components/Icons';
 
-import { formatDate } from '@/utils/table';
+import { formatDate } from '@/lib/utils';
 
 import {
     tableReservationFormField,
   tableReservationFormSchema,
 } from '@/constants/FormsDataJs/TableReservationForm';
-import Link from 'next/link';
+
 
 export default function Home() {
   const [initialValues, setInitialValues] = useState({

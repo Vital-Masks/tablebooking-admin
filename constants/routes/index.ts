@@ -7,6 +7,7 @@ export const ROUTE_PAYMENTS = ROUTE_DASHBOARD + '/payment';
 export const ROUTE_USERROLE = ROUTE_DASHBOARD + '/user-role';
 export const ROUTE_SUPPORT = ROUTE_DASHBOARD + '/support';
 export const ROUTE_SETTING = ROUTE_DASHBOARD + '/setting';
+export const ROUTE_HOSPITAL_CHAIN = ROUTE_DASHBOARD + '/hospital-chain';
 export const ROUTE_LOGIN = '/login';
 export const ROUTE_OTP = '/otp';
 

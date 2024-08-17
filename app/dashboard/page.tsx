@@ -6,14 +6,10 @@ import Table from '@/components/Common/Table';
 import Button from '@/components/Elements/Button';
 import { IconEye, IconTrash } from '@/components/Icons';
 
-import { formatDate } from '@/utils/table';
+import { formatDate } from '@/lib/utils';
 
-import {
-  reservationFormField,
-  reservationFormSchema,
-} from '@/constants/FormsDataJs/ReservationFrom';
-import Link from 'next/link';
 import AnalyticsCard from '@/components/Elements/AnalyticsCard';
+import { tableReservationFormField, tableReservationFormSchema } from '@/constants/FormsDataJs/TableReservationForm';
 
 export default function Home() {
   const [isForm, setIsForm] = useState(false);
@@ -109,9 +105,9 @@ export default function Home() {
           {isForm && (
             <FormComponent
               title="Make a reservation"
-              fields={reservationFormField}
+              fields={tableReservationFormField}
               initialValues={initialValues}
-              validationSchema={reservationFormSchema}
+              validationSchema={tableReservationFormSchema}
               handleSubmit={handleSubmit}
             />
           )}
