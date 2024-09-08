@@ -1,5 +1,5 @@
 'use client';
-import FormComponent from '@/components/Common/form';
+import FormComponent from '@/components/Common/Form';
 import FormSlider from '@/components/Common/Form/FormSlider';
 import Button from '@/components/Elements/Button';
 import {
@@ -7,11 +7,8 @@ import {
   userroleFormSchema,
 } from '@/constants/FormsDataJs/UserRoleForm';
 import {
-  createRestaurantDiningArea,
   createUserRoles,
-  getRestaurantDiningAreaById,
   getRestaurantUserRoleById,
-  updateRestaurantDiningArea,
   updateUserRoles,
 } from '@/lib/actions/restaurant.actions';
 import { handleError, returnCommonObject } from '@/lib/utils';
