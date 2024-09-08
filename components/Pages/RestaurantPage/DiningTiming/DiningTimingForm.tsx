@@ -1,38 +1,43 @@
 'use client';
-import FormComponent from '@/components/Common/form';
-import FormSlider from '@/components/Common/Form/FormSlider';
-import Button from '@/components/Elements/Button';
-import {
-  userroleFormField,
-  userroleFormSchema,
-} from '@/constants/FormsDataJs/UserRoleForm';
-import {
-  createRestaurantDiningArea,
-  createUserRoles,
-  getRestaurantDiningAreaById,
-  getRestaurantUserRoleById,
-  updateRestaurantDiningArea,
-  updateUserRoles,
-} from '@/lib/actions/restaurant.actions';
-import { handleError, returnCommonObject } from '@/lib/utils';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import FormComponent from '@/components/Common/Form';
+import FormSlider from '@/components/Common/Form/FormSlider';
+import Button from '@/components/Elements/Button';
 
-const UserRoleForm = ({ params }: any) => {
+import {
+  createDiningTiming,
+  getRestaurantCuisineMenuById,
+  getRestaurantDiningTimingById,
+} from '@/lib/actions/restaurant.actions';
+
+import { handleError, returnCommonObject } from '@/lib/utils';
+import {
+  diningFormField,
+  diningFormSchema,
+} from '@/constants/FormsDataJs/DiningTimingForm';
+
+const DiningTimingForm = ({ params }: any) => {
   const searchParams = useSearchParams();
-  const userRoleId = searchParams.get('edit');
   const router = useRouter();
   const pathname = usePathname();
+  const diningId = searchParams.get('edit');
 
   const defaultInitialValues = useMemo(
     () => ({
-      firstName: '',
-      lastName: '',
-      role: '',
-      email: '',
-      gender: '',
-      phoneNumber: '',
+      diningType: '',
+      diningName: '',
+      description: '',
+      dateType: '',
+      days: ['MONDAY'],
+      dateFrom: '',
+      dateTo: '',
+      timeFrom: '',
+      timeTo: '',
+      availabilityStatus: true,
+      pricePerPerson: '',
+      diningAreas: '',
     }),
     []
   );
@@ -46,15 +51,14 @@ const UserRoleForm = ({ params }: any) => {
     setInitialValues(defaultInitialValues);
   };
 
-  const fetchUserRoles = async () => {
-    if (!userRoleId || !params.hospitalityChainId || !params.restaurantId)
-      return;
+  const fetchDining = async () => {
+    if (!diningId || !params.hospitalityChainId || !params.restaurantId) return;
 
     try {
-      const response = await getRestaurantUserRoleById(
+      const response = await getRestaurantDiningTimingById(
         params.hospitalityChainId,
         params.restaurantId,
-        userRoleId
+        diningId
       );
 
       if (response) {
@@ -70,33 +74,31 @@ const UserRoleForm = ({ params }: any) => {
     }
   };
 
-  const onSubmit = async (data: UserRolesParams) => {
+  const handleSubmit = async (data: CreateDiningParams) => {
     try {
       if (!params.hospitalityChainId || !params.restaurantId) return;
 
       data.hospitalityChainId = params.hospitalityChainId;
       data.restaurantId = params.restaurantId;
 
-      if (userRoleId) {
-        await updateUserRoles(userRoleId, data);
+      if (diningId) {
+        // await updateRestaurantCuisineMenu(fdim, data);
       } else {
-        await createUserRoles(data);
+        await createDiningTiming(data);
       }
-
-      // closeForm();
     } catch (error) {
       handleError(
-        'An error occurred while submitting the restaurant (general) form:',
+        'An error occurred while submitting the dining timing form:',
         error
       );
     }
   };
 
   useEffect(() => {
-    if (userRoleId) {
-      fetchUserRoles();
+    if (diningId) {
+      fetchDining();
     }
-  }, [userRoleId]);
+  }, [diningId]);
 
   return (
     <>
@@ -109,16 +111,16 @@ const UserRoleForm = ({ params }: any) => {
       </Button>
       <FormSlider isOpen={isFormOpen}>
         <FormComponent
-          title="Create dining area"
-          fields={userroleFormField}
+          title="Create cuisine menu"
+          fields={diningFormField}
           initialValues={initialValues}
-          validationSchema={userroleFormSchema}
+          validationSchema={diningFormSchema}
           closeForm={closeForm}
-          handleSubmit={onSubmit}
+          handleSubmit={handleSubmit}
         />
       </FormSlider>
     </>
   );
 };
 
-export default UserRoleForm;
+export default DiningTimingForm;

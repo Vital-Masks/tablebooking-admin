@@ -28,7 +28,7 @@ const FormComponent = ({
 }: any) => {
   return (
     <div className="panel shadow-none">
-      {title || closeForm &&
+      {(title || closeForm) &&
         <div className="mb-5 flex items-start justify-between">
           <h5 className="text-lg font-semibold">{title}</h5>
           <button onClick={() => closeForm()}>
@@ -46,7 +46,7 @@ const FormComponent = ({
           onSubmit={(values, actions) => {
             handleSubmit(values).then(() => {
               actions.setSubmitting(false);
-              actions.resetForm();
+              // actions.resetForm();
             });
           }}
         >
@@ -186,7 +186,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
     case 'file':
       return (
         <div key={field.id} className="col-span-full">
-          <FilePicker />
+          {/* <FilePicker /> */}
         </div>
       );
 

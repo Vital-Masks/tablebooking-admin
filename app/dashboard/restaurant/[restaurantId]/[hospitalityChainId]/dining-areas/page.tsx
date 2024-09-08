@@ -6,7 +6,6 @@ const DiningAreasPage = ({ params }: any) => {
     <div>
       <DiningAreaTable params={params} />
       <DiningAreaForm params={params}/>
-      {/* <DiningAreas /> */}
     </div>
   );
 };

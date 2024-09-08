@@ -53,7 +53,7 @@ export const findField = (formFields: any, findString: string) => {
   return null;
 };
 
-export const convertImageToBase64 = (file: File): Promise<string>  =>{
+export const convertImageToBase64 = (file: Blob): Promise<string>  =>{
   return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);

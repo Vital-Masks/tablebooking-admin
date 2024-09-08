@@ -11,7 +11,7 @@ declare type Restaurant = {
   subscription: string;
   availability: string;
   createdOn: string;
-  hospitalityChainId?: string;
+  hospitalityChainId?: any;
   images?: any;
 };
 
@@ -68,6 +68,23 @@ declare type CuisineMenu = {
   price: string;
 };
 
+declare type DiningTiming = {
+  _id?: string;
+  restaurantId: string;
+  diningType: string;
+  diningName: string;
+  description: string;
+  dateType: string;
+  days: any;
+  dateFrom: string;
+  dateTo: string;
+  timeFrom: string;
+  timeTo: string;
+  availabilityStatus: string;
+  pricePerPerson: string;
+  diningAreas: string;
+};
+
 declare type CreateCuisineMenuParams = {
   foodName: string;
   category: string;
@@ -90,6 +107,17 @@ declare type CreateDiningParams = {
   sectionName: string;
   MaxSeatCount: string;
   SeatingAreaType: string;
+  hospitalityChainId?: string;
+  restaurantId?: string;
+};
+
+declare type UserRolesParams = {
+  firstName: string;
+  lastName: string;
+  role: string;
+  email: string;
+  gender: string;
+  phoneNumber: string;
   hospitalityChainId?: string;
   restaurantId?: string;
 };

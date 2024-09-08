@@ -4,12 +4,12 @@ import { IconEye } from '@/components/Icons';
 import Link from 'next/link';
 
 export const columns = [
-  { accessor: 'firstname', title: 'First Name' },
-  { accessor: 'lastname', title: 'Last Name' },
-  { accessor: 'contactNumber', title: 'Contact No' },
-  { accessor: 'email', title: 'Email Address' },
-  { accessor: 'gender', title: 'Gender' },
-  { accessor: 'role', title: 'Role' },
+  { accessor: 'diningName', title: 'Dining/ Buffet Name' },
+  { accessor: 'dates', title: 'Dates' },
+  { accessor: 'dateRange', title: 'Dates between' },
+  { accessor: 'timeRange', title: 'Time between' },
+  { accessor: 'pricePP', title: 'Price PP' },
+  { accessor: 'availability', title: 'Availability' },
   {
     accessor: 'action',
     title: '',

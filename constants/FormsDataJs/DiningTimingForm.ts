@@ -1,26 +1,40 @@
 import * as Yup from 'yup';
 
 export const diningFormField = [
-  
-{ id: 'diningType', name: 'diningType', label: 'Dining Type', type: 'select' },
-{ id: 'diningName', name: 'diningName', label: 'Dining Name', type: 'text' },
+  {
+    id: 'diningType',
+    name: 'diningType',
+    label: 'Dining Type',
+    type: 'select',
+  },
+  { id: 'diningName', name: 'diningName', label: 'Dining Name', type: 'text' },
   {
     id: 'description',
     name: 'description',
     label: 'Description',
     type: 'textarea',
   },
-      { id: 'dateType', name: 'dateType', label: 'Date Type', type: 'select' },
   {
-    id: 'grid1',
-    name: 'grid',
-    fields: [
-      { id: 'dayFrom', name: 'dayFrom', label: 'Day From', type: 'select' },
-      { id: 'dayTo', name: 'dayTo', label: 'Day To', type: 'select' },
+    id: 'dateType',
+    name: 'dateType',
+    label: 'Date Type',
+    type: 'select',
+    options: [
+      { value: 'custom_ate', label: 'Custom Date' },
+      { value: 'custom_dates', label: 'Custom Dates' },
+      { value: 'custom_days', label: 'Custom Days' },
     ],
   },
+  // {
+  //   id: 'grid1',
+  //   name: 'grid',
+  //   fields: [
+  //     { id: 'dayFrom', name: 'dayFrom', label: 'Day From', type: 'select' },
+  //     { id: 'dayTo', name: 'dayTo', label: 'Day To', type: 'select' },
+  //   ],
+  // },
   {
-    id: 'grid4',
+    id: 'grid2',
     name: 'grid',
     fields: [
       { id: 'dateFrom', name: 'dateFrom', label: 'Date From', type: 'date' },
@@ -28,7 +42,7 @@ export const diningFormField = [
     ],
   },
   {
-    id: 'grid5',
+    id: 'grid3',
     name: 'grid',
     fields: [
       { id: 'timeFrom', name: 'timeFrom', label: 'Time From', type: 'time' },
@@ -36,11 +50,21 @@ export const diningFormField = [
     ],
   },
   {
-    id: 'grid6',
+    id: 'grid4',
     name: 'grid',
     fields: [
-      { id: 'pricePerPerson', name: 'pricePerPerson', label: 'Price Per Person', type: 'number' },
-      { id: 'availabilityStatus', name: 'availabilityStatus', label: 'Availability Status', type: 'select' },
+      {
+        id: 'pricePerPerson',
+        name: 'pricePerPerson',
+        label: 'Price Per Person',
+        type: 'number',
+      },
+      {
+        id: 'availabilityStatus',
+        name: 'availabilityStatus',
+        label: 'Availability Status',
+        type: 'select',
+      },
     ],
   },
   {
@@ -49,18 +73,18 @@ export const diningFormField = [
     label: 'Dining Areas',
     type: 'select',
   },
-  {
-    id: 'cuisine',
-    name: 'cuisine',
-    label: 'Cuisine',
-    type: 'select',
-  },
-  {
-    id: 'coverImage',
-    name: 'coverImage',
-    label: 'Cover Image',
-    type: 'file',
-  },
+  // {
+  //   id: 'cuisine',
+  //   name: 'cuisine',
+  //   label: 'Cuisine',
+  //   type: 'select',
+  // },
+  // {
+  //   id: 'coverImage',
+  //   name: 'coverImage',
+  //   label: 'Cover Image',
+  //   type: 'file',
+  // },
 ];
 
 export const diningFormSchema = Yup.object().shape({
@@ -70,9 +94,9 @@ export const diningFormSchema = Yup.object().shape({
     .required('This field cannot be empty'),
   description: Yup.string().max(1000, 'Max characters 1000 only allowed'),
   dateType: Yup.string().required('This field cannot be empty'),
-  availabilityStatus: Yup.string().required('This field cannot be empty'),
-  dayFrom: Yup.string().required('This field cannot be empty'),
-  dayTo: Yup.string().required('This field cannot be empty'),
+
+  // dayFrom: Yup.string().required('This field cannot be empty'),
+  // dayTo: Yup.string().required('This field cannot be empty'),
   dateFrom: Yup.date().required('This field cannot be empty'),
   dateTo: Yup.date().required('This field cannot be empty'),
   timeFrom: Yup.string().required('This field cannot be empty'),
@@ -80,9 +104,8 @@ export const diningFormSchema = Yup.object().shape({
   pricePerPerson: Yup.number()
     .positive('Price must be positive')
     .required('This field cannot be empty'),
-  currency: Yup.string().required('This field cannot be empty'),
+  availabilityStatus: Yup.string().required('This field cannot be empty'),
   diningAreas: Yup.string().required('This field cannot be empty'),
-  cuisine: Yup.string().required('This field cannot be empty'),
-  coverImage: Yup.mixed().required('A cover image is required'),
+  // cuisine: Yup.string().required('This field cannot be empty'),
+  // coverImage: Yup.mixed().required('A cover image is required'),
 });
-

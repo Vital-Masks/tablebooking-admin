@@ -11,11 +11,16 @@ import {
   getRestaurantGeneral,
   updateRestaurantGeneral,
 } from '@/lib/actions/restaurant.actions';
-import { base64ToBlob, convertImageToBase64, findField, handleError, returnCommonObject } from '@/lib/utils';
+import {
+  convertImageToBase64,
+  findField,
+  handleError,
+  returnCommonObject,
+} from '@/lib/utils';
 import FilePicker from '@/components/Common/Fields/FilePicker';
 
 export default function GeneralDetailForm({ hospitalityChains, params }: any) {
-  const router = useRouter()
+  const router = useRouter();
 
   const { restaurantId, hospitalityChainId } = params;
 
@@ -37,31 +42,42 @@ export default function GeneralDetailForm({ hospitalityChains, params }: any) {
     isPromoted: false,
     registerationNumber: '',
   });
-  const [coverImage, setCoverImage] = useState<any[]>([])
+  const [coverImage, setCoverImage] = useState<any[]>([]);
 
   const onSubmit = async (data: CreateRestaurantGeneralParams) => {
     try {
-      convertImageToBase64(coverImage[0]).then((base64) => {
-        data.images = { "photo": base64}
-      })
+      const images = await Promise.all(
+        coverImage.map(async (img) => {
+          if (img instanceof Blob) {
+            const base64 = await convertImageToBase64(img);
+            return { photo: base64 };
+          }
+          return img;
+        })
+      );
 
+      data.images = images;
+      
       if (hospitalityChainId !== 'n' && restaurantId !== 'c') {
         await updateRestaurantGeneral(restaurantId, data);
-      } else {
-        const response: any = await createRestaurantGeneral(data);
-
-        if (response?.hospitalityChainId?._id && response?._id) {
-          router.push(`/${response?._id}/${response?.hospitalityChainId?._id}/general-detail`)
-          fetchGeneralDetails(response?.hospitalityChainId?._id, response?._id);
-        }
+        return;
+      }
+  
+      // Create new restaurant and handle response
+      const response = await createRestaurantGeneral(data);
+  
+      // Navigate and fetch details if response contains IDs
+      if (response?.hospitalityChainId?._id && response?._id) {
+        const { _id: resId, hospitalityChainId: { _id: chainId } } = response;
+        router.push(`/${resId}/${chainId}/general-detail`);
+        fetchGeneralDetails(chainId, resId);
       }
     } catch (error) {
-      handleError(
-        'An error occurred while submitting the restaurant (general) form:',
-        error
-      );
+      // General error handling
+      handleError('An error occurred while submitting the restaurant (general) form:', error);
     }
   };
+  
 
   const fetchGeneralDetails = async (
     hospitalityChainId: string,
@@ -72,13 +88,13 @@ export default function GeneralDetailForm({ hospitalityChains, params }: any) {
         hospitalityChainId,
         restaurantId
       );
-      console.log(">>", response)
+
       if (response) {
         const data = returnCommonObject(initialValues, response);
         data['registerationNumber'] =
           response?.hospitalityChainId?.registrationNumber;
         data['hospitalityChainId'] = response?.hospitalityChainId?._id;
-        setCoverImage(response.images)
+        setCoverImage(response.images);
         setInitialValues(data);
       }
     } catch (error) {
@@ -118,8 +134,13 @@ export default function GeneralDetailForm({ hospitalityChains, params }: any) {
               handleSubmit={onSubmit}
             />
           </div>
-          <div className='p-5'>
-            <FilePicker label="Cover photo" name="cover-photo" files={coverImage} setFiles={(v: any) => setCoverImage(v)} />
+          <div className="p-5">
+            <FilePicker
+              label="Cover photo"
+              name="cover-photo"
+              files={coverImage}
+              setFiles={(v: any) => setCoverImage(v)}
+            />
           </div>
         </div>
       </div>
