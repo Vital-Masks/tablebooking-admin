@@ -50,7 +50,7 @@ const FormComponent = ({
           onSubmit={(values, actions) => {
             handleSubmit(values).then(() => {
               actions.setSubmitting(false);
-              // actions.resetForm();
+              actions.resetForm();
             });
           }}
         >
@@ -108,6 +108,7 @@ const FormComponent = ({
                 ))}
 
               <button
+                disabled={isSubmitting}
                 type="submit"
                 className="btn btn-primary !mt-6 shadow-none"
               >

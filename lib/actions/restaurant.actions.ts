@@ -74,7 +74,7 @@ export const getRestaurantCuisineMenu = async (
   restaurantId: string
 ) => {
   return await fetcher<CuisineMenu[]>(
-    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/cuisineMenu/getAllCuisineForRestaurant`,
+    `/restaurant/${restaurantId}/cuisineMenu/getAllCuisineForRestaurant`,
     {
       method: 'GET',
     }
@@ -88,7 +88,7 @@ export const getRestaurantCuisineMenuById = async (
   cuisineMenuId: string
 ) => {
   return await fetcher<CuisineMenu>(
-    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/cuisineMenu/${cuisineMenuId}`,
+    `/restaurant/${restaurantId}/cuisineMenu/${cuisineMenuId}`,
     {
       method: 'GET',
     }
@@ -160,7 +160,7 @@ export const getRestaurantDiningTimingById = async (
   cuisineMenuId: string
 ) => {
   return await fetcher<CuisineMenu>(
-    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/diningTiming/${cuisineMenuId}`,
+    `/restaurant/${restaurantId}/diningTiming/${cuisineMenuId}`,
     {
       method: 'GET',
     }
@@ -204,7 +204,7 @@ export const updateDiningTiming = async (
 
   if (newRestaurant) {
     revalidate(
-      `${ROUTE_RESTAURANTS}/${general?.hospitalityChainId}/${general?.restaurantId}/cuisine-menu`
+      `${ROUTE_RESTAURANTS}/${general?.hospitalityChainId}/${general?.restaurantId}/dining-timings`
     );
     return parseStringify(newRestaurant);
   }
@@ -235,7 +235,7 @@ export const getRestaurantDiningAreaById = async (
   diningId: string
 ) => {
   return await fetcher<DiningArea>(
-    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/diningArea/${diningId}`,
+    `/restaurant/${restaurantId}/diningArea/${diningId}`,
     {
       method: 'GET',
     }
@@ -295,7 +295,7 @@ export const getRestaurantUserRoles = async (
   restaurantId: string
 ) => {
   return await fetcher<UserRole[]>(
-    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/userRole/getAllUserRolesForRestaurant`,
+    `/restaurant/${restaurantId}/userRole/getAllUserRolesForRestaurant`,
     {
       method: 'GET',
     }
@@ -309,7 +309,7 @@ export const getRestaurantUserRoleById = async (
   userRoleId: string
 ) => {
   return await fetcher<UserRole>(
-    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/userRole/${userRoleId}`,
+    `/restaurant/${restaurantId}/userRole/${userRoleId}`,
     {
       method: 'GET',
     }

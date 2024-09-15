@@ -9,9 +9,10 @@ import Button from '@/components/Elements/Button';
 import {
   createDiningTiming,
   getRestaurantDiningTimingById,
+  updateDiningTiming,
 } from '@/lib/actions/restaurant.actions';
 
-import { findField, handleError, returnCommonObject } from '@/lib/utils';
+import { handleError, returnCommonObject } from '@/lib/utils';
 import {
   diningFormField,
   diningFormSchema,
@@ -31,6 +32,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
       dateType: '',
       days: [],
       dateFrom: '',
+      dateTo: '',
       timeFrom: '',
       timeTo: '',
       availabilityStatus: true,
@@ -60,7 +62,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
       );
 
       if (response) {
-        const data = returnCommonObject(defaultInitialValues, response);
+        let data = returnCommonObject(defaultInitialValues, response);
         setInitialValues(data);
         setIsFormOpen(true);
       }
@@ -81,7 +83,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
       data.days = data.days.map((day: any) => day.code);
 
       if (diningId) {
-        // await updateRestaurantCuisineMenu(fdim, data);
+        await updateDiningTiming(diningId, data);
       } else {
         await createDiningTiming(data);
       }

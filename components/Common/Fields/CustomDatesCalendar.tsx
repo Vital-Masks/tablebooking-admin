@@ -17,12 +17,11 @@ const CustomDatesCalendar = ({
   values,
   setFieldValue,
 }: Props) => {
-  const [dateType, setDateType] = useState('customDate');
   const [selectedDates, setSelectedDates] = useState<any>([]);
 
   const days = [
     { name: 'Monday', code: 'monday' },
-    { name: 'Tuesday', code: 'Tuesday' },
+    { name: 'Tuesday', code: 'tuesday' },
     { name: 'Wednesday', code: 'wednesday' },
     { name: 'Thursday', code: 'thursday' },
     { name: 'Friday', code: 'friday' },
@@ -31,7 +30,7 @@ const CustomDatesCalendar = ({
   ];
 
   const renderSelectedDates = () => {
-    if (dateType === 'Custom Date') {
+    if (values['dateType'] === 'Custom Date') {
       setSelectedDates([values['dateFrom']]);
     } else {
       const start = new Date(values['dateFrom']);
@@ -48,19 +47,25 @@ const CustomDatesCalendar = ({
   };
 
   useEffect(() => {
+    if (typeof values['days'][0] === 'string') {
+      const newArr:any = [];
+      values['days'].map((day: any) => {
+        newArr.push(days.find((x) => x.code === day));
+      });
+      setFieldValue('days', newArr);
+    }
     renderSelectedDates();
-  }, [dateType, values]);
+  }, [values]);
 
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <label htmlFor={'dateType'}>Date Type</label>
+        <label htmlFor="dateType">Date Type</label>
         <Field
           as="select"
           name="dateType"
           className="form-input"
           onChange={(e: any) => {
-            setDateType(e.target.value);
             setFieldValue('dateType', e.target.value);
           }}
         >
@@ -68,20 +73,9 @@ const CustomDatesCalendar = ({
           <option value="customDates">Custom Dates</option>
           <option value="customDays">Custom Days</option>
         </Field>
-
-        {/* <select
-          name={'dateType'}
-          className="form-input"
-          onChange={(e) => setDateType(e.target.value)}
-        >
-          <option disabled>Select</option>
-          <option>Custom Date</option>
-          <option>Custom Dates</option>
-          <option>Custom Days</option>
-        </select> */}
       </div>
 
-      {dateType === 'customDays' && (
+      {values['dateType'] === 'customDays' && (
         <div className="">
           <label htmlFor={'dateFrom'}>Date Days</label>
           <MultiSelect
@@ -98,18 +92,17 @@ const CustomDatesCalendar = ({
       )}
 
       <div>
-        <label htmlFor={field.name}>
-          {field.label} {dateType}
-        </label>
+        <label htmlFor={field.name}>{field.label}</label>
         <Field
           name="dateFrom"
           component={() => (
             <VanillaCalendar
               config={{
-                type: dateType === 'Custom Date' ? 'default' : 'multiple',
+                type:
+                  values['dateType'] === 'customDate' ? 'default' : 'multiple',
                 actions: {
                   clickDay(e, self) {
-                    dateType === 'Custom Date'
+                    values['dateType'] === 'customDate'
                       ? setFieldValue('dateFrom', self.selectedDates.at(0))
                       : setFieldValue('dateFrom', self.selectedDates.at(0)),
                       setFieldValue('dateTo', self.selectedDates.at(-1));
@@ -118,7 +111,9 @@ const CustomDatesCalendar = ({
                 settings: {
                   selection: {
                     day:
-                      dateType === 'Custom Date' ? 'single' : 'multiple-ranged',
+                      values['dateType'] === 'customDate'
+                        ? 'single'
+                        : 'multiple-ranged',
                   },
                   selected: {
                     dates: selectedDates,

@@ -46,11 +46,11 @@ export const diningFormField: any = [
         type: 'select',
         options: [
           {
-            label: 'True',
+            label: 'Available',
             value: true,
           },
           {
-            label: 'False',
+            label: 'Not Available',
             value: false,
           },
         ],
