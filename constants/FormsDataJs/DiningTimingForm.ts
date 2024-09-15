@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-export const diningFormField = [
+export const diningFormField: any = [
   {
     id: 'diningType',
     name: 'diningType',
@@ -15,31 +15,11 @@ export const diningFormField = [
     type: 'textarea',
   },
   {
-    id: 'dateType',
-    name: 'dateType',
-    label: 'Date Type',
-    type: 'select',
-    options: [
-      { value: 'custom_ate', label: 'Custom Date' },
-      { value: 'custom_dates', label: 'Custom Dates' },
-      { value: 'custom_days', label: 'Custom Days' },
-    ],
-  },
-  // {
-  //   id: 'grid1',
-  //   name: 'grid',
-  //   fields: [
-  //     { id: 'dayFrom', name: 'dayFrom', label: 'Day From', type: 'select' },
-  //     { id: 'dayTo', name: 'dayTo', label: 'Day To', type: 'select' },
-  //   ],
-  // },
-  {
-    id: 'grid2',
-    name: 'grid',
-    fields: [
-      { id: 'dateFrom', name: 'dateFrom', label: 'Date From', type: 'date' },
-      { id: 'dateTo', name: 'dateTo', label: 'Date To', type: 'date' },
-    ],
+    id: 'dateFrom',
+    name: 'dateFrom',
+    label: 'Select date',
+    type: 'customDateCalendar',
+    dependant: 'dateType',
   },
   {
     id: 'grid3',
@@ -64,6 +44,16 @@ export const diningFormField = [
         name: 'availabilityStatus',
         label: 'Availability Status',
         type: 'select',
+        options: [
+          {
+            label: 'True',
+            value: true,
+          },
+          {
+            label: 'False',
+            value: false,
+          },
+        ],
       },
     ],
   },
@@ -72,6 +62,7 @@ export const diningFormField = [
     name: 'diningAreas',
     label: 'Dining Areas',
     type: 'select',
+    options: []
   },
   // {
   //   id: 'cuisine',
@@ -88,24 +79,23 @@ export const diningFormField = [
 ];
 
 export const diningFormSchema = Yup.object().shape({
-  diningType: Yup.string().required('This field cannot be empty'),
-  diningName: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
-  description: Yup.string().max(1000, 'Max characters 1000 only allowed'),
-  dateType: Yup.string().required('This field cannot be empty'),
-
-  // dayFrom: Yup.string().required('This field cannot be empty'),
-  // dayTo: Yup.string().required('This field cannot be empty'),
-  dateFrom: Yup.date().required('This field cannot be empty'),
-  dateTo: Yup.date().required('This field cannot be empty'),
-  timeFrom: Yup.string().required('This field cannot be empty'),
-  timeTo: Yup.string().required('This field cannot be empty'),
-  pricePerPerson: Yup.number()
-    .positive('Price must be positive')
-    .required('This field cannot be empty'),
-  availabilityStatus: Yup.string().required('This field cannot be empty'),
-  diningAreas: Yup.string().required('This field cannot be empty'),
+  // diningType: Yup.string().required('This field cannot be empty'),
+  // diningName: Yup.string()
+  //   .max(255, 'Max characters 255 only allowed')
+  //   .required('This field cannot be empty'),
+  // description: Yup.string().max(1000, 'Max characters 1000 only allowed'),
+  // dateType: Yup.string().required('This field cannot be empty'),
+  // // dayFrom: Yup.string().required('This field cannot be empty'),
+  // // dayTo: Yup.string().required('This field cannot be empty'),
+  // dateFrom: Yup.date().required('This field cannot be empty'),
+  // dateTo: Yup.date().required('This field cannot be empty'),
+  // timeFrom: Yup.string().required('This field cannot be empty'),
+  // timeTo: Yup.string().required('This field cannot be empty'),
+  // pricePerPerson: Yup.number()
+  //   .positive('Price must be positive')
+  //   .required('This field cannot be empty'),
+  // availabilityStatus: Yup.string().required('This field cannot be empty'),
+  // diningAreas: Yup.string().required('This field cannot be empty'),
   // cuisine: Yup.string().required('This field cannot be empty'),
   // coverImage: Yup.mixed().required('A cover image is required'),
 });

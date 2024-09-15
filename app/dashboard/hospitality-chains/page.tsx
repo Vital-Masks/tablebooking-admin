@@ -2,7 +2,6 @@ import HospitalChainPageTemplate from "@/components/Pages/HospitalChain/Hospital
 
 const HospitalChainPage = () => {
  
-
   return (
     <main>
       <HospitalChainPageTemplate />

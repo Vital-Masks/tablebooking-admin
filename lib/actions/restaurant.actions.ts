@@ -40,7 +40,7 @@ export const getRestaurantGeneral = async (
   restaurantId: string
 ) => {
   return await fetcher<Restaurant>(
-    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}`,
+    `/restaurant/${restaurantId}`,
     {
       method: 'GET',
     }
@@ -146,7 +146,7 @@ export const getRestaurantDiningTiming = async (
   restaurantId: string
 ) => {
   return await fetcher<DiningTiming[]>(
-    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/diningTiming/getAllDiningTimingForRestaurant`,
+    `/restaurant/${restaurantId}/diningTiming/getAllDiningTimingForRestaurant`,
     {
       method: 'GET',
     }
@@ -171,9 +171,9 @@ export const getRestaurantDiningTimingById = async (
 export const createDiningTiming = async (
   general: CreateDiningParams
 ): Promise<DiningTiming | null> => {
-  console.log('>>', general);
+
   const newRestaurant = await fetcher<DiningTiming>(
-    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/diningTiming`,
+    `/restaurant/${general?.restaurantId}/diningTiming`,
     {
       method: 'POST',
       body: general,
@@ -221,7 +221,7 @@ export const getRestaurantDiningAreas = async (
   restaurantId: string
 ) => {
   return await fetcher<DiningArea[]>(
-    `/hospitalityChain/${hospitalityChainId}/restaurant/${restaurantId}/diningArea/getAllDiningAreaForRestaurant`,
+    `/restaurant/${restaurantId}/diningArea/getAllDiningAreaForRestaurant`,
     {
       method: 'GET',
     }

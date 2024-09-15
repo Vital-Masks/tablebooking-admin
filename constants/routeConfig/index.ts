@@ -87,7 +87,7 @@ export const menuItems = [
   },
   {
     id: 'hospitalChain',
-    title: 'Hospital Chain',
+    title: 'Hospitality Chains',
     Icon: IconShop,
     childItems: [],
     route: ROUTE_HOSPITAL_CHAIN,

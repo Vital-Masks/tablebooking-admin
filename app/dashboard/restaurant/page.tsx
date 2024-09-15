@@ -1,3 +1,4 @@
+import VanillaCalendar from '@/components/Common/Fields/VanillaCalendar';
 import PageHeader from '@/components/Elements/PageHeader';
 import RestaurantTable from '@/components/Pages/RestaurantPage/RestaurantTable';
 import { ROUTE_RESTAURANTS } from '@/constants/routes';
@@ -10,7 +11,7 @@ const RestaurantPage = async () => {
       action: '',
     },
     button2: {
-      title: 'create new',
+      title: 'Create New',
       action: ROUTE_RESTAURANTS + '/c/n/general-detail',
     },
   };

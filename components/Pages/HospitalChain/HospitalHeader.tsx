@@ -36,9 +36,9 @@ const HospitalHeader = () => {
   });
 
   const pageHeaderData = {
-    title: 'Hospital Chain',
+    title: 'Hospitality Chains',
     button1: {
-      title: 'Create Hospital',
+      title: 'Create Chain',
       action: () => setCreateForm(true),
     },
   };

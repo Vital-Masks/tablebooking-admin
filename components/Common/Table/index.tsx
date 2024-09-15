@@ -79,6 +79,7 @@ const Table = ({ title, columns, rowData, onButtonClick }: any) => {
         <DataTable
           noRecordsText="No results match your search query"
           className="whitespace-nowrap h-full"
+          minHeight={400}
           records={recordsData}
           columns={columns}
           totalRecords={rowData.length}

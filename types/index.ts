@@ -109,6 +109,7 @@ declare type CreateDiningParams = {
   SeatingAreaType: string;
   hospitalityChainId?: string;
   restaurantId?: string;
+  days: any;
 };
 
 declare type UserRolesParams = {

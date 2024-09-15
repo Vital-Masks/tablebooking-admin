@@ -8,17 +8,16 @@ import Button from '@/components/Elements/Button';
 
 import {
   createDiningTiming,
-  getRestaurantCuisineMenuById,
   getRestaurantDiningTimingById,
 } from '@/lib/actions/restaurant.actions';
 
-import { handleError, returnCommonObject } from '@/lib/utils';
+import { findField, handleError, returnCommonObject } from '@/lib/utils';
 import {
   diningFormField,
   diningFormSchema,
 } from '@/constants/FormsDataJs/DiningTimingForm';
 
-const DiningTimingForm = ({ params }: any) => {
+const DiningTimingForm = ({ params, diningAreas }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -30,9 +29,8 @@ const DiningTimingForm = ({ params }: any) => {
       diningName: '',
       description: '',
       dateType: '',
-      days: ['MONDAY'],
+      days: [],
       dateFrom: '',
-      dateTo: '',
       timeFrom: '',
       timeTo: '',
       availabilityStatus: true,
@@ -80,6 +78,7 @@ const DiningTimingForm = ({ params }: any) => {
 
       data.hospitalityChainId = params.hospitalityChainId;
       data.restaurantId = params.restaurantId;
+      data.days = data.days.map((day: any) => day.code);
 
       if (diningId) {
         // await updateRestaurantCuisineMenu(fdim, data);
@@ -99,6 +98,13 @@ const DiningTimingForm = ({ params }: any) => {
       fetchDining();
     }
   }, [diningId]);
+
+  useEffect(() => {
+    if (diningAreas.length > 0) {
+      diningFormField.find((x: any) => x.id === 'diningAreas')['options'] =
+        diningAreas;
+    }
+  }, [diningAreas]);
 
   return (
     <>

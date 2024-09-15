@@ -30,6 +30,7 @@
     "mdb-react-ui-kit": "^8.0.0",
     "next": "^14.2.5",
     "next-auth": "^5.0.0-beta.19",
+    "primereact": "^10.8.2",
     "react": "^18",
     "react-animate-height": "^3.2.3",
     "react-dom": "^18",
@@ -37,6 +38,7 @@
     "react-popper": "^2.3.0",
     "react-redux": "^9.1.2",
     "react-select": "^5.8.0",
+    "vanilla-calendar-pro": "^2.9.10",
     "yarn": "^1.22.22",
     "yup": "^1.4.0",
     "zod": "^3.23.8"

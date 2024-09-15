@@ -77,7 +77,6 @@ export default function GeneralDetailForm({ hospitalityChains, params }: any) {
       handleError('An error occurred while submitting the restaurant (general) form:', error);
     }
   };
-  
 
   const fetchGeneralDetails = async (
     hospitalityChainId: string,

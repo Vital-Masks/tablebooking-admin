@@ -2,6 +2,8 @@ import { Field, Form, Formik } from 'formik';
 import { IconPhoto, IconXCircle } from '@/components/Icons';
 import IconLoading from '@/components/Icons/IconLoading';
 import FilePicker from '../Fields/FilePicker';
+import VanillaCalendar from '../Fields/VanillaCalendar';
+import CustomDatesCalendar from '../Fields/CustomDatesCalendar';
 
 const options = [
   { value: 'orange', label: 'Orange' },
@@ -16,6 +18,8 @@ interface FormField {
   content?: string;
   fields?: FormField[];
   options?: [{ value: string; label: string }];
+  dependant?: string;
+  ifRender?: any;
 }
 
 const FormComponent = ({
@@ -28,14 +32,14 @@ const FormComponent = ({
 }: any) => {
   return (
     <div className="panel shadow-none">
-      {(title || closeForm) &&
+      {(title || closeForm) && (
         <div className="mb-5 flex items-start justify-between">
           <h5 className="text-lg font-semibold">{title}</h5>
           <button onClick={() => closeForm()}>
             <IconXCircle />
           </button>
         </div>
-      }
+      )}
       <div className="mb-5">
         <Formik
           initialValues={initialValues}
@@ -68,10 +72,11 @@ const FormComponent = ({
                 fields?.map((field: FormField) => (
                   <div
                     key={field.id}
-                    className={`grid ${field.name === 'grid'
+                    className={`grid ${
+                      field.name === 'grid'
                         ? 'grid-cols-2 gap-4'
                         : 'grid-cols-1'
-                      }`}
+                    }`}
                   >
                     {field.name === 'grid' ? (
                       field.fields?.map((subField) => (
@@ -79,6 +84,7 @@ const FormComponent = ({
                           key={subField.id}
                           field={subField}
                           errors={errors}
+                          values={values}
                           setFieldValue={setFieldValue}
                         />
                       ))
@@ -94,6 +100,7 @@ const FormComponent = ({
                         key={field.id}
                         field={field}
                         errors={errors}
+                        values={values}
                         setFieldValue={setFieldValue}
                       />
                     )}
@@ -105,8 +112,9 @@ const FormComponent = ({
                 className="btn btn-primary !mt-6 shadow-none"
               >
                 <IconLoading
-                  className={`w-4 h-4 me-3 transition-opacity duration-300 animate-spin  ${isSubmitting ? 'opacity-100 inline' : 'opacity-0 hidden'
-                    }`}
+                  className={`w-4 h-4 me-3 transition-opacity duration-300 animate-spin  ${
+                    isSubmitting ? 'opacity-100 inline' : 'opacity-0 hidden'
+                  }`}
                 />
                 <span>{isSubmitting ? 'Submitting...' : 'Submit'}</span>
               </button>
@@ -122,37 +130,75 @@ interface RenderFieldProps {
   field: FormField;
   errors: any;
   setFieldValue: any;
+  values: any;
 }
 
 const RenderField: React.FC<RenderFieldProps> = ({
   field,
   errors,
   setFieldValue,
+  values,
 }) => {
   switch (field.type) {
     case 'select':
-      return (
-        <div key={field.id} className={`${errors[field.name] && 'has-error'}`}>
-          <label htmlFor={field.name}>{field.label}</label>
+      if (!field.ifRender) {
+        return (
+          <div
+            key={field.id}
+            className={`${errors[field.name] && 'has-error'}`}
+          >
+            <label htmlFor={field.name}>{field.label}</label>
 
-          <Field name={field.name} as="select" className="form-input">
-            <option key="0">Select</option>
-            {field.options
-              ? field.options?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))
-              : options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-          </Field>
+            <Field name={field.name} as="select" className="form-input">
+              <option key="0">Select</option>
+              {field.options
+                ? field.options?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))
+                : options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+            </Field>
 
-          <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
-        </div>
-      );
+            <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
+          </div>
+        );
+      } else {
+        if (values[field.ifRender[0]] === field.ifRender[1]) {
+          return (
+            <div
+              key={field.id}
+              className={`${errors[field.name] && 'has-error'}`}
+            >
+              <label htmlFor={field.name}>{field.label}</label>
+
+              <Field name={field.name} as="select" className="form-input">
+                <option key="0">Select</option>
+                {field.options
+                  ? field.options?.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))
+                  : options.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+              </Field>
+
+              <div className="text-danger mt-1 text-xs">
+                {errors[field.name]}
+              </div>
+            </div>
+          );
+        }
+        return <></>;
+      }
 
     case 'switch':
       return (
@@ -190,6 +236,38 @@ const RenderField: React.FC<RenderFieldProps> = ({
         </div>
       );
 
+    case 'calendar':
+      return (
+        <div key={field.id} className={`${errors[field.name] && 'has-error'}`}>
+          <label htmlFor={field.name}>{field.label}</label>
+          <VanillaCalendar
+            config={{
+              type: 'default',
+              actions: {
+                clickDay(e, self) {
+                  setFieldValue('dateFrom', self.selectedDates.at(0));
+                },
+              },
+              settings: {
+                selection: {
+                  day: 'single',
+                },
+              },
+            }}
+            className="border"
+          />
+          <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
+        </div>
+      );
+    case 'customDateCalendar':
+      return (
+        <CustomDatesCalendar
+          field={field}
+          errors={errors}
+          values={values}
+          setFieldValue={setFieldValue}
+        />
+      );
     default:
       return (
         <div key={field.id} className={`${errors[field.name] && 'has-error'}`}>
