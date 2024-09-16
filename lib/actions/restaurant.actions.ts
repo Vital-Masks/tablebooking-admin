@@ -100,7 +100,7 @@ export const createRestaurantCuisineMenu = async (
   general: CreateCuisineMenuParams
 ): Promise<CuisineMenu | null> => {
   const newRestaurant = await fetcher<CuisineMenu>(
-    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/cuisineMenu`,
+    `/restaurant/${general?.restaurantId}/cuisineMenu`,
     {
       method: 'POST',
       body: general,
@@ -122,7 +122,7 @@ export const updateRestaurantCuisineMenu = async (
   general: CreateCuisineMenuParams
 ): Promise<Restaurant | null> => {
   const newRestaurant = await fetcher<Restaurant>(
-    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/cuisineMenu/${id}`,
+    `/restaurant/${general?.restaurantId}/cuisineMenu/${id}`,
     {
       method: 'PUT',
       body: general,
@@ -169,7 +169,7 @@ export const getRestaurantDiningTimingById = async (
 
 //  CREATE RESTAURANT CUISINE MENU
 export const createDiningTiming = async (
-  general: CreateDiningParams
+  general: CreateDiningTimingParams
 ): Promise<DiningTiming | null> => {
 
   const newRestaurant = await fetcher<DiningTiming>(
@@ -192,10 +192,10 @@ export const createDiningTiming = async (
 //  UPDATE RESTAURANT CUISINE MENU
 export const updateDiningTiming = async (
   id: string,
-  general: CreateDiningParams
+  general: CreateDiningTimingParams
 ): Promise<DiningTiming | null> => {
   const newRestaurant = await fetcher<DiningTiming>(
-    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/diningTiming/${id}`,
+    `/restaurant/${general?.restaurantId}/diningTiming/${id}`,
     {
       method: 'PUT',
       body: general,
@@ -247,7 +247,7 @@ export const createRestaurantDiningArea = async (
   general: CreateDiningParams
 ): Promise<DiningArea | null> => {
   const newDining = await fetcher<Restaurant>(
-    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/diningArea`,
+    `/restaurant/${general?.restaurantId}/diningArea`,
     {
       method: 'POST',
       body: general,
@@ -269,7 +269,7 @@ export const updateRestaurantDiningArea = async (
   general: CreateDiningParams
 ): Promise<DiningArea | null> => {
   const newRestaurant = await fetcher<DiningArea>(
-    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/diningArea/${id}`,
+    `/restaurant/${general?.restaurantId}/diningArea/${id}`,
     {
       method: 'PUT',
       body: general,
@@ -321,7 +321,7 @@ export const createUserRoles = async (
   general: UserRolesParams
 ): Promise<UserRole | null> => {
   const newDining = await fetcher<UserRole>(
-    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/userRole`,
+    `/restaurant/${general?.restaurantId}/userRole`,
     {
       method: 'POST',
       body: general,
@@ -342,7 +342,7 @@ export const updateUserRoles = async (
   general: UserRolesParams
 ): Promise<UserRole | null> => {
   const newRestaurant = await fetcher<UserRole>(
-    `/hospitalityChain/${general?.hospitalityChainId}/restaurant/${general?.restaurantId}/userRole/${id}`,
+    `/restaurant/${general?.restaurantId}/userRole/${id}`,
     {
       method: 'PUT',
       body: general,

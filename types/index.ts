@@ -112,6 +112,23 @@ declare type CreateDiningParams = {
   days: any;
 };
 
+declare type CreateDiningTimingParams = {
+  diningType: string;
+  diningName: string;
+  description: string;
+  dateType: string;
+  days: any;
+  dateFrom: string;
+  dateTo: string;
+  timeFrom: string;
+  timeTo: string;
+  availabilityStatus: true;
+  pricePerPerson: string;
+  diningAreas: string;
+  hospitalityChainId?: string;
+  restaurantId?: string;
+};
+
 declare type UserRolesParams = {
   firstName: string;
   lastName: string;

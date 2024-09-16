@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import FormComponent from '@/components/Common/Form';
@@ -74,7 +73,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
     }
   };
 
-  const handleSubmit = async (data: CreateDiningParams) => {
+  const onSubmit = async (data: CreateDiningTimingParams) => {
     try {
       if (!params.hospitalityChainId || !params.restaurantId) return;
 
@@ -124,7 +123,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
           initialValues={initialValues}
           validationSchema={diningFormSchema}
           closeForm={closeForm}
-          handleSubmit={handleSubmit}
+          handleSubmit={onSubmit}
         />
       </FormSlider>
     </>
