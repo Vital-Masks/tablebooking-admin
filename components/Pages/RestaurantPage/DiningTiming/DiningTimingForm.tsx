@@ -30,7 +30,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
       diningType: '',
       diningName: '',
       description: '',
-      dateType: '',
+      dateType: 'customDate',
       days: [],
       dateFrom: '',
       dateTo: '',
