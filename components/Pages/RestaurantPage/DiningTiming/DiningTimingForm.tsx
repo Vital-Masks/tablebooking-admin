@@ -16,6 +16,8 @@ import {
   diningFormField,
   diningFormSchema,
 } from '@/constants/FormsDataJs/DiningTimingForm';
+import toast from 'react-hot-toast';
+import ToastBanner from '@/components/Elements/ToastBanner';
 
 const DiningTimingForm = ({ params, diningAreas }: any) => {
   const searchParams = useSearchParams();
@@ -51,7 +53,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
   };
 
   const fetchDining = async () => {
-    if (!diningId || !params.hospitalityChainId || !params.restaurantId) return;
+    if (!diningId || params.hospitalityChainId === 'n' || params.restaurantId === 'c') return;
 
     try {
       const response = await getRestaurantDiningTimingById(
@@ -75,7 +77,12 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
 
   const onSubmit = async (data: CreateDiningTimingParams) => {
     try {
-      if (!params.hospitalityChainId || !params.restaurantId) return;
+      if (params.hospitalityChainId === 'n' || params.restaurantId === 'c') {
+        toast.custom((t) => (
+          <ToastBanner t={t} type="ERROR" message="Resaurant don't exist!" detail="please fill the general details first." />
+        ));
+        return;
+      }
 
       data.hospitalityChainId = params.hospitalityChainId;
       data.restaurantId = params.restaurantId;
@@ -83,10 +90,19 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
 
       if (diningId) {
         await updateDiningTiming(diningId, data);
+        toast.custom((t) => (
+          <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
+        ));
       } else {
         await createDiningTiming(data);
+        toast.custom((t) => (
+          <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
+        ));
       }
     } catch (error) {
+      toast.custom((t) => (
+        <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
+      ));
       handleError(
         'An error occurred while submitting the dining timing form:',
         error

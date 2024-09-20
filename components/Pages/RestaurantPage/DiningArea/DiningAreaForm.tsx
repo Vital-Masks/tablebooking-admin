@@ -2,6 +2,7 @@
 import FormComponent from "@/components/Common/Form";
 import FormSlider from "@/components/Common/Form/FormSlider";
 import Button from "@/components/Elements/Button";
+import ToastBanner from "@/components/Elements/ToastBanner";
 import {
   seatingFormField,
   seatingFormSchema,
@@ -15,6 +16,7 @@ import { handleError, returnCommonObject } from "@/lib/utils";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 import React, { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
 const DiningAreaForm = ({ params }: any) => {
   const searchParams = useSearchParams();
@@ -41,7 +43,7 @@ const DiningAreaForm = ({ params }: any) => {
   };
 
   const fetchDinigAreaData = async () => {
-    if (!diningId || !params.hospitalityChainId || !params.restaurantId) return;
+    if (!diningId || params.hospitalityChainId === 'n' || params.restaurantId === 'c') return;
 
     try {
       const response = await getRestaurantDiningAreaById(
@@ -65,19 +67,33 @@ const DiningAreaForm = ({ params }: any) => {
 
   const onSubmit = async (data: CreateDiningParams) => {
     try {
-      if (!params.hospitalityChainId || !params.restaurantId) return;
+      if (params.hospitalityChainId === 'n' || params.restaurantId === 'c') {
+        toast.custom((t) => (
+          <ToastBanner t={t} type="ERROR" message="Resaurant don't exist!" detail="please fill the general details first." />
+        ));
+        return;
+      }
 
       data.hospitalityChainId = params.hospitalityChainId;
       data.restaurantId = params.restaurantId;
 
       if (diningId) {
         await updateRestaurantDiningArea(diningId, data);
+        toast.custom((t) => (
+          <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
+        ));
       } else {
         await createRestaurantDiningArea(data);
+        toast.custom((t) => (
+          <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
+        ));
       }
 
       // closeForm();
     } catch (error) {
+      toast.custom((t) => (
+        <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
+      ));
       handleError(
         "An error occurred while submitting the restaurant (general) form:",
         error,

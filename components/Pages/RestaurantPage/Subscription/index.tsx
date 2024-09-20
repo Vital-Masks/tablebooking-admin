@@ -45,7 +45,7 @@ const Subscriptions = () => {
   ];
 
   return (
-    <div>
+    <div className=''>
       <div className="mx-auto max-w-[320px] md:max-w-[1140px]">
         <div className="mt-5 flex justify-center space-x-4 text-center text-base font-semibold md:mt-10">
           <span

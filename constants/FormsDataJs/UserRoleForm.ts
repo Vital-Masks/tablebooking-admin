@@ -5,7 +5,16 @@ export const userroleFormField = [
   { id: 'lastName', name: 'lastName', label: 'Last name', type: 'text' },
   { id: 'role', name: 'role', label: 'Role/Designation', type: 'text' },
   { id: 'email', name: 'email', label: 'Email address', type: 'email' },
-  { id: 'gender', name: 'gender', label: 'Gender', type: 'select' },
+  {
+    id: 'gender',
+    name: 'gender',
+    label: 'Gender',
+    type: 'select',
+    options: [
+      { label: 'Male', value: 'male' },
+      { label: 'Female', value: 'female' },
+    ],
+  },
   {
     id: 'phoneNumber',
     name: 'phoneNumber',

@@ -15,6 +15,8 @@ import {
   updateRestaurantCuisineMenu,
 } from "@/lib/actions/restaurant.actions";
 import { handleError, returnCommonObject } from "@/lib/utils";
+import toast from "react-hot-toast";
+import ToastBanner from "@/components/Elements/ToastBanner";
 
 const CuisineMenuForm = ({ params }: any) => {
   const searchParams = useSearchParams();
@@ -43,8 +45,7 @@ const CuisineMenuForm = ({ params }: any) => {
   };
 
   const fetchCuisineMenuData = async () => {
-    if (!cuisineId || !params.hospitalityChainId || !params.restaurantId)
-      return;
+    if (!cuisineId || params.hospitalityChainId === 'n' || params.restaurantId === 'c') return;
 
     try {
       const response = await getRestaurantCuisineMenuById(
@@ -69,19 +70,33 @@ const CuisineMenuForm = ({ params }: any) => {
 
   const handleSubmit = async (data: CreateCuisineMenuParams) => {
     try {
-      if (!params.hospitalityChainId || !params.restaurantId) return;
+      if (params.hospitalityChainId === 'n' || params.restaurantId === 'c') {
+        toast.custom((t) => (
+          <ToastBanner t={t} type="ERROR" message="Resaurant don't exist!" detail="please fill the general details first." />
+        ));
+        return;
+      }
 
       data.hospitalityChainId = params.hospitalityChainId;
       data.restaurantId = params.restaurantId;
 
       if (cuisineId) {
         await updateRestaurantCuisineMenu(cuisineId, data);
+        toast.custom((t) => (
+          <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
+        ));
       } else {
         await createRestaurantCuisineMenu(data);
+        toast.custom((t) => (
+          <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
+        ));
       }
 
       // closeForm();
     } catch (error) {
+      toast.custom((t) => (
+        <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
+      ));
       handleError(
         "An error occurred while submitting the cuisine menu form:",
         error,

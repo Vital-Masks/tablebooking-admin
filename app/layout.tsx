@@ -23,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Provider>
-        <Toaster />
-        <body className={nunito.className}>{children}</body>
+        <body className={nunito.className}>
+          <Toaster />
+          {children}
+        </body>
       </Provider>
     </html>
   );

@@ -9,9 +9,9 @@ const rotateX = plugin(function ({ addUtilities }: any) {
 });
 module.exports = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
   theme: {
@@ -20,6 +20,18 @@ module.exports = {
     },
     extend: {
       colors: {
+        toast: {
+          '50': '#FFF6DF',
+          '100': '#fdf7f1',
+          '200': '#F8EEDB',
+          '300': '#ebbf99',
+          '400': '#dea373',
+          '500': '#ce864f',
+          '600': '#A1724E',
+          '700': '#8c501c',
+          '800': '#5c340f',
+          '900': '#482307',
+        },
         primary: {
           DEFAULT: '#4361ee',
           light: '#eaf1ff',
@@ -72,9 +84,33 @@ module.exports = {
       boxShadow: {
         '3xl':
           '0 2px 2px rgb(224 230 237 / 46%), 1px 6px 7px rgb(224 230 237 / 46%)',
+        'small-button': '0px 1px 2px rgba(126, 56, 0, 0.5)',
+        button:
+          '-6px 8px 10px rgba(81, 41, 10, 0.1), 0px 2px 2px rgba(81, 41, 10, 0.2)',
+        'button-active':
+          '-1px 2px 5px rgba(81, 41, 10, 0.15), 0px 1px 1px rgba(81, 41, 10, 0.15)',
       },
       transitionProperty: {
         'col-span': 'grid-column',
+      },
+      animation: {
+        enter: 'enter 200ms ease-out',
+        'slide-in': 'slide-in 1.2s cubic-bezier(.41,.73,.51,1.02)',
+        leave: 'leave 150ms ease-in forwards',
+      },
+      keyframes: {
+        enter: {
+          '0%': { transform: 'scale(0.9)', opacity: 0 },
+          '100%': { transform: 'scale(1)', opacity: 1 },
+        },
+        leave: {
+          '0%': { transform: 'scale(1)', opacity: 1 },
+          '100%': { transform: 'scale(0.9)', opacity: 0 },
+        },
+        'slide-in': {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(0)' },
+        },
       },
       typography: ({ theme }: any) => ({
         DEFAULT: {
@@ -97,7 +133,10 @@ module.exports = {
   },
   variants: {
     extend: {
-      gridColumn: ['responsive', 'hover', 'focus']
+      gridColumn: ['responsive', 'hover', 'focus'],
+      translate: ['active'],
+      gradientColorStops: ['active'],
+      boxShadow: ['active'],
     },
   },
   plugins: [
