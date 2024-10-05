@@ -6,6 +6,7 @@ export const diningFormField: any = [
     name: 'diningType',
     label: 'Dining Type',
     type: 'select',
+    options: []
   },
   { id: 'diningName', name: 'diningName', label: 'Dining Name', type: 'text' },
   {

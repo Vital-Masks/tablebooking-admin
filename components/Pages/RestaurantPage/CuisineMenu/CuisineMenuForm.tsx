@@ -14,9 +14,10 @@ import {
   getRestaurantCuisineMenuById,
   updateRestaurantCuisineMenu,
 } from "@/lib/actions/restaurant.actions";
-import { handleError, returnCommonObject } from "@/lib/utils";
+import { findField, handleError, returnCommonObject } from "@/lib/utils";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
+import { getUtilities } from "@/lib/actions/utilities.actions";
 
 const CuisineMenuForm = ({ params }: any) => {
   const searchParams = useSearchParams();
@@ -104,11 +105,34 @@ const CuisineMenuForm = ({ params }: any) => {
     }
   };
 
+  
+
   useEffect(() => {
     if (cuisineId) {
       fetchCuisineMenuData();
     }
   }, [cuisineId]);
+
+  useEffect(() => {
+    const fetchUtilities = async () => {
+      const utilities = await getUtilities();
+      const options = Object.entries(utilities?.[0].foodCategory).map(([key, value]) => ({
+        label: value,
+        value: key
+      }));
+      
+      foodFormField.find(x => x.id === 'foodCategory')['options'] = options;
+
+      const options2 = Object.entries(utilities?.[0].Cuisine).map(([key, value]) => ({
+        label: value,
+        value: key
+      }));
+      
+      foodFormField.find(x => x.id === 'cousineType')['options'] = options2;
+    }
+    fetchUtilities()
+  }, [])
+  
 
   return (
     <>

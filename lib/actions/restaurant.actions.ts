@@ -4,8 +4,6 @@ import { ROUTE_RESTAURANTS } from '@/constants/routes';
 import { parseStringify } from '../utils';
 import { fetcher, revalidate } from './fetcher';
 
-const ENDPOINT = process.env.API_ENDPOINT;
-
 // GET ALL RESTAURANTS
 export const getRestaurantsList = async (): Promise<Restaurant[] | null> => {
   return await fetcher<Restaurant[]>('/restaurant/getAllRestaurants');

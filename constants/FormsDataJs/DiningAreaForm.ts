@@ -18,6 +18,7 @@ export const seatingFormField = [
     name: 'seatingAreaType',
     label: 'Seating Area Type',
     type: 'select',
+    options: []
   },
 ];
 

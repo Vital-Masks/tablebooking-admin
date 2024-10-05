@@ -12,6 +12,7 @@ export const foodFormField = [
     name: 'foodCategory',
     label: 'Food Category',
     type: 'select',
+    options: []
   },
   {
     id: 'description',
@@ -24,6 +25,7 @@ export const foodFormField = [
     name: 'cousineType',
     label: 'Cuisine Type',
     type: 'select',
+    options: []
   },
   {
     id: 'price',

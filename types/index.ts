@@ -66,6 +66,7 @@ declare type CuisineMenu = {
   foodName: string;
   category: string;
   price: string;
+  coverImage: any;
 };
 
 declare type DiningTiming = {
@@ -127,6 +128,7 @@ declare type CreateDiningTimingParams = {
   diningAreas: string;
   hospitalityChainId?: string;
   restaurantId?: string;
+  coverImage?: any;
 };
 
 declare type UserRolesParams = {

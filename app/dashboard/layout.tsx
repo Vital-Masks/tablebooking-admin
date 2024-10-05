@@ -1,12 +1,8 @@
-import type { Metadata } from 'next';
-import Sidebar from '@/components/Layouts/Sidebar';
-import Header from '@/components/Layouts/Header';
-import { MantineProvider } from '@mantine/core';
-
 import '@mantine/core/styles.layer.css';
 import 'mantine-datatable/styles.layer.css';
 import ThemeProvider from '@/context/ThemeProvider';
 import MainLayout from '@/components/Layouts/MainLayout';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Create Next App',

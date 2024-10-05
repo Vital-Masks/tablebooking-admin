@@ -21,7 +21,11 @@ import FilePicker from '@/components/Common/Fields/FilePicker';
 import toast from 'react-hot-toast';
 import ToastBanner from '@/components/Elements/ToastBanner';
 
-export default function GeneralDetailForm({ hospitalityChains, params }: any) {
+export default function GeneralDetailForm({
+  hospitalityChains,
+  utilities,
+  params,
+}: any) {
   const router = useRouter();
 
   const { restaurantId, hospitalityChainId } = params;
@@ -43,6 +47,8 @@ export default function GeneralDetailForm({ hospitalityChains, params }: any) {
     availabilityStatus: '',
     isPromoted: false,
     registerationNumber: '',
+    closeTime: '',
+    openTime: '',
   });
   const [coverImage, setCoverImage] = useState<any[]>([]);
 
@@ -137,26 +143,35 @@ export default function GeneralDetailForm({ hospitalityChains, params }: any) {
     }
   }, [hospitalityChains]);
 
+  useEffect(() => {
+    const options = Object.entries(utilities?.[0].restaurantType).map(
+      ([key, value]) => ({
+        label: value,
+        value: key,
+      })
+    );
+
+    findField(generalFormField, 'restaurantType')['options'] = options;
+  }, [utilities]);
+
   return (
     <main>
-      <div>
-        <div className="grid grid-cols-3 items-start">
-          <div className="col-span-2 border-r">
-            <FormComponent
-              fields={generalFormField}
-              validationSchema={generalFormSchema}
-              initialValues={initialValues}
-              handleSubmit={onSubmit}
-            />
-          </div>
-          <div className="p-5">
-            <FilePicker
-              label="Cover photo"
-              name="cover-photo"
-              files={coverImage}
-              setFiles={(v: any) => setCoverImage(v)}
-            />
-          </div>
+      <div className="grid grid-cols-3 items-start">
+        <div className="col-span-2 border-r">
+          <FormComponent
+            fields={generalFormField}
+            validationSchema={generalFormSchema}
+            initialValues={initialValues}
+            handleSubmit={onSubmit}
+          />
+        </div>
+        <div className="p-5">
+          <FilePicker
+            label="Cover photo"
+            name="cover-photo"
+            files={coverImage}
+            setFiles={(v: any) => setCoverImage(v)}
+          />
         </div>
       </div>
     </main>

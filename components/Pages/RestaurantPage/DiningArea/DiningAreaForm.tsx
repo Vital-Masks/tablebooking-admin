@@ -12,6 +12,7 @@ import {
   getRestaurantDiningAreaById,
   updateRestaurantDiningArea,
 } from "@/lib/actions/restaurant.actions";
+import { getUtilities } from "@/lib/actions/utilities.actions";
 import { handleError, returnCommonObject } from "@/lib/utils";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
@@ -106,6 +107,19 @@ const DiningAreaForm = ({ params }: any) => {
       fetchDinigAreaData();
     }
   }, [diningId]);
+
+  useEffect(() => {
+    const fetchUtilities = async () => {
+      const utilities = await getUtilities();
+      const options = Object.entries(utilities?.[0].SeatingArea).map(([key, value]) => ({
+        label: value,
+        value: key
+      }));
+      
+      seatingFormField.find(x => x.id === 'seatingAreaType')['options'] = options;
+    }
+    fetchUtilities()
+  }, [])
 
   return (
     <>

@@ -11,13 +11,15 @@ import {
   updateDiningTiming,
 } from '@/lib/actions/restaurant.actions';
 
-import { handleError, returnCommonObject } from '@/lib/utils';
+import { convertImageToBase64, findField, handleError, returnCommonObject } from '@/lib/utils';
 import {
   diningFormField,
   diningFormSchema,
 } from '@/constants/FormsDataJs/DiningTimingForm';
 import toast from 'react-hot-toast';
 import ToastBanner from '@/components/Elements/ToastBanner';
+import { getUtilities } from '@/lib/actions/utilities.actions';
+import FilePicker from '@/components/Common/Fields/FilePicker';
 
 const DiningTimingForm = ({ params, diningAreas }: any) => {
   const searchParams = useSearchParams();
@@ -45,6 +47,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [initialValues, setInitialValues] = useState(defaultInitialValues);
+  const [coverImage, setCoverImage] = useState<any[]>([]);
 
   const closeForm = () => {
     setIsFormOpen(false);
@@ -53,7 +56,12 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
   };
 
   const fetchDining = async () => {
-    if (!diningId || params.hospitalityChainId === 'n' || params.restaurantId === 'c') return;
+    if (
+      !diningId ||
+      params.hospitalityChainId === 'n' ||
+      params.restaurantId === 'c'
+    )
+      return;
 
     try {
       const response = await getRestaurantDiningTimingById(
@@ -65,6 +73,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
       if (response) {
         let data = returnCommonObject(defaultInitialValues, response);
         setInitialValues(data);
+        setCoverImage([response.coverImage]);
         setIsFormOpen(true);
       }
     } catch (error) {
@@ -79,7 +88,12 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
     try {
       if (params.hospitalityChainId === 'n' || params.restaurantId === 'c') {
         toast.custom((t) => (
-          <ToastBanner t={t} type="ERROR" message="Resaurant don't exist!" detail="please fill the general details first." />
+          <ToastBanner
+            t={t}
+            type="ERROR"
+            message="Resaurant don't exist!"
+            detail="please fill the general details first."
+          />
         ));
         return;
       }
@@ -87,6 +101,18 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
       data.hospitalityChainId = params.hospitalityChainId;
       data.restaurantId = params.restaurantId;
       data.days = data.days.map((day: any) => day.code);
+
+      const images = await Promise.all(
+        coverImage.map(async (img) => {
+          if (img instanceof Blob) {
+            const base64 = await convertImageToBase64(img);
+            return { photo: base64 };
+          }
+          return img;
+        })
+      );
+
+      data.coverImage = images[0];
 
       if (diningId) {
         await updateDiningTiming(diningId, data);
@@ -123,6 +149,20 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
     }
   }, [diningAreas]);
 
+  useEffect(() => {
+    const fetchUtilities = async () => {
+      const utilities = await getUtilities();
+      const options = Object.entries(utilities?.[0].SeatingArea).map(
+        ([key, value]) => ({
+          label: value,
+          value: key,
+        })
+      );
+      findField(diningFormField, 'diningType')['options'] = options
+    };
+    fetchUtilities();
+  }, []);
+
   return (
     <>
       <Button
@@ -141,6 +181,14 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
           closeForm={closeForm}
           handleSubmit={onSubmit}
         />
+        <div className="px-5 pb-10">
+          <FilePicker
+            label="Cover photo"
+            name="cover-photo"
+            files={coverImage}
+            setFiles={(v: any) => setCoverImage(v)}
+          />
+        </div>
       </FormSlider>
     </>
   );

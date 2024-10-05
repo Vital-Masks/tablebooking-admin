@@ -47,27 +47,31 @@ export const findField = (formFields: any, findString: string) => {
       if (field) {
         return field;
       }
+    } else {
+      if (fieldGroup.id === findString) {
+        return fieldGroup;
+      }
     }
   }
 
   return null;
 };
 
-export const convertImageToBase64 = (file: Blob): Promise<string>  =>{
+export const convertImageToBase64 = (file: Blob): Promise<string> => {
   return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
   });
-}
+};
 
 export const base64ToBlob = (base64: string, mimeType: string) => {
   const byteCharacters = atob(base64.split(',')[1]); // Remove the data URI scheme
   const byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
   }
   const byteArray = new Uint8Array(byteNumbers);
   return new Blob([byteArray], { type: mimeType });
-}
+};

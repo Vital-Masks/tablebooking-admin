@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  tab: 'general-details',
+  tab: 'general-details'
 };
 
 const restaurantSlice = createSlice({
@@ -13,6 +13,7 @@ const restaurantSlice = createSlice({
     },
   },
 });
+
 
 export const { setTab } = restaurantSlice.actions;
 
