@@ -21,7 +21,7 @@ import { ROUTE_HOSPITAL_CHAIN } from '@/constants/routes';
 const HospitalHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const hospitalId = searchParams.get('hospitalId') || null;
+  const hospitalId = searchParams.get('hospitalId') ?? null;
 
   const [createForm, setCreateForm] = useState(false);
   const [initialValues, setInitialValues] = useState({
