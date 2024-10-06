@@ -25,7 +25,7 @@ export const columns = [
     render: ({ id, hospitalityChainId }: any) => (
       <div className="flex items-center gap-4 mx-auto w-max">
         <Link
-          href={`${ROUTE_RESTAURANTS}/${id}/${hospitalityChainId}/general-detail`}
+          href={`${ROUTE_RESTAURANTS}/${id}/general-detail`}
         >
           <IconEye />
         </Link>

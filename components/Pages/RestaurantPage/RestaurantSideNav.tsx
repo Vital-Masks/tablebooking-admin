@@ -19,7 +19,7 @@ const RestaurantSideNav = () => {
                 href={tab.id}
                 type="button"
                 className={`flex h-10 w-full items-center justify-between rounded-md p-2 font-medium hover:bg-white-dark/10 hover:text-primary ${
-                  pathname.split('/')[5] === tab.id
+                  pathname.split('/')[4] === tab.id
                     ? 'bg-gray-100 text-primary dark:bg-[#181F32] dark:text-primary'
                     : ''
                 }`}

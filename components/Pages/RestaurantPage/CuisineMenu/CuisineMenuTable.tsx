@@ -5,11 +5,8 @@ import { getRestaurantCuisineMenu } from '@/lib/actions/restaurant.actions';
 
 const CuisineMenuTable = async ({ params }: any) => {
   const rowData: any[] = [];
-  if (params.hospitalityChainId !== 'n' && params.restaurantId !== 'c') {
-    const cuisines = await getRestaurantCuisineMenu(
-      params.hospitalityChainId,
-      params.restaurantId
-    );
+  if (params.restaurantId !== 'c') {
+    const cuisines = await getRestaurantCuisineMenu(params.restaurantId);
 
     cuisines?.map((res: any) => {
       rowData.push({

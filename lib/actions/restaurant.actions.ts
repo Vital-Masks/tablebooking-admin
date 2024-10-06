@@ -33,16 +33,10 @@ export const createRestaurantGeneral = async (
 };
 
 // GET RESTAURANT GENERAL
-export const getRestaurantGeneral = async (
-  hospitalityChainId: string,
-  restaurantId: string
-) => {
-  return await fetcher<Restaurant>(
-    `/restaurant/${restaurantId}`,
-    {
-      method: 'GET',
-    }
-  );
+export const getRestaurantGeneral = async (restaurantId: string) => {
+  return await fetcher<Restaurant>(`/restaurant/${restaurantId}`, {
+    method: 'GET',
+  });
 };
 
 //  UPDATE RESTAURANT DETAIL
@@ -67,10 +61,7 @@ export const updateRestaurantGeneral = async (
 // ********************* //
 
 // GET RESTAURANT CUISINE MENU
-export const getRestaurantCuisineMenu = async (
-  hospitalityChainId: string,
-  restaurantId: string
-) => {
+export const getRestaurantCuisineMenu = async (restaurantId: string) => {
   return await fetcher<CuisineMenu[]>(
     `/restaurant/${restaurantId}/cuisineMenu/getAllCuisineForRestaurant`,
     {
@@ -81,7 +72,6 @@ export const getRestaurantCuisineMenu = async (
 
 // GET RESTAURANT CUISINE MENU BY ID
 export const getRestaurantCuisineMenuById = async (
-  hospitalityChainId: string,
   restaurantId: string,
   cuisineMenuId: string
 ) => {
@@ -106,9 +96,7 @@ export const createRestaurantCuisineMenu = async (
   );
 
   if (newRestaurant) {
-    revalidate(
-      `${ROUTE_RESTAURANTS}/${general?.hospitalityChainId}/${general?.restaurantId}/cuisine-menu`
-    );
+    revalidate(ROUTE_RESTAURANTS);
     return parseStringify(newRestaurant);
   }
   return null;
@@ -128,9 +116,7 @@ export const updateRestaurantCuisineMenu = async (
   );
 
   if (newRestaurant) {
-    revalidate(
-      `${ROUTE_RESTAURANTS}/${general?.hospitalityChainId}/${general?.restaurantId}/cuisine-menu`
-    );
+    revalidate(ROUTE_RESTAURANTS);
     return parseStringify(newRestaurant);
   }
   return null;
@@ -139,10 +125,7 @@ export const updateRestaurantCuisineMenu = async (
 // ********************* //
 // ** DINING TIMIMG ** //
 // ********************* //
-export const getRestaurantDiningTiming = async (
-  hospitalityChainId: string,
-  restaurantId: string
-) => {
+export const getRestaurantDiningTiming = async (restaurantId: string) => {
   return await fetcher<DiningTiming[]>(
     `/restaurant/${restaurantId}/diningTiming/getAllDiningTimingForRestaurant`,
     {
@@ -153,7 +136,6 @@ export const getRestaurantDiningTiming = async (
 
 // GET RESTAURANT CUISINE MENU BY ID
 export const getRestaurantDiningTimingById = async (
-  hospitalityChainId: string,
   restaurantId: string,
   cuisineMenuId: string
 ) => {
@@ -169,7 +151,6 @@ export const getRestaurantDiningTimingById = async (
 export const createDiningTiming = async (
   general: CreateDiningTimingParams
 ): Promise<DiningTiming | null> => {
-
   const newRestaurant = await fetcher<DiningTiming>(
     `/restaurant/${general?.restaurantId}/diningTiming`,
     {
@@ -179,9 +160,7 @@ export const createDiningTiming = async (
   );
 
   if (newRestaurant) {
-    revalidate(
-      `${ROUTE_RESTAURANTS}/${general?.hospitalityChainId}/${general?.restaurantId}/dining-timings`
-    );
+    revalidate(ROUTE_RESTAURANTS);
     return parseStringify(newRestaurant);
   }
   return null;
@@ -201,9 +180,7 @@ export const updateDiningTiming = async (
   );
 
   if (newRestaurant) {
-    revalidate(
-      `${ROUTE_RESTAURANTS}/${general?.hospitalityChainId}/${general?.restaurantId}/dining-timings`
-    );
+    revalidate(ROUTE_RESTAURANTS);
     return parseStringify(newRestaurant);
   }
   return null;
@@ -214,10 +191,7 @@ export const updateDiningTiming = async (
 // ********************* //
 
 // GET RESTAURANT CUISINE MENU
-export const getRestaurantDiningAreas = async (
-  hospitalityChainId: string,
-  restaurantId: string
-) => {
+export const getRestaurantDiningAreas = async (restaurantId: string) => {
   return await fetcher<DiningArea[]>(
     `/restaurant/${restaurantId}/diningArea/getAllDiningAreaForRestaurant`,
     {
@@ -228,7 +202,6 @@ export const getRestaurantDiningAreas = async (
 
 // GET RESTAURANT CUISINE MENU BY ID
 export const getRestaurantDiningAreaById = async (
-  hospitalityChainId: string,
   restaurantId: string,
   diningId: string
 ) => {
@@ -253,9 +226,7 @@ export const createRestaurantDiningArea = async (
   );
 
   if (newDining) {
-    revalidate(
-      `ROUTE_RESTAURANTS/${general?.hospitalityChainId}/${general?.restaurantId}/dining-areas`
-    );
+    revalidate(ROUTE_RESTAURANTS);
     return parseStringify(newDining);
   }
   return null;
@@ -275,9 +246,7 @@ export const updateRestaurantDiningArea = async (
   );
 
   if (newRestaurant) {
-    revalidate(
-      `${ROUTE_RESTAURANTS}/${general?.hospitalityChainId}/${general?.restaurantId}/dining-areas`
-    );
+    revalidate(ROUTE_RESTAURANTS);
     return parseStringify(newRestaurant);
   }
   return null;
@@ -288,10 +257,7 @@ export const updateRestaurantDiningArea = async (
 // ********************* //
 
 // GET RESTAURANT USER ROLES
-export const getRestaurantUserRoles = async (
-  hospitalityChainId: string,
-  restaurantId: string
-) => {
+export const getRestaurantUserRoles = async (restaurantId: string) => {
   return await fetcher<UserRole[]>(
     `/restaurant/${restaurantId}/userRole/getAllUserRolesForRestaurant`,
     {
@@ -302,7 +268,6 @@ export const getRestaurantUserRoles = async (
 
 // GET RESTAURANT CUISINE MENU BY ID
 export const getRestaurantUserRoleById = async (
-  hospitalityChainId: string,
   restaurantId: string,
   userRoleId: string
 ) => {
@@ -327,9 +292,7 @@ export const createUserRoles = async (
   );
 
   if (newDining) {
-    revalidate(
-      `ROUTE_RESTAURANTS/${general?.hospitalityChainId}/${general?.restaurantId}/user-roles`
-    );
+    revalidate(ROUTE_RESTAURANTS);
     return parseStringify(newDining);
   }
   return null;
@@ -348,9 +311,7 @@ export const updateUserRoles = async (
   );
 
   if (newRestaurant) {
-    revalidate(
-      `${ROUTE_RESTAURANTS}/${general?.hospitalityChainId}/${general?.restaurantId}/user-roles`
-    );
+    revalidate(ROUTE_RESTAURANTS);
     return parseStringify(newRestaurant);
   }
   return null;

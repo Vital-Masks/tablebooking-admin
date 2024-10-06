@@ -5,11 +5,8 @@ import { getRestaurantDiningAreas } from '@/lib/actions/restaurant.actions';
 
 const DiningAreaTable = async ({ params }: any) => {
   const rowData: any[] = [];
-  if (params.hospitalityChainId !== 'n' && params.restaurantId !== 'c') {
-    const diningArea = await getRestaurantDiningAreas(
-      params.hospitalityChainId,
-      params.restaurantId
-    );
+  if (params.restaurantId !== 'c') {
+    const diningArea = await getRestaurantDiningAreas(params.restaurantId);
 
     diningArea?.map((res: any) => {
       rowData.push({
@@ -25,7 +22,7 @@ const DiningAreaTable = async ({ params }: any) => {
     <div>
       <Table columns={columns} rowData={rowData} />
     </div>
-  )
+  );
 };
 
 export default DiningAreaTable;

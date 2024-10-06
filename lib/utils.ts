@@ -37,23 +37,23 @@ export const returnCommonObject = (existingObject: any, currentObject: any) => {
   return commonObject;
 };
 
-export const findField = (formFields: any, findString: string) => {
-  for (const fieldGroup of formFields) {
-    if (Array.isArray(fieldGroup.fields)) {
-      const field = fieldGroup.fields.find(
-        (field: any) => field.id === findString
-      );
 
+export const findField = (formFields: any[], findString: string): any | null => {
+  for (const fieldGroup of formFields) {
+    // Check if the fieldGroup has nested fields
+    if (fieldGroup.fields) {
+      const field = fieldGroup.fields.find(({ id }: any) => id === findString);
       if (field) {
         return field;
       }
-    } else {
-      if (fieldGroup.id === findString) {
-        return fieldGroup;
-      }
+    }
+    // If it's not a nested group, check the fieldGroup itself
+    if (fieldGroup.id === findString) {
+      return fieldGroup;
     }
   }
-
+  
+  // Return null if no match is found
   return null;
 };
 

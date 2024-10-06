@@ -23,6 +23,7 @@ import ToastBanner from '@/components/Elements/ToastBanner';
 
 export default function GeneralDetailForm({
   hospitalityChains,
+  generalDetails,
   utilities,
   params,
 }: any) {
@@ -105,10 +106,7 @@ export default function GeneralDetailForm({
     restaurantId: string
   ) => {
     try {
-      const response: any = await getRestaurantGeneral(
-        hospitalityChainId,
-        restaurantId
-      );
+      const response: any = await getRestaurantGeneral(restaurantId);
 
       if (response) {
         const data = returnCommonObject(initialValues, response);
@@ -127,12 +125,6 @@ export default function GeneralDetailForm({
   };
 
   useEffect(() => {
-    if (hospitalityChainId != 'n' && restaurantId != 'c') {
-      fetchGeneralDetails(hospitalityChainId, restaurantId);
-    }
-  }, [hospitalityChainId, restaurantId]);
-
-  useEffect(() => {
     if (hospitalityChains) {
       const options = hospitalityChains.map((chain: any) => ({
         label: chain.chainName,
@@ -142,6 +134,17 @@ export default function GeneralDetailForm({
       findField(generalFormField, 'hospitalityChainId')['options'] = options;
     }
   }, [hospitalityChains]);
+
+  useEffect(() => {
+    if (generalDetails) {
+      const data = returnCommonObject(initialValues, generalDetails);
+      data['registerationNumber'] =
+        generalDetails?.hospitalityChainId?.registrationNumber;
+      data['hospitalityChainId'] = generalDetails?.hospitalityChainId?._id;
+      setCoverImage(generalDetails.images);
+      setInitialValues(data);
+    }
+  }, [generalDetails]);
 
   useEffect(() => {
     const options = Object.entries(utilities?.[0].restaurantType).map(

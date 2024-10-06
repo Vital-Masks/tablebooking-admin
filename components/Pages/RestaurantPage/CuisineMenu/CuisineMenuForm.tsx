@@ -46,15 +46,13 @@ const CuisineMenuForm = ({ params }: any) => {
   };
 
   const fetchCuisineMenuData = async () => {
-    if (!cuisineId || params.hospitalityChainId === 'n' || params.restaurantId === 'c') return;
+    if (!cuisineId || params.restaurantId === 'c') return;
 
     try {
       const response = await getRestaurantCuisineMenuById(
-        params.hospitalityChainId,
         params.restaurantId,
         cuisineId,
       );
-
 
       if (response) {
         const data = returnCommonObject(defaultInitialValues, response);
@@ -71,14 +69,12 @@ const CuisineMenuForm = ({ params }: any) => {
 
   const handleSubmit = async (data: CreateCuisineMenuParams) => {
     try {
-      if (params.hospitalityChainId === 'n' || params.restaurantId === 'c') {
+      if (params.restaurantId === 'c') {
         toast.custom((t) => (
           <ToastBanner t={t} type="ERROR" message="Resaurant don't exist!" detail="please fill the general details first." />
         ));
         return;
       }
-
-      data.hospitalityChainId = params.hospitalityChainId;
       data.restaurantId = params.restaurantId;
 
       if (cuisineId) {
@@ -93,7 +89,7 @@ const CuisineMenuForm = ({ params }: any) => {
         ));
       }
 
-      // closeForm();
+      closeForm();
     } catch (error) {
       toast.custom((t) => (
         <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
@@ -104,8 +100,6 @@ const CuisineMenuForm = ({ params }: any) => {
       );
     }
   };
-
-  
 
   useEffect(() => {
     if (cuisineId) {
@@ -121,14 +115,13 @@ const CuisineMenuForm = ({ params }: any) => {
         value: key
       }));
       
-      foodFormField.find(x => x.id === 'foodCategory')['options'] = options;
+      findField(foodFormField, 'foodCategory')['options'] = options;
 
       const options2 = Object.entries(utilities?.[0].Cuisine).map(([key, value]) => ({
         label: value,
         value: key
       }));
-      
-      foodFormField.find(x => x.id === 'cousineType')['options'] = options2;
+      findField(foodFormField, 'cousineType')['options'] = options2;
     }
     fetchUtilities()
   }, [])

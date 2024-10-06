@@ -11,7 +11,12 @@ import {
   updateDiningTiming,
 } from '@/lib/actions/restaurant.actions';
 
-import { convertImageToBase64, findField, handleError, returnCommonObject } from '@/lib/utils';
+import {
+  convertImageToBase64,
+  findField,
+  handleError,
+  returnCommonObject,
+} from '@/lib/utils';
 import {
   diningFormField,
   diningFormSchema,
@@ -56,16 +61,10 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
   };
 
   const fetchDining = async () => {
-    if (
-      !diningId ||
-      params.hospitalityChainId === 'n' ||
-      params.restaurantId === 'c'
-    )
-      return;
+    if (!diningId || params.restaurantId === 'c') return;
 
     try {
       const response = await getRestaurantDiningTimingById(
-        params.hospitalityChainId,
         params.restaurantId,
         diningId
       );
@@ -86,7 +85,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
 
   const onSubmit = async (data: CreateDiningTimingParams) => {
     try {
-      if (params.hospitalityChainId === 'n' || params.restaurantId === 'c') {
+      if (params.restaurantId === 'c') {
         toast.custom((t) => (
           <ToastBanner
             t={t}
@@ -97,8 +96,6 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
         ));
         return;
       }
-
-      data.hospitalityChainId = params.hospitalityChainId;
       data.restaurantId = params.restaurantId;
       data.days = data.days.map((day: any) => day.code);
 
@@ -125,6 +122,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
           <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
         ));
       }
+      closeForm();
     } catch (error) {
       toast.custom((t) => (
         <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
@@ -144,8 +142,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
 
   useEffect(() => {
     if (diningAreas.length > 0) {
-      diningFormField.find((x: any) => x.id === 'diningAreas')['options'] =
-        diningAreas;
+      findField(diningFormField, 'diningAreas')['options'] = diningAreas;
     }
   }, [diningAreas]);
 
@@ -158,7 +155,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
           value: key,
         })
       );
-      findField(diningFormField, 'diningType')['options'] = options
+      findField(diningFormField, 'diningType')['options'] = options;
     };
     fetchUtilities();
   }, []);

@@ -46,16 +46,10 @@ const UserRoleForm = ({ params }: any) => {
   };
 
   const fetchUserRoles = async () => {
-    if (
-      !userRoleId ||
-      params.hospitalityChainId === 'n' ||
-      params.restaurantId === 'c'
-    )
-      return;
+    if (!userRoleId || params.restaurantId === 'c') return;
 
     try {
       const response = await getRestaurantUserRoleById(
-        params.hospitalityChainId,
         params.restaurantId,
         userRoleId
       );
@@ -75,7 +69,7 @@ const UserRoleForm = ({ params }: any) => {
 
   const onSubmit = async (data: UserRolesParams) => {
     try {
-      if (params.hospitalityChainId === 'n' || params.restaurantId === 'c') {
+      if (params.restaurantId === 'c') {
         toast.custom((t) => (
           <ToastBanner
             t={t}
@@ -86,8 +80,6 @@ const UserRoleForm = ({ params }: any) => {
         ));
         return;
       }
-
-      data.hospitalityChainId = params.hospitalityChainId;
       data.restaurantId = params.restaurantId;
 
       if (userRoleId) {
@@ -102,7 +94,7 @@ const UserRoleForm = ({ params }: any) => {
         ));
       }
 
-      // closeForm();
+      closeForm();
     } catch (error) {
       toast.custom((t) => (
         <ToastBanner t={t} type="ERROR" message="Something went wrong!" />

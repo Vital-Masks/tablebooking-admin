@@ -5,11 +5,8 @@ import { getRestaurantUserRoles } from '@/lib/actions/restaurant.actions';
 
 const UserRoleTable = async ({ params }: any) => {
   const rowData: any[] = [];
-  if (params.hospitalityChainId !== 'n' && params.restaurantId !== 'c') {
-    const userRoles = await getRestaurantUserRoles(
-      params.hospitalityChainId,
-      params.restaurantId
-    );
+  if (params.restaurantId !== 'c') {
+    const userRoles = await getRestaurantUserRoles(params.restaurantId);
 
     userRoles?.map((res: any) => {
       rowData.push({

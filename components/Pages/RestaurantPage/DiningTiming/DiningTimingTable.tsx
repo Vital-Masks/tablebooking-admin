@@ -5,9 +5,8 @@ import { getRestaurantDiningTiming } from '@/lib/actions/restaurant.actions';
 
 const DiningTimingTable = async ({ params }: any) => {
   const rowData: any[] = [];
-  if (params.hospitalityChainId !== 'n' && params.restaurantId !== 'c') {
+  if (params.restaurantId !== 'c') {
     const dinings = await getRestaurantDiningTiming(
-      params.hospitalityChainId,
       params.restaurantId
     );
 

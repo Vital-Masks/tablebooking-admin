@@ -12,7 +12,7 @@ const RestaurantPage = async () => {
     },
     button2: {
       title: 'Create New',
-      action: ROUTE_RESTAURANTS + '/c/n/general-detail',
+      action: ROUTE_RESTAURANTS + '/c/general-detail',
     },
   };
 

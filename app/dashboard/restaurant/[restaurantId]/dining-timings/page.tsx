@@ -4,11 +4,8 @@ import { getRestaurantDiningAreas } from '@/lib/actions/restaurant.actions';
 
 const DiningTimingPage = async ({ params }: any) => {
   const diningAreas: any[] = [];
-  if (params.hospitalityChainId !== 'n' && params.restaurantId !== 'c') {
-    const diningArea = await getRestaurantDiningAreas(
-      params.hospitalityChainId,
-      params.restaurantId
-    );
+  if (params.restaurantId !== 'c') {
+    const diningArea = await getRestaurantDiningAreas(params.restaurantId);
 
     diningArea?.map((res: any) => {
       diningAreas.push({
