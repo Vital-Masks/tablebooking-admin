@@ -60,29 +60,24 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
   };
 
   const thumbs = files.map((file, i) => (
-    <div
-      className="w-full border flex items-center gap-2 justify-between"
-      key={`img_${i}`}
-    >
-      <div>
-        {(file.photo || file.preview) && (
-          <Image
-            src={file.photo || file.preview}
-            className="h-32 w-auto max-w-32 object-contain"
-            alt={`img_${i}`}
-            onLoad={() => URL.revokeObjectURL(file.preview)}
-            width={420}
-            height={420}
-          />
-        )}
-      </div>
+    <div className="border items-center gap-2 justify-between p-1 rounded" key={`img_${i}`}>
       <button
         onClick={() => removeFile(i)}
         title="Remove file"
-        className="mr-2 hover:bg-gray-100 rounded-full w-6 h-6 flex items-center justify-center"
-      >
+        className="ml-auto hover:bg-gray-100 rounded-full w-6 h-6 flex items-center justify-center"
+      > 
         <IconTrash className="w-4 h-4" />
       </button>
+      {(file.photo || file.preview) && (
+        <Image
+          src={file.photo || file.preview}
+          className="h-32 w-auto max-w-32 object-contain rounded-sm"
+          alt={`img_${i}`}
+          onLoad={() => URL.revokeObjectURL(file.preview)}
+          width={420}
+          height={420}
+        />
+      )}
     </div>
   ));
 
@@ -114,7 +109,9 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
           </div>
         </div>
       </div>
-      <aside className="flex flex-col mt-4 gap-4">{thumbs}</aside>
+      <aside className="flex flex-wrap items-start justify-start mt-4 gap-2">
+        {thumbs}
+      </aside>
     </div>
   );
 };
