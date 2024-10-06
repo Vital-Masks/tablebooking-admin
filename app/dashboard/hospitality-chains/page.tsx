@@ -1,10 +1,11 @@
-import HospitalChainPageTemplate from "@/components/Pages/HospitalChain/HospitalChainPageTemplate";
+import HospitalHeader from '@/components/Pages/HospitalChain/HospitalHeader';
+import HospitalTable from '@/components/Pages/HospitalChain/HospitalTable';
 
 const HospitalChainPage = () => {
- 
   return (
     <main>
-      <HospitalChainPageTemplate />
+      <HospitalHeader />
+      <HospitalTable />
     </main>
   );
 };

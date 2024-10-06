@@ -89,7 +89,7 @@ const HospitalHeader = () => {
   }, [hospitalId]);
 
   return (
-    <div>
+    <>
       <PageHeader pageHeaderData={pageHeaderData} />
 
       <FormSlider isOpen={createForm}>
@@ -102,7 +102,7 @@ const HospitalHeader = () => {
           closeForm={() => handleCloseForm()}
         />
       </FormSlider>
-    </div>
+    </>
   );
 };
 
