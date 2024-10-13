@@ -1,4 +1,3 @@
-import VanillaCalendar from '@/components/Common/Fields/VanillaCalendar';
 import PageHeader from '@/components/Elements/PageHeader';
 import RestaurantTable from '@/components/Pages/RestaurantPage/RestaurantTable';
 import { ROUTE_RESTAURANTS } from '@/constants/routes';

@@ -16,7 +16,7 @@ export const generalFormField = [
         name: 'restaurantType',
         label: 'Restaurant Type',
         type: 'select',
-        options: []
+        options: [],
       },
     ],
   },
@@ -98,13 +98,20 @@ export const generalFormField = [
     ],
   },
   {
-    id: 'paymentOptions',
-    name: 'paymentOptions',
-    label: 'Payment Options',
-    type: 'select',
+    id: 'grid7',
+    name: 'grid',
+    fields: [
+      {
+        id: 'paymentOptions',
+        name: 'paymentOptions',
+        label: 'Payment Options',
+        type: 'select',
+      },
+      { id: 'cuisine', name: 'cuisine', label: 'Cuisine', type: 'select' },
+    ],
   },
   {
-    id: 'grid7',
+    id: 'grid8',
     name: 'grid',
     fields: [
       { id: 'timeZone', name: 'timeZone', label: 'Time Zone', type: 'text' },
@@ -116,18 +123,18 @@ export const generalFormField = [
         options: [
           {
             label: 'Available',
-            value: true
+            value: true,
           },
           {
             label: 'Not Available',
-            value: false
-          }
+            value: false,
+          },
         ],
       },
     ],
   },
   {
-    id: 'grid8',
+    id: 'grid9',
     name: 'grid',
     fields: [
       { id: 'openTime', name: 'openTime', label: 'Open time', type: 'time' },

@@ -67,7 +67,7 @@ export default function GeneralDetailForm({
 
       data.images = images;
 
-      if (hospitalityChainId !== 'n' && restaurantId !== 'c') {
+      if (restaurantId !== 'c') {
         await updateRestaurantGeneral(restaurantId, data);
         toast.custom((t) => (
           <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
@@ -81,13 +81,13 @@ export default function GeneralDetailForm({
         <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
       ));
       // Navigate and fetch details if response contains IDs
-      if (response?.hospitalityChainId?._id && response?._id) {
+      if (response?._id) {
         const {
           _id: resId,
           hospitalityChainId: { _id: chainId },
         } = response;
-        router.push(`/${resId}/${chainId}/general-detail`);
-        fetchGeneralDetails(chainId, resId);
+        router.push(`/${chainId}/general-detail`);
+        fetchGeneralDetails(resId);
       }
     } catch (error) {
       // General error handling
@@ -101,10 +101,7 @@ export default function GeneralDetailForm({
     }
   };
 
-  const fetchGeneralDetails = async (
-    hospitalityChainId: string,
-    restaurantId: string
-  ) => {
+  const fetchGeneralDetails = async (restaurantId: string) => {
     try {
       const response: any = await getRestaurantGeneral(restaurantId);
 
@@ -154,7 +151,14 @@ export default function GeneralDetailForm({
       })
     );
 
-    findField(generalFormField, 'restaurantType')['options'] = options;
+    const options2 = Object.entries(utilities?.[0].Cuisine).map(
+      ([key, value]) => ({
+        label: value,
+        value: key,
+      })
+    );
+
+    findField(generalFormField, 'cuisine')['options'] = options2;
   }, [utilities]);
 
   return (
