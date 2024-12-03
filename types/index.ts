@@ -152,3 +152,18 @@ declare type UserRole = {
   gender: string;
   phoneNumber: string;
 };
+
+declare type Reservation = {
+  id: string;
+  fullname: string;
+  contact: string;
+  restaurant: string;
+  reservedfor: string;
+  date: string;
+  time: string;
+  pax: string;
+  diningarea: string;
+  status: string;
+  table: string;
+  createdOn: string;
+};

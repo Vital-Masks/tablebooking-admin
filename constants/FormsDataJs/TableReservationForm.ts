@@ -2,13 +2,12 @@ import * as Yup from 'yup';
 
 export const tableReservationFormField = [
   {
-    id: 'grid1',
-    name: 'grid',
-    fields: [
-      { id: 'date', name: 'date', label: 'Date', type: 'select' },
-      { id: 'time', name: 'time', label: 'Time', type: 'select' },
-    ],
+    id: 'date',
+    name: 'date',
+    label: 'Select date',
+    type: 'calendar',
   },
+  { id: 'time', name: 'time', label: 'Time', type: 'time' },
   { id: 'fullname', name: 'fullname', label: 'Full name', type: 'text' },
   {
     id: 'contactNumber',
@@ -17,33 +16,42 @@ export const tableReservationFormField = [
     type: 'text',
   },
   { id: 'email', name: 'email', label: 'Email address', type: 'email' },
-  { id: 'restaurant', name: 'restaurant', label: 'Restaurant', type: 'text' },
+  { id: 'restaurant', name: 'restaurant', label: 'Restaurant', type: 'restaurant-select' },
   {
-    id: 'reservedfor',
-    name: 'reservedfor',
-    label: 'Reserved For',
-    type: 'text',
+    id: 'dining',
+    name: 'dining',
+    label: 'Dining',
+    type: 'dining-select',
   },
-  { id: 'pax', name: 'pax', label: 'Pax', type: 'number' },
-  { id: 'diningarea', name: 'diningarea', label: 'Dining Area', type: 'text' },
+  { id: 'diningArea', name: 'diningArea', label: 'Dining Area', type: 'dining-area-select' },
+  { id: 'guestSize', name: 'guestSize', label: 'Guest Size', type: 'number' },
   { id: 'occasion', name: 'occasion', label: 'Occasion', type: 'text' },
   {
     id: 'specialnote',
     name: 'specialnote',
     label: 'Special Note',
-    type: 'text',
+    type: 'textarea',
   },
   {
     id: 'grid2',
     name: 'grid',
     fields: [
       { id: 'tableno', name: 'tableno', label: 'Table No', type: 'select' },
-      { id: 'status', name: 'status', label: 'Status', type: 'select' },
+      {
+        id: 'status', name: 'status', label: 'Status', type: 'select', options: [{
+          label: "Booked", value: 'booked'
+        }, {
+          label: "Pending", value: 'pending'
+        }, {
+          label: "Rejected", value: 'rejected'
+        }
+        ]
+      },
     ],
   },
 ];
 
-export const tableReservationFormSchema = {
+export const tableReservationFormSchema = Yup.object().shape({
   date: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
@@ -61,14 +69,14 @@ export const tableReservationFormSchema = {
   restaurant: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
-  reservedfor: Yup.string()
+    dining: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
-  pax: Yup.number()
+    guestSize: Yup.number()
     .integer('Pax must be an integer')
     .positive('Pax must be a positive number')
     .required('This field cannot be empty'),
-  diningarea: Yup.string()
+    diningArea: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
   occasion: Yup.string().max(255, 'Max characters 255 only allowed'),
@@ -77,4 +85,4 @@ export const tableReservationFormSchema = {
   status: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
-};
+});

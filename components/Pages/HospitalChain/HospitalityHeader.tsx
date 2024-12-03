@@ -18,7 +18,7 @@ import {
 import { handleError, returnCommonObject } from '@/lib/utils';
 import { ROUTE_HOSPITAL_CHAIN } from '@/constants/routes';
 
-const HospitalHeader = () => {
+const HospitalityHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const hospitalId = searchParams.get('hospitalId') ?? null;
@@ -106,4 +106,4 @@ const HospitalHeader = () => {
   );
 };
 
-export default HospitalHeader;
+export default HospitalityHeader;

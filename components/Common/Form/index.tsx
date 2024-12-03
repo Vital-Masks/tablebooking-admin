@@ -1,15 +1,15 @@
-import { Field, Form, Formik } from 'formik';
-import { IconPhoto, IconXCircle } from '@/components/Icons';
-import IconLoading from '@/components/Icons/IconLoading';
-import FilePicker from '../Fields/FilePicker';
-import VanillaCalendar from '../Fields/VanillaCalendar';
-import CustomDatesCalendar from '../Fields/CustomDatesCalendar';
+import { Field, Form, Formik } from "formik";
+import { IconXCircle } from "@/components/Icons";
+import IconLoading from "@/components/Icons/IconLoading";
+import VanillaCalendar from "../Fields/VanillaCalendar";
+import CustomDatesCalendar from "../Fields/CustomDatesCalendar";
+import RestaurantSelect from "@/components/Elements/RestaurantSelect";
+import DiningSelect from "@/components/Elements/DiningSelect";
+import DiningAreaSelect from "@/components/Elements/DiningAreaSelect";
+import Calendar from "../Fields/Calendar";
 
-const options = [
-  { value: 'orange', label: 'Orange' },
-  { value: 'white', label: 'White' },
-  { value: 'purple', label: 'Purple' },
-];
+const options = [{ value: "select", label: "Select" }];
+
 interface FormField {
   id: string;
   name: string;
@@ -73,12 +73,12 @@ const FormComponent = ({
                   <div
                     key={field.id}
                     className={`grid ${
-                      field.name === 'grid'
-                        ? 'grid-cols-2 gap-4'
-                        : 'grid-cols-1'
+                      field.name === "grid"
+                        ? "grid-cols-2 gap-4"
+                        : "grid-cols-1"
                     }`}
                   >
-                    {field.name === 'grid' ? (
+                    {field.name === "grid" ? (
                       field.fields?.map((subField) => (
                         <RenderField
                           key={subField.id}
@@ -88,7 +88,7 @@ const FormComponent = ({
                           setFieldValue={setFieldValue}
                         />
                       ))
-                    ) : field.type === 'header' ? (
+                    ) : field.type === "header" ? (
                       <p
                         key={field.id}
                         className="text-md font-bold mt-2 border-t pt-3"
@@ -114,10 +114,10 @@ const FormComponent = ({
               >
                 <IconLoading
                   className={`w-4 h-4 me-3 transition-opacity duration-300 animate-spin  ${
-                    isSubmitting ? 'opacity-100 inline' : 'opacity-0 hidden'
+                    isSubmitting ? "opacity-100 inline" : "opacity-0 hidden"
                   }`}
                 />
-                <span>{isSubmitting ? 'Submitting...' : 'Submit'}</span>
+                <span>{isSubmitting ? "Submitting..." : "Submit"}</span>
               </button>
             </Form>
           )}
@@ -141,12 +141,12 @@ const RenderField: React.FC<RenderFieldProps> = ({
   values,
 }) => {
   switch (field.type) {
-    case 'select':
+    case "select":
       if (!field.ifRender) {
         return (
           <div
             key={field.id}
-            className={`${errors[field.name] && 'has-error'}`}
+            className={`${errors[field.name] && "has-error"}`}
           >
             <label htmlFor={field.name}>{field.label}</label>
 
@@ -173,7 +173,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
           return (
             <div
               key={field.id}
-              className={`${errors[field.name] && 'has-error'}`}
+              className={`${errors[field.name] && "has-error"}`}
             >
               <label htmlFor={field.name}>{field.label}</label>
 
@@ -201,7 +201,32 @@ const RenderField: React.FC<RenderFieldProps> = ({
         return <></>;
       }
 
-    case 'switch':
+    case "restaurant-select":
+      return (
+        <div key={field.id}>
+          <RestaurantSelect field={field} errors={errors} />
+        </div>
+      );
+
+    case "dining-select":
+      return (
+        <DiningSelect
+          field={field}
+          errors={errors}
+          restaurantId={values["restaurant"]}
+        />
+      );
+
+    case "dining-area-select":
+      return (
+        <DiningAreaSelect
+          field={field}
+          errors={errors}
+          restaurantId={values["restaurant"]}
+        />
+      );
+
+    case "switch":
       return (
         <div key={field.id}>
           <label htmlFor={field.name}>{field.label}</label>
@@ -217,7 +242,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
         </div>
       );
 
-    case 'textarea':
+    case "textarea":
       return (
         <div key={field.id}>
           <label htmlFor={field.name}>{field.label}</label>
@@ -230,37 +255,29 @@ const RenderField: React.FC<RenderFieldProps> = ({
         </div>
       );
 
-    case 'file':
+    case "file":
       return (
         <div key={field.id} className="col-span-full">
           {/* <FilePicker /> */}
         </div>
       );
 
-    case 'calendar':
+    case "calendar":
       return (
-        <div key={field.id} className={`${errors[field.name] && 'has-error'}`}>
+        <div
+          key={field.id}
+          className={`w-full ${errors[field.name] && "has-error"}`}
+        >
           <label htmlFor={field.name}>{field.label}</label>
-          <VanillaCalendar
-            config={{
-              type: 'default',
-              actions: {
-                clickDay(e, self) {
-                  setFieldValue('dateFrom', self.selectedDates.at(0));
-                },
-              },
-              settings: {
-                selection: {
-                  day: 'single',
-                },
-              },
-            }}
-            className="border"
+          <Calendar
+            name={field.name}
+            values={values}
+            setFieldValue={setFieldValue}
           />
           <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
         </div>
       );
-    case 'customDateCalendar':
+    case "customDateCalendar":
       return (
         <CustomDatesCalendar
           field={field}
@@ -271,7 +288,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
       );
     default:
       return (
-        <div key={field.id} className={`${errors[field.name] && 'has-error'}`}>
+        <div key={field.id} className={`${errors[field.name] && "has-error"}`}>
           <label htmlFor={field.name}>{field.label}</label>
           <Field
             id={field.name}

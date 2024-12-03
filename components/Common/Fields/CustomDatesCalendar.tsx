@@ -60,7 +60,7 @@ const CustomDatesCalendar = ({
 
   useEffect(() => {
     // Only update 'days' if they are strings (avoid unnecessary updates)
-    if (typeof values['days'][0] === 'string') {
+    if (typeof values['days']?.[0] === 'string') {
       const newArr = values['days']
         .map((day: string) => days.find((x) => x.code === day))
         .filter(Boolean);

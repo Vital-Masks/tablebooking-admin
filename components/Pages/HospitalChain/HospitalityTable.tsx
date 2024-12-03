@@ -2,7 +2,7 @@ import Table from '@/components/Common/Table';
 import { columns } from './columns';
 import { getHospitalChainList } from '@/lib/actions/hospitalChain.action';
 
-const HospitalTable = async () => {
+const HospitalityTable = async () => {
   const rowData: HospitalChain[] = [];
   const hospitals = await getHospitalChainList();
 
@@ -21,4 +21,4 @@ const HospitalTable = async () => {
   return <Table columns={columns} rowData={rowData} />;
 };
 
-export default HospitalTable;
+export default HospitalityTable;
