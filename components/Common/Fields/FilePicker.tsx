@@ -1,8 +1,8 @@
-import { useDropzone, FileRejection, DropEvent } from 'react-dropzone';
-import { IconPhoto, IconTrash } from '@/components/Icons';
-import { FC } from 'react';
-import imageCompression from 'browser-image-compression';
-import Image from 'next/image';
+import { useDropzone, FileRejection, DropEvent } from "react-dropzone";
+import { IconPhoto, IconTrash } from "@/components/Icons";
+import { FC } from "react";
+import imageCompression from "browser-image-compression";
+import Image from "next/image";
 
 interface FilePickerProps {
   name: string;
@@ -28,13 +28,13 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
       const compressedFile = await imageCompression(file, options);
       return compressedFile;
     } catch (error) {
-      console.error('Image compression failed:', error);
+      console.error("Image compression failed:", error);
       throw error;
     }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: { 'image/*': [] },
+    accept: { "image/*": [] },
     maxFiles: 5,
     onDrop: async (
       acceptedFiles: File[],
@@ -60,24 +60,27 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
   };
 
   const thumbs = files.map((file, i) => (
-    <div className="border items-center gap-2 justify-between p-1 rounded" key={`img_${i}`}>
-      <button
-        onClick={() => removeFile(i)}
-        title="Remove file"
-        className="ml-auto hover:bg-gray-100 rounded-full w-6 h-6 flex items-center justify-center"
-      > 
-        <IconTrash className="w-4 h-4" />
-      </button>
+    <div
+      className="border items-center rounded relative w-full"
+      key={`img_${i}`}
+    >
       {(file.photo || file.preview) && (
         <Image
           src={file.photo || file.preview}
-          className="h-32 w-auto max-w-32 object-contain rounded-sm"
+          className="w-full aspect-square object-cover rounded-sm"
           alt={`img_${i}`}
           onLoad={() => URL.revokeObjectURL(file.preview)}
           width={420}
           height={420}
         />
       )}
+      <button
+        onClick={() => removeFile(i)}
+        title="Remove file"
+        className="ml-auto hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center absolute bottom-2 right-2 bg-white/50"
+      >
+        <IconTrash className="w-3 h-3" />
+      </button>
     </div>
   ));
 
@@ -90,7 +93,7 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
         {label}
       </label>
       <div
-        {...getRootProps({ className: 'dropzone' })}
+        {...getRootProps({ className: "dropzone" })}
         className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
       >
         <div className="text-center">
@@ -109,7 +112,7 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
           </div>
         </div>
       </div>
-      <aside className="flex flex-wrap items-start justify-start mt-4 gap-2">
+      <aside className="grid grid-cols-3 mt-4 gap-1">
         {thumbs}
       </aside>
     </div>
