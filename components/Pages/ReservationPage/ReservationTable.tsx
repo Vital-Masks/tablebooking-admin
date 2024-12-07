@@ -9,15 +9,15 @@ const ReservationTable = async () => {
   reservations?.map((res: any) => {
     rowData.push({
       id: res._id,
-      fullname: 'Full name',
-      contact: 'Contact No',
-      restaurant: 'Restaurant',
-      reservedfor: 'Reserved For',
+      fullname: res.guestUserId.firstName,
+      contact: res.guestUserId.contactNo,
+      restaurant: res.restaurantId.restaurantName,
+      reservedfor: res.dining.diningName,
       date: res.date,
       time: res.time,
       pax: res.guestSize,
-      diningarea: 'Dining Area',
-      status: 'Status',
+      diningarea: res.diningArea.sectionName,
+      status: res.status,
       table: 'Table',
       createdOn: res.created_at,
     });

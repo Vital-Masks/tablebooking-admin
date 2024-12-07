@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import VanillaCalendar from "./VanillaCalendar";
 
 const Calendar = ({ name, values, setFieldValue }: any) => {
-  const [selectedDates, setSelectedDates] = useState<any[]>([]);
+  const [selectedDates, setSelectedDates] = useState<any[]>([new Date()]);
 
   useEffect(() => {
     if (values && values[name] !== selectedDates[0]) {
@@ -29,8 +29,8 @@ const Calendar = ({ name, values, setFieldValue }: any) => {
             },
             selected: {
               dates: selectedDates,
-              month: 0,
-              year: 2024,
+              month: new Date(selectedDates[0]).getMonth(),
+              year: new Date(selectedDates[0]).getFullYear(),
             },
             visibility: {
               theme: "light",

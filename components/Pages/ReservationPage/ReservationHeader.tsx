@@ -7,18 +7,17 @@ import FormComponent from "@/components/Common/Form";
 import FormSlider from "@/components/Common/Form/FormSlider";
 import PageHeader from "@/components/Elements/PageHeader";
 
-import {
-  createHospitalChain,
-  getHospitalChain,
-  updateHospitalChain,
-} from "@/lib/actions/hospitalChain.action";
-import { handleError, returnCommonObject } from "@/lib/utils";
+
+import { handleError } from "@/lib/utils";
 import { ROUTE_RESERVATIONS } from "@/constants/routes";
 import {
   tableReservationFormField,
   tableReservationFormSchema,
 } from "@/constants/FormsDataJs/TableReservationForm";
-import { createReservation } from "@/lib/actions/reservation.action";
+import {
+  createReservation,
+  getReservation,
+} from "@/lib/actions/reservation.action";
 
 const ReservationHeader = () => {
   const searchParams = useSearchParams();
@@ -60,13 +59,13 @@ const ReservationHeader = () => {
   const handleFormSubmit = async (data: any) => {
     try {
       data["guestUserId"] = "67091f41011f4aea418b87f1";
-       if (reservationId) {
+      if (reservationId) {
         //  await updateHospitalChain(reservationId, data);
         //  router.push(ROUTE_RESERVATIONS);
-       } else {
-         await createReservation(data);
-       }
-       setCreateForm(false);
+      } else {
+        await createReservation(data);
+      }
+      setCreateForm(false);
     } catch (error) {
       handleError(
         "An error occurred while submitting the hospital chain form:",
@@ -75,13 +74,27 @@ const ReservationHeader = () => {
     }
   };
 
-  const fetchHospitalChain = async (id: string) => {
+  const fetchReservation = async (id: string) => {
     try {
       setCreateForm(true);
-      const response = await getHospitalChain(id);
-      setInitialValues((prevValues) =>
-        returnCommonObject(prevValues, response)
-      );
+      const response = await getReservation(id);
+
+
+      setInitialValues({
+        date: response.date,
+        time: response.time.replace('.', ':'),
+        fullname: response.guestUserId.firstName,
+        contactNumber: response.guestUserId.contactNo,
+        email: response.guestUserId.email,
+        restaurant: response.restaurantId._id,
+        reservedfor: response.dining._id,
+        pax: response.guestSize,
+        diningarea: response.diningArea._id,
+        occasion: response.occasion,
+        specialnote: response.specialRequest,
+        tableno: "",
+        status: response.status,
+      });
     } catch (error) {
       handleError(
         "An error occurred while submitting the hospital chain form:",
@@ -92,7 +105,7 @@ const ReservationHeader = () => {
 
   useEffect(() => {
     if (reservationId) {
-      fetchHospitalChain(reservationId);
+      fetchReservation(reservationId);
     }
   }, [reservationId]);
 

@@ -29,7 +29,7 @@ export const getReservationList = async (): Promise<
 };
 
 export const getReservation = async (id: string) => {
-    return await fetcher<Reservation>(`/hospitalityChain/${id}`, {
+    return await fetcher<Reservation>(`/reservation/${id}`, {
       method: 'GET',
     });
   };
