@@ -7,7 +7,6 @@ import FormComponent from "@/components/Common/Form";
 import FormSlider from "@/components/Common/Form/FormSlider";
 import PageHeader from "@/components/Elements/PageHeader";
 
-
 import { handleError } from "@/lib/utils";
 import { ROUTE_RESERVATIONS } from "@/constants/routes";
 import {
@@ -79,11 +78,10 @@ const ReservationHeader = () => {
       setCreateForm(true);
       const response = await getReservation(id);
 
-
       setInitialValues({
         date: response.date,
-        time: response.time.replace('.', ':'),
-        fullname: response.guestUserId.firstName,
+        time: response.time.replace(".", ":"),
+        fullname: response.guestUserId?.firstName,
         contactNumber: response.guestUserId.contactNo,
         email: response.guestUserId.email,
         restaurant: response.restaurantId._id,
