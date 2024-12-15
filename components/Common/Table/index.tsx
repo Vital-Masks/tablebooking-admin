@@ -1,17 +1,18 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { DataTable } from 'mantine-datatable';
+"use client";
 
-import { IconFilter } from '@/components/Icons';
-import Dropdown from '@/components/Elements/Dropdown';
-import Button from '@/components/Elements/Button';
+import React, { useEffect, useState } from "react";
+import { DataTable } from "mantine-datatable";
 
-const Table = ({ title, columns, rowData, onButtonClick }: any) => {
+import { IconFilter } from "@/components/Icons";
+import Dropdown from "@/components/Elements/Dropdown";
+import Button from "@/components/Elements/Button";
+
+const Table = ({ title, columns, rowData, onButtonClick, Filter, isLoading }: any) => {
   const pageSize = 10;
   const initialRecords = rowData.slice(0, pageSize);
   const [page, setPage] = useState(1);
   const [recordsData, setRecordsData] = useState(initialRecords);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     setPage(1);
@@ -41,20 +42,7 @@ const Table = ({ title, columns, rowData, onButtonClick }: any) => {
                 </>
               }
             >
-              <ul className="!min-w-[170px]">
-                <li>
-                  <button type="button">Available</button>
-                </li>
-                <li>
-                  <button type="button">Free plan</button>
-                </li>
-                <li>
-                  <button type="button">Pro plan</button>
-                </li>
-                <li>
-                  <button type="button">Restaurant</button>
-                </li>
-              </ul>
+              <Filter />
             </Dropdown>
           </div>
           <div>
@@ -77,7 +65,7 @@ const Table = ({ title, columns, rowData, onButtonClick }: any) => {
       </div>
       <div className="datatables h-full">
         <DataTable
-          noRecordsText="No results match your search query"
+          noRecordsText={isLoading? "Loading..." : "No results match your search query"}
           className="whitespace-nowrap h-full"
           minHeight={400}
           records={recordsData}
@@ -86,9 +74,6 @@ const Table = ({ title, columns, rowData, onButtonClick }: any) => {
           recordsPerPage={pageSize}
           page={page}
           onPageChange={(p) => setPage(p)}
-          paginationText={({ from, to, totalRecords }) =>
-            `Showing  ${from} to ${to} of ${totalRecords} entries`
-          }
         />
       </div>
     </div>

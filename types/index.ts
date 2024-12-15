@@ -13,6 +13,7 @@ declare type Restaurant = {
   createdOn: string;
   hospitalityChainId?: any;
   images?: any;
+  restaurantName?: string;
 };
 
 declare type CreateRestaurantGeneralParams = {

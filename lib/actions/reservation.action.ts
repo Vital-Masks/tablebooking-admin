@@ -7,12 +7,12 @@ import { fetcher, revalidate } from './fetcher';
 const ENDPOINT = process.env.API_ENDPOINT;
 
 // GET ALL RESERVATIONS
-export const getReservationList = async (): Promise<
+export const getReservationList = async (restaurantId: string): Promise<
     Reservation[] | null
 > => {
     try {
         const response = await fetch(
-            `${ENDPOINT}/restaurant/66a12f0eabf0ba2855d1a18d/reservation/getAllForRestaurant`
+            `${ENDPOINT}/restaurant/${restaurantId}/reservation/getAllForRestaurant`
         );
         if (!response.ok) {
             throw new Error(`Failed to fetch: ${response.statusText}`);
@@ -30,9 +30,9 @@ export const getReservationList = async (): Promise<
 
 export const getReservation = async (id: string) => {
     return await fetcher<Reservation>(`/reservation/${id}`, {
-      method: 'GET',
+        method: 'GET',
     });
-  };
+};
 
 //  CREATE RESERVATION
 export const createReservation = async (
