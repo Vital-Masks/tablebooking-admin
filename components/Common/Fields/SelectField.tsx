@@ -12,6 +12,7 @@ interface CustomSelectProps extends FieldProps {
   className?: string;
   placeholder?: string;
   hasError?: boolean;
+  disabled?: boolean;
 }
 
 export const SelectField = ({
@@ -21,7 +22,8 @@ export const SelectField = ({
   form,
   options,
   isMulti = false,
-  hasError = false
+  hasError = false,
+  disabled = false
 }: CustomSelectProps) => {
 
   const onChange = (option: Option | Option[]) => {
@@ -54,6 +56,7 @@ export const SelectField = ({
       placeholder={placeholder}
       options={options}
       isMulti={isMulti}
+      isDisabled={disabled}
       classNames={{
         control: (state) =>
           state.isFocused

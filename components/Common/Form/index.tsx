@@ -259,13 +259,14 @@ const RenderField: React.FC<RenderFieldProps> = ({
       return (
         <div
           key={field.id}
-          className={`w-full ${errors[field.name] && "has-error"}`}
+          className={`w-full min-w-full ${errors[field.name] && "has-error"}`}
         >
           <label htmlFor={field.name}>{field.label}</label>
           <Calendar
             name={field.name}
             values={values}
             setFieldValue={setFieldValue}
+            hasError={errors[field.name]}
           />
           <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
         </div>

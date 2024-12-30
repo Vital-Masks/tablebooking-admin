@@ -3,6 +3,7 @@
 import { getRestaurantsList } from "@/lib/actions/restaurant.actions";
 import { Field } from "formik";
 import { useEffect, useState } from "react";
+import SelectField from "../Common/Fields/SelectField";
 
 // Define the interface for restaurant options
 interface RestaurantOption {
@@ -34,17 +35,13 @@ const RestaurantSelect = ({ field, errors }: any) => {
   return (
     <div key={field.id} className={`${errors[field.name] && "has-error"}`}>
       <label htmlFor={field.name}>{field.label}</label>
-
-      <Field name={field.name} as="select" className="form-input">
-        <option key="0">Select</option>
-        {state.length > 0 &&
-          state?.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-      </Field>
-
+      <Field
+        name={field.name}
+        component={SelectField}
+        options={state}
+        disabled={state.length === 0}
+        hasError={errors[field.name]}
+      />
       <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
     </div>
   );

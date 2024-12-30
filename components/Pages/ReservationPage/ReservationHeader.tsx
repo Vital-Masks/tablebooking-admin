@@ -77,19 +77,19 @@ const ReservationHeader = () => {
     try {
       setCreateForm(true);
       const response = await getReservation(id);
-
+      console.log(">> response", response)
       setInitialValues({
         date: response.date,
-        time: response.time.replace(".", ":"),
+        time: response.time?.replace(".", ":"),
         fullname: response.guestUserId?.firstName,
-        contactNumber: response.guestUserId.contactNo,
-        email: response.guestUserId.email,
-        restaurant: response.restaurantId._id,
-        reservedfor: response.dining._id,
-        pax: response.guestSize,
-        diningarea: response.diningArea._id,
-        occasion: response.occasion,
-        specialnote: response.specialRequest,
+        contactNumber: response.guestUserId?.contactNo,
+        email: response.guestUserId?.email,
+        restaurant: response.restaurantId?._id,
+        reservedfor: response.dining?._id,
+        pax: response.guestSize || "",
+        diningarea: response.diningArea?._id,
+        occasion: response.occasion || "",
+        specialnote: response.specialRequest || "",
         tableno: "",
         status: response.status,
       });

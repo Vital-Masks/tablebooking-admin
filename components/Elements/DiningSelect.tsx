@@ -3,6 +3,7 @@
 import { getRestaurantDiningTiming } from "@/lib/actions/restaurant.actions";
 import { Field } from "formik";
 import { useEffect, useState } from "react";
+import SelectField from "../Common/Fields/SelectField";
 
 // Define the interface for restaurant options
 interface RestaurantOption {
@@ -40,21 +41,12 @@ const DiningSelect = ({ field, errors, restaurantId }: any) => {
       <label htmlFor={field.name}>{field.label}</label>
       <Field
         name={field.name}
-        as="select"
-        className="form-input"
+        component={SelectField}
+        options={state}
         disabled={state.length === 0}
-      >
-        <option key="0" value="">
-          {state.length > 0 ? "Select" : "No Results!"}
-        </option>
-        {state.length > 0 &&
-          state.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-      </Field>
+        hasError={errors[field.name]}
 
+      />
       <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
     </div>
   );

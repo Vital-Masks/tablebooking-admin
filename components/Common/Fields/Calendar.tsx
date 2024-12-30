@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import VanillaCalendar from "./VanillaCalendar";
 
-const Calendar = ({ name, values, setFieldValue }: any) => {
+const Calendar = ({ name, values, setFieldValue, hasError }: any) => {
   const [selectedDates, setSelectedDates] = useState<any[]>([new Date()]);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const Calendar = ({ name, values, setFieldValue }: any) => {
   }, [values]);
 
   return (
-    <div>
+    <div className="min-w-full w-full">
       <VanillaCalendar
         config={{
           type: "default",
@@ -37,7 +37,7 @@ const Calendar = ({ name, values, setFieldValue }: any) => {
             },
           },
         }}
-        className="border"
+        className={`w-full mx-auto border !min-w-full ${hasError ? 'border-red-500' : ''} `}
       />
     </div>
   );
