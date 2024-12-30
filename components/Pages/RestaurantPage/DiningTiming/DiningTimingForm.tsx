@@ -23,10 +23,9 @@ import {
 } from "@/constants/FormsDataJs/DiningTimingForm";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
-import { getUtilities } from "@/lib/actions/utilities.actions";
 import FilePicker from "@/components/Common/Fields/FilePicker";
 
-const DiningTimingForm = ({ params, diningAreas }: any) => {
+const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -148,18 +147,15 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
   }, [diningAreas]);
 
   useEffect(() => {
-    const fetchUtilities = async () => {
-      const utilities = await getUtilities();
-      const options = Object.entries(utilities?.[0].SeatingArea).map(
-        ([key, value]) => ({
-          label: value,
-          value: key,
-        })
-      );
-      findField(diningFormField, "diningType")["options"] = options;
-    };
-    fetchUtilities();
-  }, []);
+    const options = Object.entries(utilities?.[0].experienceType).map(
+      ([key, value]) => ({
+        label: value,
+        value: value,
+      })
+    );
+
+    findField(diningFormField, "diningType")["options"] = options;
+  }, [utilities]);
 
   return (
     <>

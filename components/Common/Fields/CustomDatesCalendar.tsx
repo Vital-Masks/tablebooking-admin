@@ -35,7 +35,7 @@ const CustomDatesCalendar = ({
 
   // Memoized function to avoid infinite update loops
   const renderSelectedDates = useCallback(() => {
-    if (values["dateType"] === "customDate") {
+    if (values["dateType"] === "Custom Date") {
       if (
         selectedDates.length !== 1 ||
         selectedDates[0] !== values["dateFrom"]
@@ -70,14 +70,14 @@ const CustomDatesCalendar = ({
           name="dateType"
           component={SelectField}
           options={[
-            { label: "Custom Date", value: "customDate" },
-            { label: "Custom Dates", value: "customDates" },
-            { label: "Custom Days", value: "customDays" },
+            { label: "Custom Date", value: "Custom Date" },
+            { label: "Custom Dates", value: "Custom Dates" },
+            { label: "Custom Days", value: "Custom Days" },
           ]}
         ></Field>
       </div>
 
-      {values["dateType"] === "customDays" && (
+      {values["dateType"] === "Custom Days" && (
         <div>
           <label htmlFor={"dateFrom"}>Date Days</label>
           <Field
@@ -94,10 +94,10 @@ const CustomDatesCalendar = ({
 
         <VanillaCalendar
           config={{
-            type: values["dateType"] === "customDate" ? "default" : "multiple",
+            type: values["dateType"] === "Custom Date" ? "default" : "multiple",
             actions: {
               clickDay(e, self) {
-                if (values["dateType"] === "customDate") {
+                if (values["dateType"] === "Custom Date") {
                   setFieldValue("dateFrom", self.selectedDates.at(0));
                 } else {
                   setFieldValue("dateFrom", self.selectedDates.at(0));
@@ -108,7 +108,7 @@ const CustomDatesCalendar = ({
             settings: {
               selection: {
                 day:
-                  values["dateType"] === "customDate"
+                  values["dateType"] === "Custom Date"
                     ? "single"
                     : "multiple-ranged",
               },

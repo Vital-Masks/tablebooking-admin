@@ -112,14 +112,14 @@ const CuisineMenuForm = ({ params }: any) => {
       const utilities = await getUtilities();
       const options = Object.entries(utilities?.[0].foodCategory).map(([key, value]) => ({
         label: value,
-        value: key
+        value: value
       }));
       
       findField(foodFormField, 'foodCategory')['options'] = options;
 
       const options2 = Object.entries(utilities?.[0].Cuisine).map(([key, value]) => ({
         label: value,
-        value: key
+        value: value
       }));
       findField(foodFormField, 'cousineType')['options'] = options2;
     }

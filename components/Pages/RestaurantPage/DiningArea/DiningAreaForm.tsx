@@ -116,7 +116,7 @@ const DiningAreaForm = ({ params }: any) => {
       const options = Object.entries(utilities?.[0].SeatingArea).map(
         ([key, value]) => ({
           label: value,
-          value: key,
+          value: value,
         })
       );
       findField(seatingFormField, 'seatingAreaType')['options'] = options;

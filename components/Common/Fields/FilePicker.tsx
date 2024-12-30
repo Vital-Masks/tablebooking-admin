@@ -64,7 +64,7 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
       className="border items-center rounded relative w-full"
       key={`img_${i}`}
     >
-      {(file?.photo || file?.preview) && (
+      {(file?.photo?.startsWith('http://') || file?.photo?.startsWith('https://')) && (file?.photo || file?.preview) && (
         <>
           <Image
             src={file.photo || file.preview}

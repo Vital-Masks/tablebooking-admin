@@ -1,6 +1,7 @@
 import DiningTimingForm from '@/components/Pages/RestaurantPage/DiningTiming/DiningTimingForm';
 import DiningTimingTable from '@/components/Pages/RestaurantPage/DiningTiming/DiningTimingTable';
 import { getRestaurantDiningAreas } from '@/lib/actions/restaurant.actions';
+import { getUtilities } from '@/lib/actions/utilities.actions';
 
 const DiningTimingPage = async ({ params }: any) => {
   const diningAreas: any[] = [];
@@ -15,10 +16,13 @@ const DiningTimingPage = async ({ params }: any) => {
     });
   }
 
+  const utilities = await getUtilities();
+
+
   return (
     <div>
       <DiningTimingTable params={params} />
-      <DiningTimingForm params={params} diningAreas={diningAreas} />
+      <DiningTimingForm params={params} diningAreas={diningAreas} utilities={utilities}/>
     </div>
   );
 };
