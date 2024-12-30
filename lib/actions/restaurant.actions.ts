@@ -18,7 +18,7 @@ export const createRestaurantGeneral = async (
   body: CreateRestaurantGeneralParams
 ): Promise<Restaurant | null> => {
   const newRestaurant = await fetcher<Restaurant>(
-    `/hospitalityChain/${body?.hospitalityChainId}/restaurant`,
+    `/restaurant`,
     {
       method: 'POST',
       body: body,

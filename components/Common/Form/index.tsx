@@ -1,16 +1,17 @@
 import { Field, Form, Formik } from "formik";
 import { IconXCircle } from "@/components/Icons";
 import IconLoading from "@/components/Icons/IconLoading";
-import VanillaCalendar from "../Fields/VanillaCalendar";
 import CustomDatesCalendar from "../Fields/CustomDatesCalendar";
 import RestaurantSelect from "@/components/Elements/RestaurantSelect";
 import DiningSelect from "@/components/Elements/DiningSelect";
 import DiningAreaSelect from "@/components/Elements/DiningAreaSelect";
 import Calendar from "../Fields/Calendar";
+import SelectField from "../Fields/SelectField";
 
 const options = [{ value: "select", label: "Select" }];
 
 interface FormField {
+  isMulti: boolean;
   id: string;
   name: string;
   label?: string;
@@ -149,22 +150,13 @@ const RenderField: React.FC<RenderFieldProps> = ({
             className={`${errors[field.name] && "has-error"}`}
           >
             <label htmlFor={field.name}>{field.label}</label>
-
-            <Field name={field.name} as="select" className="form-input">
-              <option key="0">Select</option>
-              {field.options
-                ? field.options?.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))
-                : options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-            </Field>
-
+            <Field
+              name={field.name}
+              component={SelectField}
+              options={field.options}
+              isMulti={field.isMulti}
+              hasError={errors[field.name]}
+            />
             <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
           </div>
         );
@@ -178,7 +170,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
               <label htmlFor={field.name}>{field.label}</label>
 
               <Field name={field.name} as="select" className="form-input">
-                <option key="0">Select</option>
+                <option key="0">Select 2</option>
                 {field.options
                   ? field.options?.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -244,14 +236,15 @@ const RenderField: React.FC<RenderFieldProps> = ({
 
     case "textarea":
       return (
-        <div key={field.id}>
+        <div key={field.id} className={`${errors[field.name] && "has-error"}`}>
           <label htmlFor={field.name}>{field.label}</label>
           <Field
             id={field.name}
             name={field.name}
             as="textarea"
-            className="form-textarea"
+            className="form-textarea mb-0"
           />
+          <div className="text-danger text-xs">{errors[field.name]}</div>
         </div>
       );
 

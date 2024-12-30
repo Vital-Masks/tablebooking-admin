@@ -1,25 +1,24 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import FormComponent from '@/components/Common/Form';
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import FormComponent from "@/components/Common/Form";
 import {
   generalFormField,
   generalFormSchema,
-} from '@/constants/FormsDataJs/GeneralDetailsForm';
+} from "@/constants/FormsDataJs/GeneralDetailsForm";
 import {
   createRestaurantGeneral,
-  getRestaurantGeneral,
   updateRestaurantGeneral,
-} from '@/lib/actions/restaurant.actions';
+} from "@/lib/actions/restaurant.actions";
 import {
   convertImageToBase64,
   findField,
   handleError,
   returnCommonObject,
-} from '@/lib/utils';
-import FilePicker from '@/components/Common/Fields/FilePicker';
-import toast from 'react-hot-toast';
-import ToastBanner from '@/components/Elements/ToastBanner';
+} from "@/lib/utils";
+import FilePicker from "@/components/Common/Fields/FilePicker";
+import toast from "react-hot-toast";
+import ToastBanner from "@/components/Elements/ToastBanner";
 
 export default function GeneralDetailForm({
   hospitalityChains,
@@ -29,27 +28,30 @@ export default function GeneralDetailForm({
 }: any) {
   const router = useRouter();
 
-  const { restaurantId, hospitalityChainId } = params;
+  const { restaurantId } = params;
 
   const [initialValues, setInitialValues] = useState({
-    restaurantName: '',
-    restaurantType: '',
-    contactNo: '',
-    whatsappNo: '',
-    email: '',
-    website: '',
-    address: '',
-    addressEmbedURL: '',
-    description: '',
-    dinningStyle: '',
-    dressCode: '',
-    paymentOptions: '',
-    timeZone: '',
-    availabilityStatus: '',
+    restaurantName: "",
+    restaurantType: "",
+    contactNo: "",
+    whatsappNo: "",
+    registerationNumber:"",
+    hospitalityChainId:"",
+    email: "",
+    website: "",
+    address: "",
+    addressEmbedURL: "",
+    description: "",
+    dinningStyle: "",
+    dressCode: "",
+    paymentOptions: "",
+    cousines: [],
+    timeZone: "",
+    availabilityStatus: "",
+    openTime: "",
+    closeTime: "",
     isPromoted: false,
-    registerationNumber: '',
-    closeTime: '',
-    openTime: '',
+    coverImage: []
   });
   const [coverImage, setCoverImage] = useState<any[]>([]);
 
@@ -67,7 +69,7 @@ export default function GeneralDetailForm({
 
       data.images = images;
 
-      if (restaurantId !== 'c') {
+      if (restaurantId !== "c") {
         await updateRestaurantGeneral(restaurantId, data);
         toast.custom((t) => (
           <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
@@ -82,12 +84,8 @@ export default function GeneralDetailForm({
       ));
       // Navigate and fetch details if response contains IDs
       if (response?._id) {
-        const {
-          _id: resId,
-          hospitalityChainId: { _id: chainId },
-        } = response;
-        router.push(`/${chainId}/general-detail`);
-        fetchGeneralDetails(resId);
+        const { _id: restaurantId } = response;
+        router.push(`/dashboard/restaurant/${restaurantId}/general-detail`);
       }
     } catch (error) {
       // General error handling
@@ -95,27 +93,7 @@ export default function GeneralDetailForm({
         <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
       ));
       handleError(
-        'An error occurred while submitting the restaurant (general) form:',
-        error
-      );
-    }
-  };
-
-  const fetchGeneralDetails = async (restaurantId: string) => {
-    try {
-      const response: any = await getRestaurantGeneral(restaurantId);
-
-      if (response) {
-        const data = returnCommonObject(initialValues, response);
-        data['registerationNumber'] =
-          response?.hospitalityChainId?.registrationNumber;
-        data['hospitalityChainId'] = response?.hospitalityChainId?._id;
-        setCoverImage(response.images);
-        setInitialValues(data);
-      }
-    } catch (error) {
-      handleError(
-        'An error occurred while rendering the restaurant (general) details:',
+        "An error occurred while submitting the restaurant (general) form:",
         error
       );
     }
@@ -128,16 +106,16 @@ export default function GeneralDetailForm({
         value: chain._id,
       }));
 
-      findField(generalFormField, 'hospitalityChainId')['options'] = options;
+      findField(generalFormField, "hospitalityChainId")["options"] = options;
     }
   }, [hospitalityChains]);
 
   useEffect(() => {
     if (generalDetails) {
       const data = returnCommonObject(initialValues, generalDetails);
-      data['registerationNumber'] =
+      data["registerationNumber"] =
         generalDetails?.hospitalityChainId?.registrationNumber;
-      data['hospitalityChainId'] = generalDetails?.hospitalityChainId?._id;
+      data["hospitalityChainId"] = generalDetails?.hospitalityChainId?._id;
       setCoverImage(generalDetails.images);
       setInitialValues(data);
     }
@@ -158,8 +136,10 @@ export default function GeneralDetailForm({
       })
     );
 
-    findField(generalFormField, 'cuisine')['options'] = options2;
+    findField(generalFormField, "restaurantType")["options"] = options;
+    findField(generalFormField, "cousines")["options"] = options2;
   }, [utilities]);
+
 
   return (
     <main>

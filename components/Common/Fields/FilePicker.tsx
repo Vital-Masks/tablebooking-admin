@@ -59,30 +59,32 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
     setFiles(files.filter((_, i) => i !== fileIndex));
   };
 
-  const thumbs = files.map((file, i) => (
+  const thumbs = files.length ? files?.map((file, i) => (
     <div
       className="border items-center rounded relative w-full"
       key={`img_${i}`}
     >
-      {(file.photo || file.preview) && (
-        <Image
-          src={file.photo || file.preview}
-          className="w-full aspect-square object-cover rounded-sm"
-          alt={`img_${i}`}
-          onLoad={() => URL.revokeObjectURL(file.preview)}
-          width={420}
-          height={420}
-        />
+      {(file?.photo || file?.preview) && (
+        <>
+          <Image
+            src={file.photo || file.preview}
+            className="w-full aspect-square object-cover rounded-sm"
+            alt={`img_${i}`}
+            onLoad={() => URL.revokeObjectURL(file.preview)}
+            width={420}
+            height={420}
+          />
+          <button
+            onClick={() => removeFile(i)}
+            title="Remove file"
+            className="ml-auto hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center absolute bottom-2 right-2 bg-white/50"
+          >
+            <IconTrash className="w-3 h-3" />
+          </button>
+        </>
       )}
-      <button
-        onClick={() => removeFile(i)}
-        title="Remove file"
-        className="ml-auto hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center absolute bottom-2 right-2 bg-white/50"
-      >
-        <IconTrash className="w-3 h-3" />
-      </button>
     </div>
-  ));
+  )): <></>;
 
   return (
     <div>
@@ -112,9 +114,8 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
           </div>
         </div>
       </div>
-      <aside className="grid grid-cols-3 mt-4 gap-1">
-        {thumbs}
-      </aside>
+
+      <aside className="grid grid-cols-3 mt-4 gap-1">{thumbs}</aside>
     </div>
   );
 };

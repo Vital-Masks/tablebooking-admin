@@ -6,6 +6,7 @@ import { getUtilities } from '@/lib/actions/utilities.actions';
 const GeneralDetailPage = async ({ params }: any) => {
   const hospitalityChains = await getHospitalChainList();
   const utilities = await getUtilities();
+
   let generalDetails: any;
   
   if (params.restaurantId !== 'c') {

@@ -1,8 +1,8 @@
-'use client';
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import VanillaCalendar from './VanillaCalendar';
-import { MultiSelect } from 'primereact/multiselect';
-import { Field } from 'formik';
+"use client";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
+import VanillaCalendar from "./VanillaCalendar";
+import { Field } from "formik";
+import SelectField from "./SelectField";
 
 type Props = {
   field: any;
@@ -22,33 +22,33 @@ const CustomDatesCalendar = ({
   // Memoize the days array to avoid unnecessary re-creation on every render
   const days = useMemo(
     () => [
-      { name: 'Monday', code: 'monday' },
-      { name: 'Tuesday', code: 'tuesday' },
-      { name: 'Wednesday', code: 'wednesday' },
-      { name: 'Thursday', code: 'thursday' },
-      { name: 'Friday', code: 'friday' },
-      { name: 'Saturday', code: 'saturday' },
-      { name: 'Sunday', code: 'sunday' },
+      { label: "Monday", value: "monday" },
+      { label: "Tuesday", value: "tuesday" },
+      { label: "Wednesday", value: "wednesday" },
+      { label: "Thursday", value: "thursday" },
+      { label: "Friday", value: "friday" },
+      { label: "Saturday", value: "saturday" },
+      { label: "Sunday", value: "sunday" },
     ],
     []
   );
 
   // Memoized function to avoid infinite update loops
   const renderSelectedDates = useCallback(() => {
-    if (values['dateType'] === 'customDate') {
+    if (values["dateType"] === "customDate") {
       if (
         selectedDates.length !== 1 ||
-        selectedDates[0] !== values['dateFrom']
+        selectedDates[0] !== values["dateFrom"]
       ) {
-        setSelectedDates([values['dateFrom']]);
+        setSelectedDates([values["dateFrom"]]);
       }
     } else {
-      const start = new Date(values['dateFrom']);
-      const end = new Date(values['dateTo']);
+      const start = new Date(values["dateFrom"]);
+      const end = new Date(values["dateTo"]);
       const dateArray: string[] = [];
 
       while (start <= end) {
-        dateArray.push(start.toISOString().split('T')[0]);
+        dateArray.push(start.toISOString().split("T")[0]);
         start.setDate(start.getDate() + 1);
       }
 
@@ -56,20 +56,9 @@ const CustomDatesCalendar = ({
         setSelectedDates(dateArray);
       }
     }
-  }, [values['dateFrom'], values['dateTo'], values['dateType'], selectedDates]);
+  }, [values["dateFrom"], values["dateTo"], values["dateType"], selectedDates]);
 
   useEffect(() => {
-    // Only update 'days' if they are strings (avoid unnecessary updates)
-    if (typeof values['days']?.[0] === 'string') {
-      const newArr = values['days']
-        .map((day: string) => days.find((x) => x.code === day))
-        .filter(Boolean);
-
-      if (JSON.stringify(newArr) !== JSON.stringify(values['days'])) {
-        setFieldValue('days', newArr);
-      }
-    }
-
     renderSelectedDates(); // Call the memoized function
   }, [values, days, setFieldValue, renderSelectedDates]);
 
@@ -78,55 +67,50 @@ const CustomDatesCalendar = ({
       <div>
         <label htmlFor="dateType">Date Type</label>
         <Field
-          as="select"
           name="dateType"
-          className="form-input"
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            setFieldValue('dateType', e.target.value);
-          }}
-        >
-          <option value="customDate">Custom Date</option>
-          <option value="customDates">Custom Dates</option>
-          <option value="customDays">Custom Days</option>
-        </Field>
+          component={SelectField}
+          options={[
+            { label: "Custom Date", value: "customDate" },
+            { label: "Custom Dates", value: "customDates" },
+            { label: "Custom Days", value: "customDays" },
+          ]}
+        ></Field>
       </div>
 
-      {values['dateType'] === 'customDays' && (
+      {values["dateType"] === "customDays" && (
         <div>
-          <label htmlFor={'dateFrom'}>Date Days</label>
-          <MultiSelect
-            value={values['days']}
-            onChange={(e) => setFieldValue('days', e.value)}
+          <label htmlFor={"dateFrom"}>Date Days</label>
+          <Field
+            name="days"
+            component={SelectField}
             options={days}
-            optionLabel="name"
-            display="chip"
-            placeholder="Select Days"
-            className="w-full form-input max-w-[480px] p-0 outline-none"
-          />
+            isMulti={true}
+          ></Field>
         </div>
       )}
 
-      <div>
+      <div className="w-full">
         <label htmlFor={field.name}>{field.label}</label>
+
         <VanillaCalendar
           config={{
-            type: values['dateType'] === 'customDate' ? 'default' : 'multiple',
+            type: values["dateType"] === "customDate" ? "default" : "multiple",
             actions: {
               clickDay(e, self) {
-                if (values['dateType'] === 'customDate') {
-                  setFieldValue('dateFrom', self.selectedDates.at(0));
+                if (values["dateType"] === "customDate") {
+                  setFieldValue("dateFrom", self.selectedDates.at(0));
                 } else {
-                  setFieldValue('dateFrom', self.selectedDates.at(0));
-                  setFieldValue('dateTo', self.selectedDates.at(-1));
+                  setFieldValue("dateFrom", self.selectedDates.at(0));
+                  setFieldValue("dateTo", self.selectedDates.at(-1));
                 }
               },
             },
             settings: {
               selection: {
                 day:
-                  values['dateType'] === 'customDate'
-                    ? 'single'
-                    : 'multiple-ranged',
+                  values["dateType"] === "customDate"
+                    ? "single"
+                    : "multiple-ranged",
               },
               selected: {
                 dates: selectedDates,
@@ -134,11 +118,11 @@ const CustomDatesCalendar = ({
                 year: 2024,
               },
               visibility: {
-                theme: 'light',
+                theme: "light",
               },
             },
           }}
-          className="border"
+          className={`w-full mx-auto border !min-w-full ${errors[field.name] ? 'border-red-500' : ''}`}
         />
 
         <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>

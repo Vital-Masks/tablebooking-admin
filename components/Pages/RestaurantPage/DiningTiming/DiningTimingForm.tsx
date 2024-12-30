@@ -1,51 +1,51 @@
-'use client';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import FormComponent from '@/components/Common/Form';
-import FormSlider from '@/components/Common/Form/FormSlider';
-import Button from '@/components/Elements/Button';
+"use client";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import FormComponent from "@/components/Common/Form";
+import FormSlider from "@/components/Common/Form/FormSlider";
+import Button from "@/components/Elements/Button";
 
 import {
   createDiningTiming,
   getRestaurantDiningTimingById,
   updateDiningTiming,
-} from '@/lib/actions/restaurant.actions';
+} from "@/lib/actions/restaurant.actions";
 
 import {
   convertImageToBase64,
   findField,
   handleError,
   returnCommonObject,
-} from '@/lib/utils';
+} from "@/lib/utils";
 import {
   diningFormField,
   diningFormSchema,
-} from '@/constants/FormsDataJs/DiningTimingForm';
-import toast from 'react-hot-toast';
-import ToastBanner from '@/components/Elements/ToastBanner';
-import { getUtilities } from '@/lib/actions/utilities.actions';
-import FilePicker from '@/components/Common/Fields/FilePicker';
+} from "@/constants/FormsDataJs/DiningTimingForm";
+import toast from "react-hot-toast";
+import ToastBanner from "@/components/Elements/ToastBanner";
+import { getUtilities } from "@/lib/actions/utilities.actions";
+import FilePicker from "@/components/Common/Fields/FilePicker";
 
 const DiningTimingForm = ({ params, diningAreas }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const diningId = searchParams.get('edit');
+  const diningId = searchParams.get("edit");
 
   const defaultInitialValues = useMemo(
     () => ({
-      diningType: '',
-      diningName: '',
-      description: '',
-      dateType: 'customDate',
+      diningType: "",
+      diningName: "",
+      description: "",
+      dateType: "customDate",
       days: [],
-      dateFrom: '',
-      dateTo: '',
-      timeFrom: '',
-      timeTo: '',
-      availabilityStatus: true,
-      pricePerPerson: '',
-      diningAreas: '',
+      dateFrom: "",
+      dateTo: "",
+      timeFrom: "",
+      timeTo: "",
+      availabilityStatus: "",
+      pricePerPerson: "",
+      diningAreas: "",
     }),
     []
   );
@@ -61,7 +61,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
   };
 
   const fetchDining = async () => {
-    if (!diningId || params.restaurantId === 'c') return;
+    if (!diningId || params.restaurantId === "c") return;
 
     try {
       const response = await getRestaurantDiningTimingById(
@@ -69,15 +69,17 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
         diningId
       );
 
+      console.log(">> response", response);
+
       if (response) {
-        let data = returnCommonObject(defaultInitialValues, response);
+        let data = returnCommonObject(initialValues, response);
         setInitialValues(data);
         setCoverImage([response.coverImage]);
         setIsFormOpen(true);
       }
     } catch (error) {
       handleError(
-        'An error occurred while fetching cuisine menu details:',
+        "An error occurred while fetching cuisine menu details:",
         error
       );
     }
@@ -85,7 +87,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
 
   const onSubmit = async (data: CreateDiningTimingParams) => {
     try {
-      if (params.restaurantId === 'c') {
+      if (params.restaurantId === "c") {
         toast.custom((t) => (
           <ToastBanner
             t={t}
@@ -97,7 +99,6 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
         return;
       }
       data.restaurantId = params.restaurantId;
-      data.days = data.days.map((day: any) => day.code);
 
       const images = await Promise.all(
         coverImage.map(async (img) => {
@@ -128,7 +129,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
         <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
       ));
       handleError(
-        'An error occurred while submitting the dining timing form:',
+        "An error occurred while submitting the dining timing form:",
         error
       );
     }
@@ -142,7 +143,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
 
   useEffect(() => {
     if (diningAreas.length > 0) {
-      findField(diningFormField, 'diningAreas')['options'] = diningAreas;
+      findField(diningFormField, "diningAreas")["options"] = diningAreas;
     }
   }, [diningAreas]);
 
@@ -155,7 +156,7 @@ const DiningTimingForm = ({ params, diningAreas }: any) => {
           value: key,
         })
       );
-      findField(diningFormField, 'diningType')['options'] = options;
+      findField(diningFormField, "diningType")["options"] = options;
     };
     fetchUtilities();
   }, []);
