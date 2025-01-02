@@ -68,8 +68,6 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
         diningId
       );
 
-      console.log(">> response", response);
-
       if (response) {
         let data = returnCommonObject(initialValues, response);
         setInitialValues(data);

@@ -1,4 +1,4 @@
-declare type Status = 'pending' | 'scheduled' | 'cancelled';
+declare type Status = "pending" | "scheduled" | "cancelled";
 
 declare type Restaurant = {
   _id?: string;
@@ -174,4 +174,18 @@ declare type Reservation = {
   diningArea?: any;
   occasion?: string;
   specialRequest?: string;
+};
+
+declare type NotificationType = {
+  _id?: string;
+  id: string;
+  notificationType: string;
+  message: string;
+};
+
+declare type CreateNotificationParams = {
+  notificationTitle: string;
+  notification: string;
+  restaurantIds: string[];
+  dateAndTime: string;
 };

@@ -69,7 +69,7 @@ const FormComponent = ({
             // warn user when leaving the page without saving
             // {WarnIfUnsaved(Object.keys(touched).some((v) => v !== '') && dirty)}
             <Form onSubmit={handleSubmit} className="space-y-5">
-              {fields.length > 0 &&
+              {fields?.length > 0 &&
                 fields?.map((field: FormField) => (
                   <div
                     key={field.id}

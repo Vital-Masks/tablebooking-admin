@@ -125,7 +125,7 @@ export default function GeneralDetailForm({
     const options = Object.entries(utilities?.[0].restaurantType).map(
       ([key, value]) => ({
         label: value,
-        value: key,
+        value: value,
       })
     );
 

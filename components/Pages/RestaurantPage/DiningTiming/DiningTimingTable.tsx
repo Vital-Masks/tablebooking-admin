@@ -18,7 +18,7 @@ const DiningTimingTable = async ({ params }: any) => {
         dateRange: `${res.dateFrom} - ${res.dateTo}`,
         timeRange: `${res.timeFrom} - ${res.timeTo}`,
         pricePP: res.pricePerPerson,
-        availability: res.availabilityStatus ? "Yes" : "No",
+        availability: res.availabilityStatus ? "Available" : "Not Available",
       });
     });
   }

@@ -143,11 +143,11 @@ export const generalFormField = [
         options: [
           {
             label: "Available",
-            value: "available",
+            value: "Available",
           },
           {
             label: "Not Available",
-            value: "not-available",
+            value: "Not Available",
           },
         ],
       },
