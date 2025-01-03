@@ -20,7 +20,7 @@ interface PreviewFile extends File {
 
 const compressImage = async (file: File) => {
   const options = {
-    maxSizeMB: 1, // Max size for the image in MB
+    maxSizeKB: 500, // Max size for the image in KB
     maxWidthOrHeight: 1920, // Max width/height
     useWebWorker: true,
   };
