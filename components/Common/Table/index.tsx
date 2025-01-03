@@ -7,7 +7,14 @@ import { IconFilter } from "@/components/Icons";
 import Dropdown from "@/components/Elements/Dropdown";
 import Button from "@/components/Elements/Button";
 
-const Table = ({ title, columns, rowData, onButtonClick, Filter, isLoading }: any) => {
+const Table = ({
+  title,
+  columns,
+  rowData,
+  onButtonClick,
+  Filter,
+  isLoading,
+}: any) => {
   const pageSize = 10;
   const initialRecords = rowData.slice(0, pageSize);
   const [page, setPage] = useState(1);
@@ -42,7 +49,7 @@ const Table = ({ title, columns, rowData, onButtonClick, Filter, isLoading }: an
                 </>
               }
             >
-              <Filter />
+              {Filter && <Filter />}
             </Dropdown>
           </div>
           <div>
@@ -65,7 +72,9 @@ const Table = ({ title, columns, rowData, onButtonClick, Filter, isLoading }: an
       </div>
       <div className="datatables h-full">
         <DataTable
-          noRecordsText={isLoading? "Loading..." : "No results match your search query"}
+          noRecordsText={
+            isLoading ? "Loading..." : "No results match your search query"
+          }
           className="whitespace-nowrap h-full"
           minHeight={400}
           records={recordsData}

@@ -20,7 +20,7 @@ const RestaurantTable = async () => {
     });
   });
 
-  return <Table columns={columns} rowData={rowData} />;
+  return <Table columns={columns} rowData={rowData} />
 };
 
 export default RestaurantTable;
