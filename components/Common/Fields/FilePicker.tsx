@@ -7,9 +7,10 @@ import IconBrokenFile from "@/components/Icons/IconBrokenFile";
 
 interface FilePickerProps {
   name: string;
-  label: string;
+  label?: string;
   files: PreviewFile[];
   setFiles: (files: PreviewFile[]) => void;
+  hasError: string;
 }
 
 interface PreviewFile extends File {
@@ -17,7 +18,15 @@ interface PreviewFile extends File {
   photo: string;
 }
 
-const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
+const FilePicker: FC<FilePickerProps> = ({
+  name,
+  label,
+  files,
+  setFiles,
+  hasError,
+}) => {
+  const safeFiles = Array.isArray(files) ? files : [];
+
   const compressImage = async (file: File) => {
     const options = {
       maxSizeMB: 1, // Max size for the image in MB
@@ -52,7 +61,7 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
         })
       ) as PreviewFile[];
 
-      setFiles([...files, ...previewFiles]);
+      setFiles([...safeFiles, ...previewFiles]);
     },
   });
 
@@ -60,7 +69,7 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
     setFiles(files.filter((_, i) => i !== fileIndex));
   };
 
-  const thumbs = files.length ? (
+  const thumbs = files?.length ? (
     files?.map((file, i) => (
       <div
         className="border items-center rounded relative w-full"
@@ -68,7 +77,8 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
       >
         {(file?.photo?.startsWith("http://") ||
           file?.photo?.startsWith("https://") ||
-          file?.photo?.startsWith("data:image")) &&
+          file?.photo?.startsWith("data:image") ||
+          file?.preview) &&
         (file?.photo || file?.preview) ? (
           <>
             <Image
@@ -115,7 +125,7 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
       </label>
       <div
         {...getRootProps({ className: "dropzone" })}
-        className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
+        className={`mt-2 flex justify-center rounded-lg border border-dashed cursor-pointer px-6 py-10 ${hasError ? "border-red-500" : "border-gray-900/25"}`}
       >
         <div className="text-center">
           <IconPhoto
@@ -123,18 +133,17 @@ const FilePicker: FC<FilePickerProps> = ({ name, label, files, setFiles }) => {
             className="mx-auto h-7 w-7 text-gray-300"
           />
           <div className="mt-4 flex text-sm leading-6 text-gray-600">
-            <label
-              htmlFor={name}
-              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-            >
-              <span>Upload a file</span>
+            <div className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+              <span>Upload files</span>
               <input id={name} name={name} {...getInputProps()} />
-            </label>
+              <br />
+              {hasError && <span className="text-red-500">{hasError}</span>}
+            </div>
           </div>
         </div>
       </div>
 
-      <aside className="grid grid-cols-3 mt-4 gap-1">{thumbs}</aside>
+      <aside className="grid grid-cols-7 mt-4 gap-1">{thumbs}</aside>
     </div>
   );
 };

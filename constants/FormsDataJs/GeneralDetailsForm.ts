@@ -2,6 +2,12 @@ import * as Yup from "yup";
 
 export const generalFormField = [
   {
+    id: "coverImage",
+    name: "coverImage",
+    label: "Cover Image",
+    type: "file",
+  },
+  {
     id: "grid1",
     name: "grid",
     fields: [
@@ -17,7 +23,7 @@ export const generalFormField = [
         label: "Restaurant Type",
         type: "select",
         options: [],
-      },
+      }
     ],
   },
   {
@@ -85,7 +91,7 @@ export const generalFormField = [
     type: "textarea",
   },
   {
-    id: "grid6",
+    id: "grid7",
     name: "grid",
     fields: [
       {
@@ -98,7 +104,7 @@ export const generalFormField = [
     ],
   },
   {
-    id: "grid7",
+    id: "grid8",
     name: "grid",
     fields: [
       {
@@ -131,7 +137,7 @@ export const generalFormField = [
     ],
   },
   {
-    id: "grid8",
+    id: "grid9",
     name: "grid",
     fields: [
       { id: "timeZone", name: "timeZone", label: "Time Zone", type: "text" },
@@ -154,7 +160,7 @@ export const generalFormField = [
     ],
   },
   {
-    id: "grid9",
+    id: "grid10",
     name: "grid",
     fields: [
       { id: "openTime", name: "openTime", label: "Open time", type: "time" },
@@ -167,16 +173,16 @@ export const generalFormField = [
     ],
   },
   {
-    id: "isPromoted",
-    name: "isPromoted",
-    label: "Promoted",
-    type: "switch",
-  },
-  {
-    id: "coverImage",
-    name: "coverImage",
-    label: "Cover Image",
-    type: "file",
+    id: "grid11",
+    name: "grid",
+    fields: [
+      {
+        id: "isPromoted",
+        name: "isPromoted",
+        label: "Promoted",
+        type: "switch",
+      },
+    ],
   },
 ];
 
@@ -235,7 +241,8 @@ export const generalFormSchema = Yup.object().shape({
   availabilityStatus: Yup.string().required("This field cannot be empty"),
   closeTime: Yup.string().required("This field cannot be empty"),
   openTime: Yup.string().required("This field cannot be empty"),
-  isPromoted: Yup.boolean()
+  isPromoted: Yup.boolean(),
+  coverImage: Yup.array().min(5, "At least 5 cover images must be selected").required("This field cannot be empty"),
 });
 
 export const generalImageFormField = [

@@ -7,6 +7,7 @@ import DiningSelect from "@/components/Elements/DiningSelect";
 import DiningAreaSelect from "@/components/Elements/DiningAreaSelect";
 import Calendar from "../Fields/Calendar";
 import SelectField from "../Fields/SelectField";
+import FilePicker from "../Fields/FilePicker";
 
 const options = [{ value: "select", label: "Select" }];
 
@@ -68,14 +69,14 @@ const FormComponent = ({
           }) => (
             // warn user when leaving the page without saving
             // {WarnIfUnsaved(Object.keys(touched).some((v) => v !== '') && dirty)}
-            <Form onSubmit={handleSubmit} className="space-y-5">
+            <Form onSubmit={handleSubmit} className="space-y-7">
               {fields?.length > 0 &&
                 fields?.map((field: FormField) => (
                   <div
                     key={field.id}
                     className={`grid ${
                       field.name === "grid"
-                        ? "grid-cols-2 gap-4"
+                        ? "grid-cols-2 gap-5"
                         : "grid-cols-1"
                     }`}
                   >
@@ -107,7 +108,6 @@ const FormComponent = ({
                     )}
                   </div>
                 ))}
-
               <button
                 disabled={isSubmitting}
                 type="submit"
@@ -250,8 +250,14 @@ const RenderField: React.FC<RenderFieldProps> = ({
 
     case "file":
       return (
-        <div key={field.id} className="col-span-full">
-          {/* <FilePicker /> */}
+        <div key={field.id}>
+          <FilePicker
+            name={field.name}
+            label={field.label}
+            files={values[field.name]}
+            setFiles={(v: any) => setFieldValue(field.name, v)}
+            hasError={errors[field.name]}
+          />
         </div>
       );
 

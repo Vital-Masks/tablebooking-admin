@@ -35,6 +35,7 @@ declare type CreateRestaurantGeneralParams = {
   coverUpload: string;
   hospitalityChainId?: string;
   images: any;
+  coverImage: any;
 };
 
 declare type HospitalChain = {

@@ -23,7 +23,6 @@ import {
 } from "@/constants/FormsDataJs/DiningTimingForm";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
-import FilePicker from "@/components/Common/Fields/FilePicker";
 
 const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
   const searchParams = useSearchParams();
@@ -51,7 +50,6 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [initialValues, setInitialValues] = useState(defaultInitialValues);
-  const [coverImage, setCoverImage] = useState<any[]>([]);
 
   const closeForm = () => {
     setIsFormOpen(false);
@@ -67,11 +65,10 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
         params.restaurantId,
         diningId
       );
-
       if (response) {
         let data = returnCommonObject(initialValues, response);
+        data["coverImage"] = [response.coverImage];
         setInitialValues(data);
-        setCoverImage([response.coverImage]);
         setIsFormOpen(true);
       }
     } catch (error) {
@@ -98,7 +95,7 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
       data.restaurantId = params.restaurantId;
 
       const images = await Promise.all(
-        coverImage.map(async (img) => {
+        data.coverImage.map(async (img: Blob) => {
           if (img instanceof Blob) {
             const base64 = await convertImageToBase64(img);
             return { photo: base64 };
@@ -166,21 +163,13 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
       </Button>
       <FormSlider isOpen={isFormOpen}>
         <FormComponent
-          title="Create cuisine menu"
+          title="Create Dining Timing"
           fields={diningFormField}
           initialValues={initialValues}
           validationSchema={diningFormSchema}
           closeForm={closeForm}
           handleSubmit={onSubmit}
         />
-        <div className="px-5 pb-10">
-          <FilePicker
-            label="Cover photo"
-            name="cover-photo"
-            files={coverImage}
-            setFiles={(v: any) => setCoverImage(v)}
-          />
-        </div>
       </FormSlider>
     </>
   );

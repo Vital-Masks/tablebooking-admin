@@ -16,7 +16,6 @@ import {
   handleError,
   returnCommonObject,
 } from "@/lib/utils";
-import FilePicker from "@/components/Common/Fields/FilePicker";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
 
@@ -35,8 +34,8 @@ export default function GeneralDetailForm({
     restaurantType: "",
     contactNo: "",
     whatsappNo: "",
-    registerationNumber:"",
-    hospitalityChainId:"",
+    registerationNumber: "",
+    hospitalityChainId: "",
     email: "",
     website: "",
     address: "",
@@ -51,14 +50,13 @@ export default function GeneralDetailForm({
     openTime: "",
     closeTime: "",
     isPromoted: false,
-    coverImage: []
+    coverImage: [],
   });
-  const [coverImage, setCoverImage] = useState<any[]>([]);
 
   const onSubmit = async (data: CreateRestaurantGeneralParams) => {
     try {
       const images = await Promise.all(
-        coverImage.map(async (img) => {
+        data.coverImage.map(async (img: Blob) => {
           if (img instanceof Blob) {
             const base64 = await convertImageToBase64(img);
             return { photo: base64 };
@@ -116,7 +114,7 @@ export default function GeneralDetailForm({
       data["registerationNumber"] =
         generalDetails?.hospitalityChainId?.registrationNumber;
       data["hospitalityChainId"] = generalDetails?.hospitalityChainId?._id;
-      setCoverImage(generalDetails.images);
+      data["coverImage"] = generalDetails.images;
       setInitialValues(data);
     }
   }, [generalDetails]);
@@ -140,27 +138,14 @@ export default function GeneralDetailForm({
     findField(generalFormField, "cousines")["options"] = options2;
   }, [utilities]);
 
-
   return (
     <main>
-      <div className="grid grid-cols-3 items-start">
-        <div className="col-span-2 border-r">
-          <FormComponent
-            fields={generalFormField}
-            validationSchema={generalFormSchema}
-            initialValues={initialValues}
-            handleSubmit={onSubmit}
-          />
-        </div>
-        <div className="p-5">
-          <FilePicker
-            label="Cover photo"
-            name="cover-photo"
-            files={coverImage}
-            setFiles={(v: any) => setCoverImage(v)}
-          />
-        </div>
-      </div>
+      <FormComponent
+        fields={generalFormField}
+        validationSchema={generalFormSchema}
+        initialValues={initialValues}
+        handleSubmit={onSubmit}
+      />
     </main>
   );
 }

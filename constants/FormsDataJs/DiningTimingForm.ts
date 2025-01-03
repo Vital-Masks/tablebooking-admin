@@ -64,7 +64,13 @@ export const diningFormField: any = [
     label: "Dining Areas",
     type: "select",
     options: [],
-  }
+  },
+  {
+    id: "coverImage",
+    name: "coverImage",
+    label: "Cover Image",
+    type: "file",
+  },
 ];
 
 export const diningFormSchema = Yup.object().shape({
@@ -87,4 +93,5 @@ export const diningFormSchema = Yup.object().shape({
     .required("This field cannot be empty"),
   availabilityStatus: Yup.string().required("This field cannot be empty"),
   diningAreas: Yup.string().required("This field cannot be empty"),
+  coverImage: Yup.array().min(1, "Please upload a cover image").max(1, "Only one cover image is allowed").required("This field cannot be empty"),
 });
