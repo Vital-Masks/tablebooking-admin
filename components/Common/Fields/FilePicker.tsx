@@ -18,6 +18,22 @@ interface PreviewFile extends File {
   photo: string;
 }
 
+const compressImage = async (file: File) => {
+  const options = {
+    maxSizeMB: 1, // Max size for the image in MB
+    maxWidthOrHeight: 1920, // Max width/height
+    useWebWorker: true,
+  };
+
+  try {
+    const compressedFile = await imageCompression(file, options);
+    return compressedFile;
+  } catch (error) {
+    console.error("Image compression failed:", error);
+    throw error;
+  }
+};
+
 const FilePicker: FC<FilePickerProps> = ({
   name,
   label,
@@ -25,23 +41,7 @@ const FilePicker: FC<FilePickerProps> = ({
   setFiles,
   hasError,
 }) => {
-  const safeFiles = Array.isArray(files) ? files : [];
-
-  const compressImage = async (file: File) => {
-    const options = {
-      maxSizeMB: 1, // Max size for the image in MB
-      maxWidthOrHeight: 1920, // Max width/height
-      useWebWorker: true,
-    };
-
-    try {
-      const compressedFile = await imageCompression(file, options);
-      return compressedFile;
-    } catch (error) {
-      console.error("Image compression failed:", error);
-      throw error;
-    }
-  };
+  const uploadedFiles = Array.isArray(files) ? files : [];
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: { "image/*": [] },
@@ -61,36 +61,36 @@ const FilePicker: FC<FilePickerProps> = ({
         })
       ) as PreviewFile[];
 
-      setFiles([...safeFiles, ...previewFiles]);
+      setFiles([...uploadedFiles, ...previewFiles]);
     },
   });
 
-  const removeFile = (fileIndex: number) => {
-    setFiles(files.filter((_, i) => i !== fileIndex));
+  const removeFile = (indexToRemove: number) => {
+    setFiles(uploadedFiles.filter((_, i) => i !== indexToRemove));
   };
 
-  const thumbs = files?.length ? (
-    files?.map((file, i) => (
+  const filePreviews = uploadedFiles?.length ? (
+    uploadedFiles?.map((uploadedFile, fileIndex) => (
       <div
         className="border items-center rounded relative w-full"
-        key={`img_${i}`}
+        key={`img_${fileIndex}`}
       >
-        {(file?.photo?.startsWith("http://") ||
-          file?.photo?.startsWith("https://") ||
-          file?.photo?.startsWith("data:image") ||
-          file?.preview) &&
-        (file?.photo || file?.preview) ? (
+        {(uploadedFile?.photo?.startsWith("http://") ||
+          uploadedFile?.photo?.startsWith("https://") ||
+          uploadedFile?.photo?.startsWith("data:image") ||
+          uploadedFile?.preview) &&
+        (uploadedFile?.photo || uploadedFile?.preview) ? (
           <>
             <Image
-              src={file.photo || file.preview}
+              src={uploadedFile.photo || uploadedFile.preview}
               className="w-full aspect-square object-cover rounded-sm"
-              alt={`img_${i}`}
-              onLoad={() => URL.revokeObjectURL(file.preview)}
+              alt={`img_${fileIndex}`}
+              onLoad={() => URL.revokeObjectURL(uploadedFile.preview)}
               width={420}
               height={420}
             />
             <button
-              onClick={() => removeFile(i)}
+              onClick={() => removeFile(fileIndex)}
               title="Remove file"
               className="ml-auto hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center absolute bottom-2 right-2 bg-white/50"
             >
@@ -101,7 +101,7 @@ const FilePicker: FC<FilePickerProps> = ({
           <div className="border items-center rounded relative w-full aspect-square bg-neutral-50 flex items-center justify-center">
             <IconBrokenFile className="text-neutral-500" />
             <button
-              onClick={() => removeFile(i)}
+              onClick={() => removeFile(fileIndex)}
               title="Remove file"
               className="ml-auto hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center absolute bottom-2 right-2 bg-white/50"
             >
@@ -143,7 +143,7 @@ const FilePicker: FC<FilePickerProps> = ({
         </div>
       </div>
 
-      <aside className="grid grid-cols-7 mt-4 gap-1">{thumbs}</aside>
+      <aside className="grid grid-cols-7 mt-4 gap-1">{filePreviews}</aside>
     </div>
   );
 };
