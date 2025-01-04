@@ -22,13 +22,13 @@ const CustomDatesCalendar = ({
   // Memoize the days array to avoid unnecessary re-creation on every render
   const days = useMemo(
     () => [
-      { label: "Monday", value: "monday" },
-      { label: "Tuesday", value: "tuesday" },
-      { label: "Wednesday", value: "wednesday" },
-      { label: "Thursday", value: "thursday" },
-      { label: "Friday", value: "friday" },
-      { label: "Saturday", value: "saturday" },
-      { label: "Sunday", value: "sunday" },
+      { label: "Monday", value: "Monday" },
+      { label: "Tuesday", value: "Tuesday" },
+      { label: "Wednesday", value: "Wednesday" },
+      { label: "Thursday", value: "Thursday" },
+      { label: "Friday", value: "Friday" },
+      { label: "Saturday", value: "Saturday" },
+      { label: "Sunday", value: "Sunday" },
     ],
     []
   );
@@ -78,14 +78,17 @@ const CustomDatesCalendar = ({
       </div>
 
       {values["dateType"] === "Custom Days" && (
-        <div>
-          <label htmlFor={"dateFrom"}>Date Days</label>
+        <div className={`${errors["days"] && "has-error"}`}>
+          <label htmlFor={"days"}>Days</label>
           <Field
-            name="days"
+            id={"days"}
+            name={"days"}
             component={SelectField}
             options={days}
             isMulti={true}
-          ></Field>
+            hasError={errors['days']}
+          />
+          <div className="text-danger mt-1 text-xs">{errors["days"]}</div>
         </div>
       )}
 
@@ -122,7 +125,7 @@ const CustomDatesCalendar = ({
               },
             },
           }}
-          className={`w-full mx-auto border !min-w-full ${errors[field.name] ? 'border-red-500' : ''}`}
+          className={`w-full mx-auto border !min-w-full ${errors[field.name] ? "border-red-500" : ""}`}
         />
 
         <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>

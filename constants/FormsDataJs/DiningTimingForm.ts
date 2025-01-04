@@ -86,6 +86,11 @@ export const diningFormSchema = Yup.object().shape({
     .max(10, "Max characters 10 only allowed")
     .required("This field cannot be empty"),
   dateFrom: Yup.date().required("This field cannot be empty"),
+  days: Yup.array().when(['dateType'], ([dateType], schema) => {
+    return dateType === 'Custom Days' 
+      ? schema.min(1, "Please select at least one day").required("This field cannot be empty")
+      : schema;
+  }),
   timeFrom: Yup.string().required("This field cannot be empty"),
   timeTo: Yup.string().required("This field cannot be empty"),
   pricePerPerson: Yup.number()

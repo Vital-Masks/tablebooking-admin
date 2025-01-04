@@ -15,7 +15,7 @@ export const tabs = [
   },
   {
     id: restaurantTabs.cuisineMenu,
-    name: 'Cuisines & Menu',
+    name: 'Menu Items',
     description: 'Update your Cuisine and Menu details here',
   },
   {
