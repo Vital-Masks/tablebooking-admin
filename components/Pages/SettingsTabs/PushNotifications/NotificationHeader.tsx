@@ -11,7 +11,7 @@ import {
   getHospitalChain,
   updateHospitalChain,
 } from "@/lib/actions/hospitalChain.action";
-import { handleError, returnCommonObject } from "@/lib/utils";
+import { findField, handleError, returnCommonObject } from "@/lib/utils";
 import { ROUTE_HOSPITAL_CHAIN } from "@/constants/routes";
 import {
   customNotificationFormField,
@@ -19,7 +19,7 @@ import {
 } from "@/constants/FormsDataJs/NotificationForms";
 import { createCustomNotification } from "@/lib/actions/pushNotification.action";
 
-const NotificationHeader = () => {
+const NotificationHeader = ({ restaurantOptions }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const hospitalId = searchParams.get("hospitalId") ?? null;
@@ -49,21 +49,20 @@ const NotificationHeader = () => {
   };
 
   const handleFormSubmit = async (data: CreateNotificationParams) => {
-
-     try {
-       if (hospitalId) {
+    try {
+      if (hospitalId) {
         //  await updateHospitalChain(hospitalId, data);
-         router.push(ROUTE_HOSPITAL_CHAIN);
-       } else {
-         await createCustomNotification(data);
-       }
-       setCreateForm(false);
-     } catch (error) {
-       handleError(
-         "An error occurred while submitting the hospital chain form:",
-         error
-       );
-     }
+        router.push(ROUTE_HOSPITAL_CHAIN);
+      } else {
+        await createCustomNotification(data);
+      }
+      setCreateForm(false);
+    } catch (error) {
+      handleError(
+        "An error occurred while submitting the hospital chain form:",
+        error
+      );
+    }
   };
 
   const fetchHospitalChain = async (id: string) => {
@@ -86,6 +85,13 @@ const NotificationHeader = () => {
       fetchHospitalChain(hospitalId);
     }
   }, [hospitalId]);
+
+  useEffect(() => {
+    if (restaurantOptions) {
+      findField(customNotificationFormField, "customersOf")["options"] =
+        restaurantOptions;
+    }
+  }, [restaurantOptions]);
 
   return (
     <>

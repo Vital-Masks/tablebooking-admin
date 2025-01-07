@@ -140,7 +140,7 @@ export const generalFormField = [
     id: "grid9",
     name: "grid",
     fields: [
-      { id: "timeZone", name: "timeZone", label: "Time Zone", type: "text" },
+      { id: "timeZone", name: "timeZone", label: "Time Zone", type: "select", options: [] },
       {
         id: "availabilityStatus",
         name: "availabilityStatus",

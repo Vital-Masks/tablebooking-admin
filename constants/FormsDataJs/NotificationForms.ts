@@ -18,10 +18,7 @@ export const customNotificationFormField = [
     name: "customersOf",
     label: "Customers of",
     type: "select",
-    options: [
-      { label: "A", value: "a" },
-      { label: "B", value: "b" },
-    ],
+    options: [],
     isMulti: true,
   },
   {

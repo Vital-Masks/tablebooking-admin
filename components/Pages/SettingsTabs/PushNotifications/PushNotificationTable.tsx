@@ -4,9 +4,9 @@ import { getNotificationList } from "@/lib/actions/pushNotification.action";
 
 const PushNotificationTable = async () => {
   const rowData: NotificationType[] = [];
-  const hospitals = await getNotificationList();
+  const notifications = await getNotificationList();
 
-  hospitals?.map((res: any) => {
+  notifications?.map((res: any) => {
     rowData.push({
       id: res._id,
       notificationType: res.notificationTitle,

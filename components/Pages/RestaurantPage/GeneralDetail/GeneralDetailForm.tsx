@@ -18,6 +18,7 @@ import {
 } from "@/lib/utils";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
+import { timezones } from "@/constants/timezones";
 
 export default function GeneralDetailForm({
   hospitalityChains,
@@ -134,8 +135,14 @@ export default function GeneralDetailForm({
       })
     );
 
+    const timezoneOptions = timezones.map((timezone: any) => ({
+      label: timezone.zone,
+      value: timezone.gmt,
+    }));
+
     findField(generalFormField, "restaurantType")["options"] = options;
     findField(generalFormField, "cousines")["options"] = options2;
+    findField(generalFormField, "timeZone")["options"] = timezoneOptions;
   }, [utilities]);
 
   return (
