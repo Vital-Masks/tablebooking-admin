@@ -9,29 +9,29 @@ import PageHeader from "@/components/Elements/PageHeader";
 import { findField, handleError, returnCommonObject } from "@/lib/utils";
 import { ROUTE_HOSPITAL_CHAIN } from "@/constants/routes";
 import {
-  customNotificationFormField,
-  customNotificationFormSchema,
+  autoNotificationFormField,
+  autoNotificationFormSchema,
 } from "@/constants/FormsDataJs/NotificationForms";
 import {
+  createAutoNotification,
   createCustomNotification,
   getNotification,
 } from "@/lib/actions/pushNotification.action";
 
-const NotificationHeader = ({ restaurantOptions }: any) => {
+const AutoNotificationHeader = ({ restaurantOptions }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const notificationId = searchParams.get("notificationId") ?? null;
 
   const [createForm, setCreateForm] = useState(false);
   const [initialValues, setInitialValues] = useState({
-    notificationTitle: "",
+    automativeNotificationType: "",
     notification: "",
     customersOf: "",
-    date: "",
   });
 
   const pageHeaderData = {
-    title: "Custom Notification",
+    title: "Automatice Notification",
     button1: {
       title: "Create Notification",
       action: () => setCreateForm(true),
@@ -45,20 +45,13 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
     }
   };
 
-  const handleFormSubmit = async (data: CreateNotificationParams) => {
-    const body: CreateNotificationParams = {
-      notificationTitle: data.notificationTitle,
-      notification: data.notification,
-      restaurantIds: data.customersOf,
-      dateAndTime: data.date,
-    };
-
+  const handleFormSubmit = async (data: CreateAutoNotificationParams) => {
     try {
       if (notificationId) {
         //  await updateHospitalChain(notificationId, data);
         router.push(ROUTE_HOSPITAL_CHAIN);
       } else {
-        await createCustomNotification(body);
+        await createAutoNotification(data);
       }
       setCreateForm(false);
     } catch (error) {
@@ -92,7 +85,7 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
 
   useEffect(() => {
     if (restaurantOptions) {
-      findField(customNotificationFormField, "customersOf")["options"] =
+      findField(autoNotificationFormField, "customersOf")["options"] =
         restaurantOptions;
     }
   }, [restaurantOptions]);
@@ -103,9 +96,9 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
       <FormSlider isOpen={createForm}>
         <FormComponent
           title="Create Notification"
-          fields={customNotificationFormField}
+          fields={autoNotificationFormField}
           initialValues={initialValues}
-          validationSchema={customNotificationFormSchema}
+          validationSchema={autoNotificationFormSchema}
           handleSubmit={handleFormSubmit}
           closeForm={() => handleCloseForm()}
         />
@@ -114,4 +107,4 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
   );
 };
 
-export default NotificationHeader;
+export default AutoNotificationHeader;

@@ -1,9 +1,14 @@
-import React from 'react'
+import PromocodesTable from "@/components/Pages/SettingsTabs/Promocodes/PromocodesTable";
+import NotificationHeader from "@/components/Pages/SettingsTabs/PushNotifications/NotificationHeader";
+import React from "react";
 
-const page = () => {
+const PromoPage = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div>
+      <NotificationHeader />
+      <PromocodesTable />
+    </div>
+  );
+};
 
-export default page
+export default PromoPage;

@@ -1,9 +1,14 @@
-import React from 'react'
+import NotificationHeader from "@/components/Pages/SettingsTabs/PushNotifications/NotificationHeader";
+import PushNotificationTable from "@/components/Pages/SettingsTabs/PushNotifications/PushNotificationTable";
+import React from "react";
 
-const page = () => {
+const BannerImagePage = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div>
+      <NotificationHeader />
+      <PushNotificationTable />
+    </div>
+  );
+};
 
-export default page
+export default BannerImagePage;

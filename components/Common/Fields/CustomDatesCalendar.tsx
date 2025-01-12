@@ -17,7 +17,14 @@ const CustomDatesCalendar = ({
   values,
   setFieldValue,
 }: Props) => {
-  const [selectedDates, setSelectedDates] = useState<any[]>([]);
+  const [selectedDates, setSelectedDates] = useState<any[]>([new Date()]);
+
+  const [selectedMonth, setSelectedMonth] = useState<any>([
+    new Date().getMonth(),
+  ]);
+  const [selectedYear, setSelectedYear] = useState<any>([
+    new Date().getFullYear(),
+  ]);
 
   // Memoize the days array to avoid unnecessary re-creation on every render
   const days = useMemo(
@@ -33,34 +40,20 @@ const CustomDatesCalendar = ({
     []
   );
 
-  // Memoized function to avoid infinite update loops
-  const renderSelectedDates = useCallback(() => {
+  useEffect(() => {
     if (values["dateType"] === "Custom Date") {
-      if (
-        selectedDates.length !== 1 ||
-        selectedDates[0] !== values["dateFrom"]
-      ) {
-        setSelectedDates([values["dateFrom"]]);
-      }
+      setSelectedDates([values["dateFrom"]]);
+      setSelectedMonth([new Date(values["dateFrom"]).getMonth()]);
+      setSelectedYear([new Date(values["dateFrom"]).getFullYear()]);
     } else {
-      const start = new Date(values["dateFrom"]);
-      const end = new Date(values["dateTo"]);
-      const dateArray: string[] = [];
-
-      while (start <= end) {
-        dateArray.push(start.toISOString().split("T")[0]);
-        start.setDate(start.getDate() + 1);
-      }
-
-      if (JSON.stringify(dateArray) !== JSON.stringify(selectedDates)) {
-        setSelectedDates(dateArray);
+      setSelectedDates([values["dateFrom"]]);
+      setSelectedMonth([new Date(values["dateFrom"]).getMonth()]);
+      setSelectedYear([new Date(values["dateFrom"]).getFullYear()]);
+      if (values["dateTo"]) {
+        setSelectedDates([`${values["dateFrom"]}:${values["dateTo"]}`]);
       }
     }
-  }, [values["dateFrom"], values["dateTo"], values["dateType"], selectedDates]);
-
-  useEffect(() => {
-    renderSelectedDates(); // Call the memoized function
-  }, [values, days, setFieldValue, renderSelectedDates]);
+  }, [values]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -86,7 +79,7 @@ const CustomDatesCalendar = ({
             component={SelectField}
             options={days}
             isMulti={true}
-            hasError={errors['days']}
+            hasError={errors["days"]}
           />
           <div className="text-danger mt-1 text-xs">{errors["days"]}</div>
         </div>
@@ -98,34 +91,27 @@ const CustomDatesCalendar = ({
         <VanillaCalendar
           config={{
             type: values["dateType"] === "Custom Date" ? "default" : "multiple",
-            actions: {
-              clickDay(e, self) {
-                if (values["dateType"] === "Custom Date") {
-                  setFieldValue("dateFrom", self.selectedDates.at(0));
-                } else {
-                  setFieldValue("dateFrom", self.selectedDates.at(0));
-                  setFieldValue("dateTo", self.selectedDates.at(-1));
+            selectionDatesMode:
+              values["dateType"] === "Custom Date"
+                ? "single"
+                : "multiple-ranged",
+            selectedDates: selectedDates,
+            selectedMonth: selectedMonth,
+            selectedYear: selectedYear,
+            onClickDate(self) {
+              if (values["dateType"] === "Custom Date") {
+                const newDate = self.context.selectedDates;
+                setFieldValue("dateFrom", newDate[0]);
+              } else {
+                setFieldValue("dateFrom", self.context.selectedDates[0]);
+                if (self.context.selectedDates[1]) {
+                  setFieldValue("dateTo", self.context.selectedDates[1]);
                 }
-              },
+              }
             },
-            settings: {
-              selection: {
-                day:
-                  values["dateType"] === "Custom Date"
-                    ? "single"
-                    : "multiple-ranged",
-              },
-              selected: {
-                dates: selectedDates,
-                month: 0,
-                year: 2024,
-              },
-              visibility: {
-                theme: "light",
-              },
-            },
+            selectedTheme: 'light',
           }}
-          className={`w-full mx-auto border !min-w-full ${errors[field.name] ? "border-red-500" : ""}`}
+          className={`w-full mx-auto border !min-w-full ${errors[field.name] ? "border-red-500" : "border-gray-300"}`}
         />
 
         <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>

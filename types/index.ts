@@ -180,13 +180,30 @@ declare type Reservation = {
 declare type NotificationType = {
   _id?: string;
   id: string;
-  notificationType: string;
-  message: string;
+  notificationTitle: string;
+  customersOf: string;
+  createdAt: string;
+  status: string;
 };
 
 declare type CreateNotificationParams = {
   notificationTitle: string;
   notification: string;
-  restaurantIds: string[];
-  dateAndTime: string;
+  restaurantIds?: string[];
+  dateAndTime?: string;
+  customersOf?: string[];
+  date?: string;
+};
+
+declare type AutoNotificationType = {
+  _id?: string;
+  id: string;
+  notificationType: string;
+  notification: string;
+};
+
+declare type CreateAutoNotificationParams = {
+  notificationType: string;
+  notification: string;
+  customersOf?: string[];
 };

@@ -3,12 +3,11 @@ import { columns } from "./columns";
 import { getNotificationList } from "@/lib/actions/pushNotification.action";
 import moment from "moment";
 
-const PushNotificationTable = async () => {
+const PromocodesTable = async () => {
   const rowData: NotificationType[] = [];
   const notifications = await getNotificationList();
 
   notifications?.map((res: any) => {
-    console.log(">> ", res);
     rowData.push({
       id: res._id,
       notificationTitle: res.notificationTitle,
@@ -21,4 +20,4 @@ const PushNotificationTable = async () => {
   return <Table columns={columns} rowData={rowData} />;
 };
 
-export default PushNotificationTable;
+export default PromocodesTable;

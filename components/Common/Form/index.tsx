@@ -22,6 +22,7 @@ interface FormField {
   options?: [{ value: string; label: string }];
   dependant?: string;
   ifRender?: any;
+  hasTime?: boolean;
 }
 
 const FormComponent = ({
@@ -139,7 +140,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
   field,
   errors,
   setFieldValue,
-  values,
+  values
 }) => {
   switch (field.type) {
     case "select":
@@ -272,6 +273,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
             name={field.name}
             values={values}
             setFieldValue={setFieldValue}
+            hasTime={field?.hasTime}
             hasError={errors[field.name]}
           />
           <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>

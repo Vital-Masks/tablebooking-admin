@@ -5,10 +5,12 @@ import { ROUTE_PUSH_NOTIFICATION } from "@/constants/routes";
 import Link from "next/link";
 
 export const columns = [
-  { accessor: "notificationTitle", title: "Notification Title" },
-  { accessor: "customersOf", title: "Customers Of" },
-  { accessor: "createdAt", title: "Scheduled" },
-  { accessor: "status", title: "Status" },
+  { accessor: "promocode", title: "Promocode" },
+  { accessor: "promocodeFor", title: "Promocode For" },
+  { accessor: "validFromDate", title: "Valid From" },
+  { accessor: "validTillDate", title: "Valid Till" },
+  { accessor: "amount", title: "Amount" },
+  { accessor: "availabilityStatus", title: "Availability" },
   {
     accessor: "action",
     title: "",

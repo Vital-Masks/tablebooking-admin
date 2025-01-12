@@ -1,28 +1,29 @@
-'use client'
-import { HTMLAttributes, useEffect, useRef, useState } from 'react';
-import VC from 'vanilla-calendar-pro';
-import { IOptions } from 'vanilla-calendar-pro/types';
-import 'vanilla-calendar-pro/build/vanilla-calendar.min.css';
+import { useEffect, useRef, useState } from 'react';
+import { Options, Calendar } from 'vanilla-calendar-pro';
 
-interface VanillaCalendarProps extends HTMLAttributes<HTMLDivElement> {
-  config?: IOptions;
+import 'vanilla-calendar-pro/styles/index.css';
+
+interface CalendarProps extends React.HTMLAttributes<HTMLDivElement> {
+  config?: Options,
 }
 
-function VanillaCalendar({ config, ...attributes }: VanillaCalendarProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [calendar, setCalendar] = useState<VC | null>(null);
+function VanillaCalendar({ config, ...attributes }: CalendarProps) {
+  const ref = useRef(null);
+  const [calendar, setCalendar] = useState<Calendar | null>(null);
 
   useEffect(() => {
     if (!ref.current) return;
-    setCalendar(new VC(ref.current, config));
-  }, [ref, config]);
+    setCalendar(new Calendar(ref.current, config));
+  }, [ref, config])
 
   useEffect(() => {
     if (!calendar) return;
-    calendar.init();
-  }, [calendar]);
+    calendar.init()
+  }, [calendar])
 
-  return <div {...attributes} ref={ref}></div>;
+  return (
+    <div {...attributes} ref={ref}></div>
+  )
 }
 
 export default VanillaCalendar;

@@ -20,6 +20,7 @@ import {
   ROUTE_SETTING,
   ROUTE_SUPPORT,
   ROUTE_HOSPITAL_CHAIN,
+  ROUTE_PUSH_NOTIFICATION,
 } from '../routes';
 
 export const menuItems = [
@@ -76,7 +77,7 @@ export const menuItems = [
     title: 'Setting',
     Icon: IconSettings,
     childItems: [],
-    route: ROUTE_SETTING,
+    route: ROUTE_PUSH_NOTIFICATION,
   },
   {
     id: 'support',

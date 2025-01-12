@@ -12,7 +12,13 @@ const tabs = [
     id: "pushNotifications",
     name: "Push Notifications",
     description: "Update your Notification details here",
-    component: (name: any) => <PushNotifications />,
+    component: () => <PushNotifications />,
+  },
+  {
+    id: "autohNotifications",
+    name: "Automatice Notifications",
+    description: "Update your Notification details here",
+    component: () => <PushNotifications />,
   },
   {
     id: "promocodes",
@@ -85,7 +91,7 @@ const SettingPage = () => {
             <div className="h-px border-b border-white-light"></div>
 
             <div className="table-responsive min-h-[400px] grow overflow-y-auto sm:min-h-[300px] p-5">
-              {tabs.find((x) => x.id === selectedTab)?.component("ginthu")}
+              {tabs.find((x) => x.id === selectedTab)?.component()}
             </div>
 
             {isEmpty && (
