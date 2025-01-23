@@ -8,6 +8,9 @@ import IconBrokenFile from "@/components/Icons/IconBrokenFile";
 interface FilePickerProps {
   name: string;
   label?: string;
+  placeholder?: string;
+  accept?: any;
+  maxFiles?: number;
   files: PreviewFile[];
   setFiles: (files: PreviewFile[]) => void;
   hasError: string;
@@ -37,15 +40,18 @@ const compressImage = async (file: File) => {
 const FilePicker: FC<FilePickerProps> = ({
   name,
   label,
+  placeholder,
+  accept,
+  maxFiles,
   files,
   setFiles,
-  hasError,
+  hasError,  
 }) => {
   const uploadedFiles = Array.isArray(files) ? files : [];
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: { "image/*": [] },
-    maxFiles: 5,
+    accept: accept ?? { "image/*": [] },
+    maxFiles: maxFiles ?? 5,
     onDrop: async (
       acceptedFiles: File[],
       fileRejections: FileRejection[],
@@ -98,7 +104,7 @@ const FilePicker: FC<FilePickerProps> = ({
             </button>
           </>
         ) : (
-          <div className="border items-center rounded relative w-full aspect-square bg-neutral-50 flex items-center justify-center">
+          <div className="border rounded relative w-full aspect-square bg-neutral-50 flex items-center justify-center">
             <IconBrokenFile className="text-neutral-500" />
             <button
               onClick={() => removeFile(fileIndex)}
@@ -134,7 +140,7 @@ const FilePicker: FC<FilePickerProps> = ({
           />
           <div className="mt-4 flex text-sm leading-6 text-gray-600">
             <div className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-              <span>Upload files</span>
+              <span>{placeholder ?? 'Upload files'}</span>
               <input id={name} name={name} {...getInputProps()} />
               <br />
               {hasError && <span className="text-red-500">{hasError}</span>}

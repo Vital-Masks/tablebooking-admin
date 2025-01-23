@@ -52,7 +52,7 @@ export const autoNotificationFormField = [
     id: "automativeNotificationType",
     name: "automativeNotificationType",
     label: "Automative Notification Type",
-    type: "text",
+    type: "select",
   },
   {
     id: "notification",

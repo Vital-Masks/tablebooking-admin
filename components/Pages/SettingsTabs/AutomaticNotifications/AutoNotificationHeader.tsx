@@ -1,39 +1,39 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { use, useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 
-import FormComponent from "@/components/Common/Form";
-import FormSlider from "@/components/Common/Form/FormSlider";
-import PageHeader from "@/components/Elements/PageHeader";
-import { findField, handleError, returnCommonObject } from "@/lib/utils";
-import { ROUTE_HOSPITAL_CHAIN } from "@/constants/routes";
+import FormComponent from '@/components/Common/Form';
+import FormSlider from '@/components/Common/Form/FormSlider';
+import PageHeader from '@/components/Elements/PageHeader';
+import { findField, handleError, returnCommonObject } from '@/lib/utils';
+import { ROUTE_HOSPITAL_CHAIN } from '@/constants/routes';
 import {
   autoNotificationFormField,
   autoNotificationFormSchema,
-} from "@/constants/FormsDataJs/NotificationForms";
+} from '@/constants/FormsDataJs/NotificationForms';
 import {
   createAutoNotification,
   createCustomNotification,
   getNotification,
-} from "@/lib/actions/pushNotification.action";
+} from '@/lib/actions/pushNotification.action';
 
-const AutoNotificationHeader = ({ restaurantOptions }: any) => {
+const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const notificationId = searchParams.get("notificationId") ?? null;
+  const notificationId = searchParams.get('notificationId') ?? null;
 
   const [createForm, setCreateForm] = useState(false);
   const [initialValues, setInitialValues] = useState({
-    automativeNotificationType: "",
-    notification: "",
-    customersOf: "",
+    automativeNotificationType: '',
+    notification: '',
+    customersOf: '',
   });
 
   const pageHeaderData = {
-    title: "Automatice Notification",
+    title: 'Automatice Notification',
     button1: {
-      title: "Create Notification",
+      title: 'Create Notification',
       action: () => setCreateForm(true),
     },
   };
@@ -56,7 +56,7 @@ const AutoNotificationHeader = ({ restaurantOptions }: any) => {
       setCreateForm(false);
     } catch (error) {
       handleError(
-        "An error occurred while submitting the hospital chain form:",
+        'An error occurred while submitting the hospital chain form:',
         error
       );
     }
@@ -71,7 +71,7 @@ const AutoNotificationHeader = ({ restaurantOptions }: any) => {
       );
     } catch (error) {
       handleError(
-        "An error occurred while submitting the hospital chain form:",
+        'An error occurred while submitting the hospital chain form:',
         error
       );
     }
@@ -85,10 +85,25 @@ const AutoNotificationHeader = ({ restaurantOptions }: any) => {
 
   useEffect(() => {
     if (restaurantOptions) {
-      findField(autoNotificationFormField, "customersOf")["options"] =
+      findField(autoNotificationFormField, 'customersOf')['options'] =
         restaurantOptions;
     }
   }, [restaurantOptions]);
+
+  useEffect(() => {
+    if (utilities) {
+      const options2 = Object.entries(utilities?.[0].notificationType).map(
+        ([key, value]) => ({
+          label: value,
+          value: value,
+        })
+      );
+
+      findField(autoNotificationFormField, 'automativeNotificationType')[
+        'options'
+      ] = options2;
+    }
+  }, [utilities]);
 
   return (
     <>

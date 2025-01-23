@@ -33,7 +33,7 @@ const Calendar = ({ name, values, setFieldValue, hasTime, hasError }: any) => {
   }, [values]);
 
   return (
-    <div className="min-w-full w-full">
+    <div className="min-w-full w-full border rounded-lg">
       <VanillaCalendar
         config={{
           type: "default",
@@ -41,7 +41,7 @@ const Calendar = ({ name, values, setFieldValue, hasTime, hasError }: any) => {
           selectedMonth: selectedMonth,
           selectedYear: selectedYear,
           selectedTime: selectedTime,
-          selectionTimeMode: 12,
+         
           onClickDate(self) {
             const newDate = self.context.selectedDates;
             if (newDate[0] !== selectedDates[0]) {
@@ -49,8 +49,6 @@ const Calendar = ({ name, values, setFieldValue, hasTime, hasError }: any) => {
             }
           },
           onChangeTime(self) {
-            console.log("self >>", selectedDates[0]);
-            console.log("self >>", self.context.selectedTime);
             const convertedDateTime = moment(
               selectedDates[0] + " " + self.context.selectedTime
             ).format("YYYY-MM-DDTHH:mm:ss.SSSZ");

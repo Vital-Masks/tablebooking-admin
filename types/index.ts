@@ -89,13 +89,15 @@ declare type DiningTiming = {
 };
 
 declare type CreateCuisineMenuParams = {
-  foodName: string;
-  category: string;
-  price: string;
-  description: string;
-  cuisine: string;
+  foodName?: string;
+  category?: string;
+  price?: string;
+  description?: string;
+  cuisine?: string;
   hospitalityChainId?: string;
   restaurantId?: string;
+  pdf?: string;
+  link?: string;
 };
 
 declare type DiningArea = {

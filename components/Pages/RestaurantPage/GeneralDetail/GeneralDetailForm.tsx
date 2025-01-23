@@ -1,24 +1,24 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import FormComponent from "@/components/Common/Form";
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import FormComponent from '@/components/Common/Form';
 import {
   generalFormField,
   generalFormSchema,
-} from "@/constants/FormsDataJs/GeneralDetailsForm";
+} from '@/constants/FormsDataJs/GeneralDetailsForm';
 import {
   createRestaurantGeneral,
   updateRestaurantGeneral,
-} from "@/lib/actions/restaurant.actions";
+} from '@/lib/actions/restaurant.actions';
 import {
   convertImageToBase64,
   findField,
   handleError,
   returnCommonObject,
-} from "@/lib/utils";
-import toast from "react-hot-toast";
-import ToastBanner from "@/components/Elements/ToastBanner";
-import { timezones } from "@/constants/timezones";
+} from '@/lib/utils';
+import toast from 'react-hot-toast';
+import ToastBanner from '@/components/Elements/ToastBanner';
+import { timezones } from '@/constants/timezones';
 
 export default function GeneralDetailForm({
   hospitalityChains,
@@ -31,25 +31,25 @@ export default function GeneralDetailForm({
   const { restaurantId } = params;
 
   const [initialValues, setInitialValues] = useState({
-    restaurantName: "",
-    restaurantType: "",
-    contactNo: "",
-    whatsappNo: "",
-    registerationNumber: "",
-    hospitalityChainId: "",
-    email: "",
-    website: "",
-    address: "",
-    addressEmbedURL: "",
-    description: "",
-    dinningStyle: "",
-    dressCode: "",
-    paymentOptions: "",
+    restaurantName: '',
+    restaurantType: '',
+    contactNo: '',
+    whatsappNo: '',
+    registerationNumber: '',
+    hospitalityChainId: '',
+    email: '',
+    website: '',
+    address: '',
+    addressEmbedURL: '',
+    description: '',
+    dinningStyle: '',
+    dressCode: '',
+    paymentOptions: '',
     cousines: [],
-    timeZone: "",
-    availabilityStatus: "",
-    openTime: "",
-    closeTime: "",
+    timeZone: '',
+    availabilityStatus: '',
+    openTime: '',
+    closeTime: '',
     isPromoted: false,
     coverImage: [],
   });
@@ -68,7 +68,7 @@ export default function GeneralDetailForm({
 
       data.images = images;
 
-      if (restaurantId !== "c") {
+      if (restaurantId !== 'c') {
         await updateRestaurantGeneral(restaurantId, data);
         toast.custom((t) => (
           <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
@@ -92,7 +92,7 @@ export default function GeneralDetailForm({
         <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
       ));
       handleError(
-        "An error occurred while submitting the restaurant (general) form:",
+        'An error occurred while submitting the restaurant (general) form:',
         error
       );
     }
@@ -105,17 +105,17 @@ export default function GeneralDetailForm({
         value: chain._id,
       }));
 
-      findField(generalFormField, "hospitalityChainId")["options"] = options;
+      findField(generalFormField, 'hospitalityChainId')['options'] = options;
     }
   }, [hospitalityChains]);
 
   useEffect(() => {
     if (generalDetails) {
       const data = returnCommonObject(initialValues, generalDetails);
-      data["registerationNumber"] =
+      data['registerationNumber'] =
         generalDetails?.hospitalityChainId?.registrationNumber;
-      data["hospitalityChainId"] = generalDetails?.hospitalityChainId?._id;
-      data["coverImage"] = generalDetails.images;
+      data['hospitalityChainId'] = generalDetails?.hospitalityChainId?._id;
+      data['coverImage'] = generalDetails.images;
       setInitialValues(data);
     }
   }, [generalDetails]);
@@ -140,9 +140,42 @@ export default function GeneralDetailForm({
       value: timezone.gmt,
     }));
 
-    findField(generalFormField, "restaurantType")["options"] = options;
-    findField(generalFormField, "cousines")["options"] = options2;
-    findField(generalFormField, "timeZone")["options"] = timezoneOptions;
+    const dinningStyleOptions = Object.entries(utilities?.[0].dinningStyle).map(
+      ([key, value]) => ({
+        label: value,
+        value: key,
+      })
+    );
+
+    const dressCodeOptions = Object.entries(utilities?.[0].dressCode).map(
+      ([key, value]) => ({
+        label: value,
+        value: key,
+      })
+    );
+
+    const paymentOptions = Object.entries(utilities?.[0].paymentOptions).map(
+      ([key, value]) => ({
+        label: value,
+        value: key,
+      })
+    );
+
+    const currencyOptions = Object.entries(utilities?.[0].currency).map(
+      ([key, value]) => ({
+        label: value,
+        value: key,
+      })
+    );
+
+    findField(generalFormField, 'restaurantType')['options'] = options;
+    findField(generalFormField, 'cousines')['options'] = options2;
+    findField(generalFormField, 'timeZone')['options'] = timezoneOptions;
+    findField(generalFormField, 'dinningStyle')['options'] =
+      dinningStyleOptions;
+    findField(generalFormField, 'dressCode')['options'] = dressCodeOptions;
+    findField(generalFormField, 'paymentOptions')['options'] = paymentOptions;
+    findField(generalFormField, 'currency')['options'] = currencyOptions;
   }, [utilities]);
 
   return (
