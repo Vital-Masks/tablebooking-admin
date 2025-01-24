@@ -1,19 +1,20 @@
-import Table from "@/components/Common/Table";
-import { columns } from "./columns";
-import { getNotificationList } from "@/lib/actions/pushNotification.action";
-import moment from "moment";
+import Table from '@/components/Common/Table';
+import { columns } from './columns';
+import { getPromoList } from '@/lib/actions/pushNotification.action';
 
 const PromocodesTable = async () => {
-  const rowData: NotificationType[] = [];
-  const notifications = await getNotificationList();
+  const rowData: any[] = [];
+  const promos = await getPromoList();
 
-  notifications?.map((res: any) => {
+  promos?.map((res: any) => {
     rowData.push({
       id: res._id,
-      notificationTitle: res.notificationTitle,
-      customersOf: res.restaurantIds[0],
-      createdAt: moment(res.dateAndTime).format("DD-MM-YYYY / hh:mm A"),
-      status: 'Active',
+      promocode: res.promocode,
+      promocodeFor: res.promocodeFor,
+      validFromDate: res.validFromDate,
+      validTillDate: res.validTillDate,
+      amount: res.valuePercentage,
+      availabilityStatus: res.availabilityStatus,
     });
   });
 

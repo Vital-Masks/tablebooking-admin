@@ -2,14 +2,13 @@ import * as Yup from 'yup';
 
 export const promoFormField = [
  
-{ id: 'promocodeFor', name: 'promocodeFor', label: 'Promocode for', type: 'select' },
+{ id: 'promocodeFor', name: 'promocodeFor', label: 'Promocode for', type: 'select', options:[] },
 { id: 'promocode', name: 'promocode', label: 'Promocode', type: 'text' },
   {
     id: 'grid1',
     name: 'grid',
     fields: [
-      { id: 'amount', name: 'amount', label: 'Amount', type: 'number' },
-      { id: 'percentage', name: 'percentage', label: 'Percentage', type: 'number' },
+      { id: 'valuePercentage', name: 'valuePercentage', label: 'Percentage', type: 'number' },
     ],
   },
   {
@@ -33,6 +32,10 @@ export const promoFormField = [
     name: 'availabilityStatus',
     label: 'Availability Status',
     type: 'select',
+    options: [
+      { value: 'Active', label: 'Active' },
+      { value: 'Inactive', label: 'Inactive' },
+    ],
   },
 ];
 
@@ -41,10 +44,7 @@ export const promoFormSchema = Yup.object().shape({
   promocode: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
-  amount: Yup.number()
-    .positive('Amount must be positive')
-    .required('This field cannot be empty'),
-  percentage: Yup.number()
+    valuePercentage: Yup.number()
     .positive('Percentage must be positive')
     .required('This field cannot be empty'),
   validFromDate: Yup.date().required('This field cannot be empty'),

@@ -52,6 +52,7 @@ export default function GeneralDetailForm({
     closeTime: '',
     isPromoted: false,
     coverImage: [],
+    currency:''
   });
 
   const onSubmit = async (data: CreateRestaurantGeneralParams) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { IconEye } from "@/components/Icons";
-import { ROUTE_PUSH_NOTIFICATION } from "@/constants/routes";
+import { ROUTE_PROMO_CODE, ROUTE_PUSH_NOTIFICATION } from "@/constants/routes";
 import Link from "next/link";
 
 export const columns = [
@@ -17,7 +17,7 @@ export const columns = [
     titleClassName: "!text-center",
     render: ({ id }: any) => (
       <div className="flex items-center gap-4 mx-auto w-max">
-        <Link href={`${ROUTE_PUSH_NOTIFICATION}?notificationId=${id}`}>
+        <Link href={`${ROUTE_PROMO_CODE}?promoId=${id}`}>
           <IconEye />
         </Link>
       </div>

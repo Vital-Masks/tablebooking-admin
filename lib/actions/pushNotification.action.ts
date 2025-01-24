@@ -1,12 +1,13 @@
-"use server";
+'use server';
 
-import { handleError, parseStringify } from "../utils";
+import { handleError, parseStringify } from '../utils';
 import {
   ROUTE_AUTO_NOTIFICATION,
   ROUTE_HOSPITAL_CHAIN,
+  ROUTE_PROMO_CODE,
   ROUTE_PUSH_NOTIFICATION,
-} from "@/constants/routes";
-import { fetcher, revalidate } from "./fetcher";
+} from '@/constants/routes';
+import { fetcher, revalidate } from './fetcher';
 
 const ENDPOINT = process.env.API_ENDPOINT;
 
@@ -23,7 +24,7 @@ export const getNotificationList = async (): Promise<
     return result;
   } catch (error) {
     handleError(
-      "An error occurred while retrieving the hospital chains",
+      'An error occurred while retrieving the hospital chains',
       error
     );
     return null;
@@ -35,9 +36,9 @@ export const createCustomNotification = async (
   data: CreateNotificationParams
 ): Promise<NotificationType | null> => {
   const newNotification = await fetcher<NotificationType>(
-    "/notification/custom",
+    '/notification/custom',
     {
-      method: "POST",
+      method: 'POST',
       body: data,
     }
   );
@@ -52,7 +53,7 @@ export const createCustomNotification = async (
 // GET NOTIFICATION
 export const getNotification = async (id: string) => {
   return await fetcher<NotificationType>(`/notification/custom/${id}`, {
-    method: "GET",
+    method: 'GET',
   });
 };
 
@@ -64,7 +65,7 @@ export const updateHospitalChain = async (
   const newRestaurant = await fetcher<HospitalChain>(
     `/hospitalityChain/${id}`,
     {
-      method: "PUT",
+      method: 'PUT',
       body: data,
     }
   );
@@ -85,11 +86,12 @@ export const getAutoNotificationList = async (): Promise<
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
     }
-    const { result }: { result: AutoNotificationType[] } = await response.json();
+    const { result }: { result: AutoNotificationType[] } =
+      await response.json();
     return result;
   } catch (error) {
     handleError(
-      "An error occurred while retrieving the hospital chains",
+      'An error occurred while retrieving the hospital chains',
       error
     );
     return null;
@@ -101,9 +103,9 @@ export const createAutoNotification = async (
   data: CreateAutoNotificationParams
 ): Promise<AutoNotificationType | null> => {
   const newNotification = await fetcher<AutoNotificationType>(
-    "/notification/automative",
+    '/notification/automative',
     {
-      method: "POST",
+      method: 'POST',
       body: data,
     }
   );
@@ -111,6 +113,59 @@ export const createAutoNotification = async (
   if (newNotification) {
     revalidate(ROUTE_AUTO_NOTIFICATION);
     return parseStringify(newNotification);
+  }
+  return null;
+};
+
+// GET ALL Notification List
+export const getPromoList = async (): Promise<any[] | null> => {
+  try {
+    const response = await fetch(`${ENDPOINT}/promocodes/getAllPromocodes`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    const { result }: { result: any[] } = await response.json();
+    return result;
+  } catch (error) {
+    handleError(
+      'An error occurred while retrieving the hospital chains',
+      error
+    );
+    return null;
+  }
+};
+
+export const getPromo = async (id: string) => {
+  return await fetcher<any>(`/promocodes/${id}`, {
+    method: 'GET',
+  });
+};
+
+export const createPromoCodes = async (data: any): Promise<any | null> => {
+  const newCode = await fetcher<any>('/promocodes', {
+    method: 'POST',
+    body: data,
+  });
+
+  if (newCode) {
+    revalidate(ROUTE_PROMO_CODE);
+    return parseStringify(newCode);
+  }
+  return null;
+};
+
+export const updatePromoCode = async (
+  id: string,
+  data: any
+): Promise<any | null> => {
+  const newRestaurant = await fetcher<any>(`/promocodes/${id}`, {
+    method: 'PUT',
+    body: data,
+  });
+
+  if (newRestaurant) {
+    revalidate(ROUTE_PROMO_CODE);
+    return parseStringify(newRestaurant);
   }
   return null;
 };

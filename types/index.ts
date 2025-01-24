@@ -209,3 +209,13 @@ declare type CreateAutoNotificationParams = {
   notification: string;
   customersOf?: string[];
 };
+
+declare type Customers = {
+  _id?: string;
+  id: string;
+  fullname: string;
+  contactno: string;
+  emailaddress: string;
+  latestreservation: string;
+  createdOn: string;
+};

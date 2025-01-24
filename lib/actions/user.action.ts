@@ -1,36 +1,42 @@
 'use server';
-
 import { fetcher } from './fetcher';
+const ENDPOINT = process.env.API_ENDPOINT;
 
-
-export const getUserByEmail = async (email: string): Promise<any[] | null> => {
-  const { result }: any = await fetcher<any[]>(`/guestUser/email/${email}`, {
-    method: 'GET',
-  });
-
+export const getCustomers = async (): Promise<any[] | null> => {
+  const response = await fetch(`${ENDPOINT}/guestUser/getAllGuestUsers`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch: ${response.statusText}`);
+  }
+  const { result }: { result: NotificationType[] } = await response.json();
   return result;
 };
 
+export const getUserByEmail = async (email: string) => {
+  return await fetcher<any>(`/guestUser/email/${email}`, {
+    method: 'GET',
+  });
+};
+
 export const createUser = async (data: any) => {
-    const body = JSON.stringify(data);
-  
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body,
-    };
-  
-    const res = await fetch(
-      `${process.env.API_ENDPOINT}/guestUser`,
-      requestOptions
-    );
-    const result = await res.json();
-  
-    if (result.status?.includes('Successfully')) {
-      return result.result;
-    }
-  
-    return { error: result.status };
+  const body = JSON.stringify(data);
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body,
   };
+
+  const res = await fetch(
+    `${process.env.API_ENDPOINT}/guestUser`,
+    requestOptions
+  );
+  const result = await res.json();
+
+  if (result.status?.includes('Successfully')) {
+    return result.result;
+  }
+
+  return { error: result.status };
+};

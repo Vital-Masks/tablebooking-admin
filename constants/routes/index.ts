@@ -9,6 +9,7 @@ export const ROUTE_SUPPORT = ROUTE_DASHBOARD + '/support';
 export const ROUTE_SETTING = ROUTE_DASHBOARD + '/setting/';
 export const ROUTE_PUSH_NOTIFICATION = ROUTE_SETTING + '/push-notifications';
 export const ROUTE_AUTO_NOTIFICATION = ROUTE_SETTING + '/automatice-notifications';
+export const ROUTE_PROMO_CODE = ROUTE_SETTING + '/promocodes';
 export const ROUTE_HOSPITAL_CHAIN = ROUTE_DASHBOARD + '/hospitality-chains';
 export const ROUTE_LOGIN = '/login';
 export const ROUTE_OTP = '/otp';

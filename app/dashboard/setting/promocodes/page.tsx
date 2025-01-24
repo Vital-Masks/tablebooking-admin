@@ -1,11 +1,19 @@
+import PromocodesHeader from "@/components/Pages/SettingsTabs/Promocodes/PromocodesHeader";
 import PromocodesTable from "@/components/Pages/SettingsTabs/Promocodes/PromocodesTable";
-import NotificationHeader from "@/components/Pages/SettingsTabs/PushNotifications/NotificationHeader";
-import React from "react";
+import { getRestaurantsList } from "@/lib/actions/restaurant.actions";
 
-const PromoPage = () => {
+
+const PromoPage = async () => {
+    const restaurants = await getRestaurantsList();
+    const restaurantOptions = restaurants?.map((res: any) => ({
+      value: res._id,
+      label: res.restaurantName,
+    }));
+    
+
   return (
     <div>
-      <NotificationHeader />
+      <PromocodesHeader restaurantOptions={restaurantOptions} />
       <PromocodesTable />
     </div>
   );
