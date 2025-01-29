@@ -23,7 +23,7 @@ const ReservationTable = () => {
           </li>
         ) : (
           restaurants?.map((restaurant) => (
-            <li>
+            <li key={restaurant.id}>
               <button
                 type="button"
                 onClick={() => setRestaurantId(restaurant.id)}
