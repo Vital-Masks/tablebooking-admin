@@ -195,6 +195,7 @@ declare type CreateNotificationParams = {
   dateAndTime?: string;
   customersOf?: string[];
   date?: string;
+  time?: string;
 };
 
 declare type AutoNotificationType = {

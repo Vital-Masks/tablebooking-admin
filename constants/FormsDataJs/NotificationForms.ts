@@ -26,8 +26,14 @@ export const customNotificationFormField = [
     name: "date",
     label: "Date",
     type: "calendar",
-    hasTime: true,
+    hasTime: false,
   },
+  {
+    id: "time",
+    name: "time",
+    label: "Time",
+    type: "time",
+  }
 ];
 
 export const customNotificationFormSchema = Yup.object().shape({
@@ -45,6 +51,7 @@ export const customNotificationFormSchema = Yup.object().shape({
     .min(1, "At least one cuisine must be selected")
     .required("This field cannot be empty"),
   date: Yup.string().required("This field cannot be empty"),
+  time: Yup.string().required("This field cannot be empty"),
 });
 
 export const autoNotificationFormField = [

@@ -28,6 +28,7 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
     notification: "",
     customersOf: "",
     date: "",
+    time: "",
   });
 
   const pageHeaderData = {
@@ -50,7 +51,8 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
       notificationTitle: data.notificationTitle,
       notification: data.notification,
       restaurantIds: data.customersOf,
-      dateAndTime: data.date,
+      date: data.date,
+      time: data.time,
     };
 
     try {

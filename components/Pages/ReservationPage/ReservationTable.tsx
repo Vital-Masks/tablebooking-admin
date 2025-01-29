@@ -54,11 +54,11 @@ const ReservationTable = () => {
 
   const fetchReservation = async () => {
     const reservations = await getReservationList(restaurantId);
-    
+
     if (reservations) {
       const mapped = reservations.map((res: any) => ({
         id: res._id,
-        fullname: res.guestUserId?.firstName,
+        fullname: res.guestUserId?.firstName + " " + res.guestUserId?.lastName,
         contact: res.guestUserId?.contactNo,
         restaurant: res.restaurantId?.restaurantName,
         reservedfor: res.dining?.diningName,
@@ -67,7 +67,7 @@ const ReservationTable = () => {
         pax: res.guestSize,
         diningarea: res.diningArea?.sectionName,
         status: res.status,
-        table: "Table",
+        table: res.tableNo,
         createdOn: res.created_at,
       }));
 
