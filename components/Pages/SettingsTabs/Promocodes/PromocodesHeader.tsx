@@ -7,11 +7,10 @@ import FormComponent from '@/components/Common/Form';
 import FormSlider from '@/components/Common/Form/FormSlider';
 import PageHeader from '@/components/Elements/PageHeader';
 import { findField, handleError, returnCommonObject } from '@/lib/utils';
-import { ROUTE_HOSPITAL_CHAIN, ROUTE_PROMO_CODE } from '@/constants/routes';
+import { ROUTE_PROMO_CODE } from '@/constants/routes';
 
 import {
   createPromoCodes,
-  getNotification,
   getPromo,
   updatePromoCode,
 } from '@/lib/actions/pushNotification.action';
@@ -27,7 +26,7 @@ const PromocodesHeader = ({ restaurantOptions }: any) => {
 
   const [createForm, setCreateForm] = useState(false);
   const [initialValues, setInitialValues] = useState({
-    promocodeFor: '',
+    restaurantIds: '',
     promocode: '',
     valuePercentage: '',
     validFromDate: '',
@@ -73,9 +72,12 @@ const PromocodesHeader = ({ restaurantOptions }: any) => {
     try {
       setCreateForm(true);
       const response = await getPromo(id);
-      setInitialValues((prevValues) =>
-        returnCommonObject(prevValues, response)
-      );
+      const commonObj = returnCommonObject(initialValues, response);
+
+      setInitialValues({
+        ...commonObj,
+        restaurantIds: response.restaurantIds?.map((res: any) => res._id),
+      });
     } catch (error) {
       handleError(
         'An error occurred while submitting the hospital chain form:',
@@ -92,7 +94,7 @@ const PromocodesHeader = ({ restaurantOptions }: any) => {
 
   useEffect(() => {
     if (restaurantOptions) {
-      findField(promoFormField, 'promocodeFor')['options'] = restaurantOptions;
+      findField(promoFormField, 'restaurantIds')['options'] = restaurantOptions;
     }
   }, [restaurantOptions]);
 

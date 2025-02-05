@@ -1,21 +1,22 @@
 'use client';
 
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import FormComponent from '@/components/Common/Form';
 import FormSlider from '@/components/Common/Form/FormSlider';
 import PageHeader from '@/components/Elements/PageHeader';
 import { findField, handleError, returnCommonObject } from '@/lib/utils';
-import { ROUTE_HOSPITAL_CHAIN } from '@/constants/routes';
+import {
+  ROUTE_AUTO_NOTIFICATION,
+} from '@/constants/routes';
 import {
   autoNotificationFormField,
   autoNotificationFormSchema,
 } from '@/constants/FormsDataJs/NotificationForms';
 import {
-  createAutoNotification,
-  createCustomNotification,
-  getNotification,
+  autoNotificationAction,
+  getAutoNotification,
 } from '@/lib/actions/pushNotification.action';
 
 const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
@@ -27,7 +28,7 @@ const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
   const [initialValues, setInitialValues] = useState({
     automativeNotificationType: '',
     notification: '',
-    customersOf: '',
+    restaurantIds: '',
   });
 
   const pageHeaderData = {
@@ -41,17 +42,17 @@ const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
   const handleCloseForm = () => {
     setCreateForm(false);
     if (notificationId) {
-      router.push(ROUTE_HOSPITAL_CHAIN);
+      router.push(ROUTE_AUTO_NOTIFICATION);
     }
   };
 
   const handleFormSubmit = async (data: CreateAutoNotificationParams) => {
     try {
       if (notificationId) {
-        //  await updateHospitalChain(notificationId, data);
-        router.push(ROUTE_HOSPITAL_CHAIN);
+        await autoNotificationAction(data, notificationId);
+        router.push(ROUTE_AUTO_NOTIFICATION);
       } else {
-        await createAutoNotification(data);
+        await autoNotificationAction(data);
       }
       setCreateForm(false);
     } catch (error) {
@@ -65,10 +66,13 @@ const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
   const fetchNotification = async (id: string) => {
     try {
       setCreateForm(true);
-      const response = await getNotification(id);
-      setInitialValues((prevValues) =>
-        returnCommonObject(prevValues, response)
-      );
+      const response = await getAutoNotification(id);
+      const commonObj = returnCommonObject(initialValues, response);
+
+      setInitialValues({
+        ...commonObj,
+        restaurantIds: response.restaurantIds?.map((res: any) => res._id),
+      });
     } catch (error) {
       handleError(
         'An error occurred while submitting the hospital chain form:',
@@ -85,7 +89,7 @@ const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
 
   useEffect(() => {
     if (restaurantOptions) {
-      findField(autoNotificationFormField, 'customersOf')['options'] =
+      findField(autoNotificationFormField, 'restaurantIds')['options'] =
         restaurantOptions;
     }
   }, [restaurantOptions]);

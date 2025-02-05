@@ -11,6 +11,22 @@ import { fetcher, revalidate } from './fetcher';
 
 const ENDPOINT = process.env.API_ENDPOINT;
 
+export const notificationAction = async (body: CreateNotificationParams, id?: string) => {
+  const newNotification = await fetcher<NotificationType>(
+    `/notification/custom${id ? '/' : ''}${id}`,
+    {
+      method: id ? 'PUT' : 'POST',
+      body: body,
+    }
+  );
+
+  if (newNotification) {
+    revalidate(ROUTE_PUSH_NOTIFICATION);
+    return parseStringify(newNotification);
+  }
+  return null;
+};
+
 // GET ALL Notification List
 export const getNotificationList = async (): Promise<
   NotificationType[] | null
@@ -31,50 +47,16 @@ export const getNotificationList = async (): Promise<
   }
 };
 
-// CREATE CUSTOM NOTIFICATION
-export const createCustomNotification = async (
-  data: CreateNotificationParams
-): Promise<NotificationType | null> => {
-  const newNotification = await fetcher<NotificationType>(
-    '/notification/custom',
-    {
-      method: 'POST',
-      body: data,
-    }
-  );
-
-  if (newNotification) {
-    revalidate(ROUTE_PUSH_NOTIFICATION);
-    return parseStringify(newNotification);
-  }
-  return null;
-};
-
 // GET NOTIFICATION
 export const getNotification = async (id: string) => {
-  return await fetcher<NotificationType>(`/notification/custom/${id}`, {
-    method: 'GET',
-  });
-};
-
-// UPDATE HOSPITAL CHAIN
-export const updateHospitalChain = async (
-  id: string,
-  data: CreateHospitalChainParams
-): Promise<HospitalChain | null> => {
-  const newRestaurant = await fetcher<HospitalChain>(
-    `/hospitalityChain/${id}`,
+  const result = await fetcher<NotificationType[]>(
+    `/notification/custom/${id}`,
     {
-      method: 'PUT',
-      body: data,
+      method: 'GET',
     }
   );
 
-  if (newRestaurant) {
-    revalidate(ROUTE_HOSPITAL_CHAIN);
-    return parseStringify(newRestaurant);
-  }
-  return null;
+  return result[0];
 };
 
 // GET ALL AUTOMATIC NOTIFICATION LIST
@@ -99,14 +81,12 @@ export const getAutoNotificationList = async (): Promise<
 };
 
 // CREATE CUSTOM NOTIFICATION
-export const createAutoNotification = async (
-  data: CreateAutoNotificationParams
-): Promise<AutoNotificationType | null> => {
-  const newNotification = await fetcher<AutoNotificationType>(
-    '/notification/automative',
+export const autoNotificationAction = async (body: CreateAutoNotificationParams, id?: string) => {
+  const newNotification = await fetcher<NotificationType>(
+    `/notification/automative${id ? '/' : ''}${id}`,
     {
-      method: 'POST',
-      body: data,
+      method: id ? 'PUT' : 'POST',
+      body: body,
     }
   );
 
@@ -115,6 +95,18 @@ export const createAutoNotification = async (
     return parseStringify(newNotification);
   }
   return null;
+};
+
+// GET NOTIFICATION
+export const getAutoNotification = async (id: string) => {
+  const result = await fetcher<NotificationType[]>(
+    `/notification/automative/${id}`,
+    {
+      method: 'GET',
+    }
+  );
+
+  return result[0];
 };
 
 // GET ALL Notification List

@@ -112,6 +112,7 @@ export const generalFormField = [
         label: 'Dinning Style',
         type: 'select',
         options: [],
+        isMulti: true,
       },
       {
         id: 'dressCode',
@@ -119,6 +120,7 @@ export const generalFormField = [
         label: 'Dress Code',
         type: 'select',
         options: [],
+        isMulti: true,
       },
     ],
   },
@@ -145,6 +147,7 @@ export const generalFormField = [
             value: 'master',
           },
         ],
+        isMulti: true,
       },
       {
         id: 'cousines',
@@ -248,18 +251,18 @@ export const generalFormSchema = Yup.object().shape({
   description: Yup.string()
     .max(1000, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
-  dinningStyle: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
-  dressCode: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
+  dinningStyle: Yup.array()
+  .min(1, 'At least one cuisine must be selected')
+  .required('This field cannot be empty'),
+  dressCode: Yup.array()
+  .min(1, 'At least one cuisine must be selected')
+  .required('This field cannot be empty'),
   cousines: Yup.array()
     .min(1, 'At least one cuisine must be selected')
     .required('This field cannot be empty'),
-  paymentOptions: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
+  paymentOptions: Yup.array()
+  .min(1, 'At least one cuisine must be selected')
+  .required('This field cannot be empty'),
   timeZone: Yup.string()
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),

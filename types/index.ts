@@ -177,6 +177,7 @@ declare type Reservation = {
   diningArea?: any;
   occasion?: string;
   specialRequest?: string;
+  tableNo?: string;
 };
 
 declare type NotificationType = {
@@ -186,6 +187,11 @@ declare type NotificationType = {
   customersOf: string;
   createdAt: string;
   status: string;
+  restaurantIds?: string[];
+  dateAndTime?: string;
+  automativeNotificationType?: string;
+  time?: string;
+  date?: string;
 };
 
 declare type CreateNotificationParams = {

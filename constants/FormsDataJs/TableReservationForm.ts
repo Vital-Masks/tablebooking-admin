@@ -39,8 +39,8 @@ export const tableReservationFormField = [
   { id: 'guestSize', name: 'guestSize', label: 'Guest Size', type: 'number' },
   { id: 'occasion', name: 'occasion', label: 'Occasion', type: 'text' },
   {
-    id: 'specialnote',
-    name: 'specialnote',
+    id: 'specialRequest',
+    name: 'specialRequest',
     label: 'Special Note',
     type: 'textarea',
   },
@@ -48,7 +48,7 @@ export const tableReservationFormField = [
     id: 'grid2',
     name: 'grid',
     fields: [
-      { id: 'tableno', name: 'tableno', label: 'Table No', type: 'text' },
+      { id: 'tableNo', name: 'tableNo', label: 'Table No', type: 'text' },
       {
         id: 'status',
         name: 'status',
@@ -99,19 +99,17 @@ export const tableReservationFormSchema = Yup.object().shape({
     .integer('Guest size must be an integer')
     .positive('Guest size must be a positive number')
     .required('This field cannot be empty'),
-  diningArea: Yup.string()
-    .required('This field cannot be empty'),
+  diningArea: Yup.string().required('This field cannot be empty'),
   occasion: Yup.string()
     .matches(/^\S.*$/, 'Cannot start with a space')
     .min(3, 'Min characters 3 only allowed')
     .max(10, 'Max characters 10 only allowed')
     .required('This field cannot be empty'),
-  specialnote: Yup.string()
+    specialRequest: Yup.string()
     .matches(/^\S.*$/, 'Cannot start with a space')
     .min(3, 'Min characters 3 only allowed')
-    .max(255, 'Max characters 10 only allowed')
-    .required('This field cannot be empty'),
-  tableno: Yup.string()
+    .max(255, 'Max characters 10 only allowed'),
+  tableNo: Yup.string()
     .matches(/^\S.*$/, 'Cannot start with a space')
     .min(3, 'Min characters 3 only allowed')
     .max(10, 'Max characters 10 only allowed')

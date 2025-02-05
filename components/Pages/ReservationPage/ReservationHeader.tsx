@@ -16,6 +16,7 @@ import {
 import {
   createReservation,
   getReservation,
+  updateReservation,
 } from '@/lib/actions/reservation.action';
 import { createUser, getUserByEmail } from '@/lib/actions/user.action';
 import { IconEye, IconXCircle } from '@/components/Icons';
@@ -27,7 +28,7 @@ const ReservationHeader = () => {
 
   const [createForm, setCreateForm] = useState(false);
   const [viewForm, setViewForm] = useState(false);
-  const [reservation, setReservation] = useState<any>({})
+  const [reservation, setReservation] = useState<any>({});
   const [initialValues, setInitialValues] = useState({
     date: '',
     time: '',
@@ -36,12 +37,12 @@ const ReservationHeader = () => {
     contactNumber: '',
     email: '',
     restaurant: '',
-    reservedfor: '',
-    pax: '',
+    dining: '',
+    guestSize: '',
     diningarea: '',
     occasion: '',
-    specialnote: '',
-    tableno: '',
+    specialRequest: '',
+    tableNo: '',
     status: '',
   });
 
@@ -85,6 +86,7 @@ const ReservationHeader = () => {
       }
 
       if (reservationId) {
+        await updateReservation(reservationId, data);
       } else {
         await createReservation(data);
       }
@@ -99,7 +101,7 @@ const ReservationHeader = () => {
 
   const fetchReservation = async (id: string) => {
     try {
-      setViewForm(true);
+      setCreateForm(true);
       const response = await getReservation(id);
       setReservation(response);
       setInitialValues({
@@ -110,12 +112,12 @@ const ReservationHeader = () => {
         contactNumber: response.guestUserId?.contactNo,
         email: response.guestUserId?.email,
         restaurant: response.restaurantId?._id,
-        reservedfor: response.dining?._id,
-        pax: response.guestSize || '',
+        dining: response.dining?._id,
+        guestSize: response.guestSize || '',
         diningarea: response.diningArea?._id,
         occasion: response.occasion || '',
-        specialnote: response.specialRequest || '',
-        tableno: '',
+        specialRequest: response.specialRequest || '',
+        tableNo: response.tableNo || '',
         status: response.status,
       });
     } catch (error) {
@@ -177,19 +179,27 @@ const ReservationHeader = () => {
           </div>
           <div className="border p-4 border-t-0">
             <p className="font-bold text-neutral-500">Restaurant</p>
-            <p className="text-base text-neutral-900">{reservation.restaurantId?.restaurantName}</p>
+            <p className="text-base text-neutral-900">
+              {reservation.restaurantId?.restaurantName}
+            </p>
           </div>
           <div className="border p-4 border-t-0">
             <p className="font-bold text-neutral-500">Dining</p>
-            <p className="text-base text-neutral-900">{reservation.dining?.diningName}</p>
+            <p className="text-base text-neutral-900">
+              {reservation.dining?.diningName}
+            </p>
           </div>
           <div className="border p-4 border-t-0">
             <p className="font-bold text-neutral-500">Dining Area</p>
-            <p className="text-base text-neutral-900">{reservation.diningArea?.sectionName}</p>
+            <p className="text-base text-neutral-900">
+              {reservation.diningArea?.sectionName}
+            </p>
           </div>
           <div className="border p-4 border-t-0">
             <p className="font-bold text-neutral-500">Guest Size</p>
-            <p className="text-base text-neutral-900">{reservation.guestSize}</p>
+            <p className="text-base text-neutral-900">
+              {reservation.guestSize}
+            </p>
           </div>
           <div className="border p-4 border-t-0">
             <p className="font-bold text-neutral-500">Occation</p>
@@ -201,10 +211,11 @@ const ReservationHeader = () => {
           </div>
           <div className="border p-4 border-t-0 col-span-2">
             <p className="font-bold text-neutral-500">Date time</p>
-            <p className="text-neutral-900">{reservation.date} - {reservation.time}</p>
+            <p className="text-neutral-900">
+              {reservation.date} - {reservation.time}
+            </p>
           </div>
-       
-       
+
           {/* <div>
             <h1>View Reservation</h1>
             <p>First Name: {initialValues.firstname}</p>

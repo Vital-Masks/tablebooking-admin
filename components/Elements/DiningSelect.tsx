@@ -45,7 +45,6 @@ const DiningSelect = ({ field, errors, restaurantId }: any) => {
         options={state}
         disabled={state.length === 0}
         hasError={errors[field.name]}
-
       />
       <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
     </div>

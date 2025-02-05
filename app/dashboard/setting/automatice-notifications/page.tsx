@@ -1,7 +1,7 @@
-import AutoNotificationHeader from "@/components/Pages/SettingsTabs/AutomaticNotifications/AutoNotificationHeader";
-import AutoNotificationTable from "@/components/Pages/SettingsTabs/AutomaticNotifications/AutoNotificationTable";
-import { getRestaurantsList } from "@/lib/actions/restaurant.actions";
-import { getUtilities } from "@/lib/actions/utilities.actions";
+import AutoNotificationHeader from '@/components/Pages/SettingsTabs/AutomaticNotifications/AutoNotificationHeader';
+import AutoNotificationTable from '@/components/Pages/SettingsTabs/AutomaticNotifications/AutoNotificationTable';
+import { getRestaurantsList } from '@/lib/actions/restaurant.actions';
+import { getUtilities } from '@/lib/actions/utilities.actions';
 
 const AutomaticNotificationPage = async () => {
   const restaurants = await getRestaurantsList();
@@ -13,7 +13,10 @@ const AutomaticNotificationPage = async () => {
 
   return (
     <main>
-      <AutoNotificationHeader restaurantOptions={restaurantOptions} utilities={utilities} />
+      <AutoNotificationHeader
+        restaurantOptions={restaurantOptions}
+        utilities={utilities}
+      />
       <AutoNotificationTable />
     </main>
   );

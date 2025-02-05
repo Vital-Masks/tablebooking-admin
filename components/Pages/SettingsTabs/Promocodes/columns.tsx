@@ -1,7 +1,7 @@
 "use client";
 
 import { IconEye } from "@/components/Icons";
-import { ROUTE_PROMO_CODE, ROUTE_PUSH_NOTIFICATION } from "@/constants/routes";
+import { ROUTE_PROMO_CODE } from "@/constants/routes";
 import Link from "next/link";
 
 export const columns = [
