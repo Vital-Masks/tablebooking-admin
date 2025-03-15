@@ -6,14 +6,14 @@ import FormSlider from '@/components/Common/Form/FormSlider';
 import PageHeader from '@/components/Elements/PageHeader';
 import { handleError } from '@/lib/utils';
 import { ROUTE_CUSTOMERS } from '@/constants/routes';
-import { getUserByEmail } from '@/lib/actions/user.action';
+import {  getUserById } from '@/lib/actions/user.action';
 import { IconEye, IconXCircle } from '@/components/Icons';
 import moment from 'moment';
 
 const CustomerHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const email = searchParams.get('email') ?? null;
+  const id = searchParams.get('id') ?? null;
 
   const [isOpen, setIsOpen] = useState(false);
   const [customerDetails, setCustomerDetails] = useState<any>({});
@@ -29,17 +29,17 @@ const CustomerHeader = () => {
   const handleCloseForm = () => {
     setIsOpen(false);
     setCustomerDetails({});
-    if (email) {
+    if (id) {
       router.push(ROUTE_CUSTOMERS);
     }
   };
 
-  const fetchCustomers = async (email: string) => {
+  const fetchCustomers = async (id: string) => {
     try {
       setIsOpen(true);
-      const response = await getUserByEmail(email);
-      setCustomerDetails(response[0]);
-      console.log('>>', response);
+      const response = await getUserById(id);
+      setCustomerDetails(response);
+      
     } catch (error) {
       handleError(
         'An error occurred while submitting the hospital chain form:',
@@ -49,10 +49,10 @@ const CustomerHeader = () => {
   };
 
   useEffect(() => {
-    if (email) {
-      fetchCustomers(email);
+    if (id) {
+      fetchCustomers(id);
     }
-  }, [email]);
+  }, [id]);
 
   return (
     <>
@@ -95,11 +95,11 @@ const CustomerHeader = () => {
           </div>
           <div className="text-center col-span-2 border p-4  border-t-0 rounded-t-sm">
             <p className="font-bold text-neutral-500">Reservation Made</p>
-            <p className="text-xl text-neutral-900">50</p>
+            <p className="text-xl text-neutral-900">{customerDetails.reservationCount}</p>
           </div>
           <div className="text-center col-span-2 border p-4  border-t-0 rounded-t-sm">
             <p className="font-bold text-neutral-500">Reviews Made</p>
-            <p className="text-xl text-neutral-900">50</p>
+            <p className="text-xl text-neutral-900">{customerDetails.reviewsCount}</p>
           </div>
           <p className="col-span-4 text-right mt-2">
             Members since{' '}

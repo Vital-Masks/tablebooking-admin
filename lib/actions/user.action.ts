@@ -11,6 +11,12 @@ export const getCustomers = async (): Promise<any[] | null> => {
   return result;
 };
 
+export const getUserById = async (id: string) => {
+  return await fetcher<any>(`/guestUser/${id}`, {
+    method: 'GET',
+  });
+};
+
 export const getUserByEmail = async (email: string) => {
   return await fetcher<any>(`/guestUser/email/${email}`, {
     method: 'GET',

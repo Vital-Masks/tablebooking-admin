@@ -3,7 +3,6 @@
 import { handleError, parseStringify } from '../utils';
 import {
   ROUTE_AUTO_NOTIFICATION,
-  ROUTE_HOSPITAL_CHAIN,
   ROUTE_PROMO_CODE,
   ROUTE_PUSH_NOTIFICATION,
 } from '@/constants/routes';
