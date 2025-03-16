@@ -2,9 +2,9 @@ import Link from 'next/link';
 import React from 'react';
 import Button from './Button';
 
-const PageHeader = ({ pageHeaderData }: any) => {
+const PageHeader = ({ pageHeaderData, className }: any) => {
   return (
-    <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6">
+    <div className={`flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6 ${className}`}>
       <h2 className="text-lg text-black font-bold">{pageHeaderData.title}</h2>
       <div className="flex items-center gap-2">
         {pageHeaderData.button1.action && (

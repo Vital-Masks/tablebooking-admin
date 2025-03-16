@@ -111,7 +111,7 @@ const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
 
   return (
     <>
-      <PageHeader pageHeaderData={pageHeaderData} />
+      <PageHeader pageHeaderData={pageHeaderData} className="!mb-0 !rounded-none" />
       <FormSlider isOpen={createForm}>
         <FormComponent
           title="Create Notification"

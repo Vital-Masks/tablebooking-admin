@@ -6,6 +6,7 @@ export const generalFormField = [
     name: 'coverImage',
     label: 'Cover Image',
     type: 'file',
+    maxFiles: 5,
   },
   {
     id: 'grid1',

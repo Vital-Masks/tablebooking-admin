@@ -23,6 +23,7 @@ interface FormField {
   dependant?: string;
   ifRender?: any;
   hasTime?: boolean;
+  maxFiles: number;
 }
 
 const FormComponent = ({
@@ -140,7 +141,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
   field,
   errors,
   setFieldValue,
-  values
+  values,
 }) => {
   switch (field.type) {
     case "select":
@@ -258,6 +259,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
             files={values[field.name]}
             setFiles={(v: any) => setFieldValue(field.name, v)}
             hasError={errors[field.name]}
+            maxFiles={field.maxFiles}
           />
         </div>
       );

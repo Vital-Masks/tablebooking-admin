@@ -226,3 +226,15 @@ declare type Customers = {
   latestreservation: string;
   createdOn: string;
 };
+
+declare type CreateBannerParams = {
+  bannerName: string;
+  bannerFor: string;
+  redirectFor: string;
+  coverImage: any;
+  validFromDate: string;
+  validFromTime: string;
+  validTillDate: string;
+  validTillTime: string;
+  isAvailable: string;
+};

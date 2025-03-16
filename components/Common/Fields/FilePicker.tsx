@@ -10,7 +10,7 @@ interface FilePickerProps {
   label?: string;
   placeholder?: string;
   accept?: any;
-  maxFiles?: number;
+  maxFiles: number;
   files: PreviewFile[];
   setFiles: (files: PreviewFile[]) => void;
   hasError: string;
@@ -45,13 +45,13 @@ const FilePicker: FC<FilePickerProps> = ({
   maxFiles,
   files,
   setFiles,
-  hasError,  
+  hasError,
 }) => {
-  const uploadedFiles = Array.isArray(files) ? files : [];
+  const uploadedFiles = Array.isArray(files) ? files : files ? [files] : [];
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: accept ?? { "image/*": [] },
-    maxFiles: maxFiles ?? 5,
+    maxFiles: maxFiles ?? 1,
     onDrop: async (
       acceptedFiles: File[],
       fileRejections: FileRejection[],
@@ -67,7 +67,11 @@ const FilePicker: FC<FilePickerProps> = ({
         })
       ) as PreviewFile[];
 
-      setFiles([...uploadedFiles, ...previewFiles]);
+      if(maxFiles > 1) {
+        setFiles([...uploadedFiles, ...previewFiles]);
+      } else {
+        setFiles([...previewFiles]);
+      }
     },
   });
 
@@ -127,7 +131,7 @@ const FilePicker: FC<FilePickerProps> = ({
         htmlFor={label}
         className="block text-sm font-medium leading-6 text-gray-900"
       >
-        {label}
+        {label} 
       </label>
       <div
         {...getRootProps({ className: "dropzone" })}
@@ -149,7 +153,7 @@ const FilePicker: FC<FilePickerProps> = ({
         </div>
       </div>
 
-      <aside className="grid grid-cols-7 mt-4 gap-1">{filePreviews}</aside>
+      <aside className={`grid mt-4 gap-1 ${maxFiles > 1 ? 'grid-cols-7' : 'grid-cols-1'}`}>{filePreviews}</aside>
     </div>
   );
 };

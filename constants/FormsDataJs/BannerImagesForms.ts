@@ -12,18 +12,24 @@ export const bannerFormField = [
     name: 'bannerFor',
     label: 'Banner for',
     type: 'select',
+    options: [
+      { value: 'mobile-desktop', label: 'Mobile & Desktop' },
+      { value: 'mobile', label: 'Mobile' },
+      { value: 'desktop', label: 'Desktop' },
+    ],
   },
   {
-    id: 'redirectedFor',
-    name: 'redirectedFor',
+    id: 'redirectFor',
+    name: 'redirectFor',
     label: 'Redirected for',
-    type: 'select',
+    type: 'url',
   },
   {
     id: 'coverImage',
     name: 'coverImage',
     label: 'Cover Image',
     type: 'file',
+    maxFiles: 1,
   },
   {
     id: 'grid1',
@@ -42,10 +48,14 @@ export const bannerFormField = [
     ],
   },
   {
-    id: 'availabilityStatus',
-    name: 'availabilityStatus',
+    id: 'isAvailable',
+    name: 'isAvailable',
     label: 'Availability Status',
     type: 'select',
+    options: [
+      { value: true, label: 'Available' },
+      { value: false, label: 'Not Available' },
+    ],
   },
 ];
 
@@ -54,11 +64,11 @@ export const bannerFormSchema = Yup.object().shape({
     .max(255, 'Max characters 255 only allowed')
     .required('This field cannot be empty'),
   bannerFor: Yup.string().required('This field cannot be empty'),
-  redirectedFor: Yup.string().required('This field cannot be empty'),
+  redirectFor: Yup.string().required('This field cannot be empty'),
   coverImage: Yup.mixed().required('A cover image is required'),
   validFromDate: Yup.date().required('This field cannot be empty'),
   validFromTime: Yup.string().required('This field cannot be empty'),
   validTillDate: Yup.date().required('This field cannot be empty'),
   validTillTime: Yup.string().required('This field cannot be empty'),
-  availabilityStatus: Yup.string().required('This field cannot be empty'),
+  isAvailable: Yup.string().required('This field cannot be empty'),
 });

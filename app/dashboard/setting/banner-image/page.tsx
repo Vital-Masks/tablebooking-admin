@@ -1,12 +1,11 @@
-import NotificationHeader from "@/components/Pages/SettingsTabs/PushNotifications/NotificationHeader";
-import PushNotificationTable from "@/components/Pages/SettingsTabs/PushNotifications/PushNotificationTable";
-import React from "react";
+import BannerHeader from "@/components/Pages/SettingsTabs/BannerImage/BannerHeader";
+import BannerTable from "@/components/Pages/SettingsTabs/BannerImage/BannerTable";
 
 const BannerImagePage = () => {
   return (
     <div>
-      <NotificationHeader />
-      <PushNotificationTable />
+      <BannerHeader />
+      <BannerTable />
     </div>
   );
 };
