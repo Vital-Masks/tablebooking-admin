@@ -12,7 +12,7 @@ const CustomerTable = async () => {
       fullname: res.firstName + ' ' + res.lastName,
       contactno: res.contactNo,
       emailaddress: res.email,
-      latestreservation: 'res.contactNumber',
+      latestreservation: res.latestReservation?.restaurantId,
       createdOn: res.created_at,
     });
   });
