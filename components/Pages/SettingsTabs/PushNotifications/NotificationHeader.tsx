@@ -54,13 +54,12 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
       notificationTitle: data.notificationTitle,
       notification: data.notification,
       restaurantIds: data.customersOf,
-      date: data.date,
-      time: data.time,
+      dateAndTime: moment(data.date + " " + data.time).toLocaleString()
     };
 
     try {
       if (notificationId) {
-        await notificationAction(data, notificationId);
+        await notificationAction(body, notificationId);
         router.push(ROUTE_PUSH_NOTIFICATION);
       } else {
         await notificationAction(body);
@@ -78,13 +77,12 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
     try {
       setCreateForm(true);
       const response = await getNotification(id);
-
       const commonObj = returnCommonObject(initialValues, response);
       setInitialValues({
         ...commonObj,
         customersOf: response?.restaurantIds?.map((res: any) => res._id),
-        date: moment(response.date).format('YYYY-MM-DD'),
-        time: response.time,
+        date: moment(response.dateAndTime).format('YYYY-MM-DD'),
+        time: moment(response.dateAndTime).format('hh:mm A'),
       });
     } catch (error) {
       handleError(

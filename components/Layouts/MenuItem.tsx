@@ -34,7 +34,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
     setCurrentMenu((oldValue) => (oldValue === value ? '' : value));
   };
 
-  const isActive = (path: string) => (path === `/${pathname.split('/').splice(1, 2).join('/')}` ? true : false);
+  const isActive = (path: string) => (path.split('/')[2] === `${pathname.split('/')[2]}` ? true : false);
 
   return (
     <>

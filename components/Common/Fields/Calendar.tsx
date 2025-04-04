@@ -15,22 +15,26 @@ const Calendar = ({ name, values, setFieldValue, hasTime, hasError }: any) => {
   );
 
   useEffect(() => {
-    if (
-      values &&
-      moment(values[name], 'YYYY-MM-DDTHH:mm:ss.SSSZ', true).isValid()
-    ) {
-      setSelectedDates([moment(values[name]).format('YYYY-MM-DD')]);
-      setSelectedMonth([moment(values[name]).get('month')]); 
-      setSelectedYear([moment(values[name]).get('year')]);
-      setSelectedTime(moment(values[name]).format('HH:mm A'));
-    } else {
-      if (values && values[name] !== selectedDates[0]) {
-        setSelectedDates([values[name]]);
-        setSelectedMonth([new Date(values[name]).getMonth()]);
-        setSelectedYear([new Date(values[name]).getFullYear()]);
+    if (!values || !values[name]) return;
+    
+    const currentValue = values[name];
+    const formattedCurrentDate = moment(currentValue).format('YYYY-MM-DD');
+    const currentSelectedDate = selectedDates[0];
+    
+    // Only update if the values have actually changed
+    if (moment(currentValue, 'YYYY-MM-DDTHH:mm:ss.SSSZ', true).isValid()) {
+      if (formattedCurrentDate !== currentSelectedDate) {
+        setSelectedDates([formattedCurrentDate]);
+        setSelectedMonth([moment(currentValue).get('month')]); 
+        setSelectedYear([moment(currentValue).get('year')]);
+        setSelectedTime(moment(currentValue).format('HH:mm A'));
       }
+    } else if (currentValue !== currentSelectedDate) {
+      setSelectedDates([currentValue]);
+      setSelectedMonth([new Date(currentValue).getMonth()]);
+      setSelectedYear([new Date(currentValue).getFullYear()]);
     }
-  }, [values]);
+  }, [values, name]);
 
   return (
     <div className="min-w-full w-full border rounded-lg">
@@ -41,7 +45,6 @@ const Calendar = ({ name, values, setFieldValue, hasTime, hasError }: any) => {
           selectedMonth: selectedMonth,
           selectedYear: selectedYear,
           selectedTime: selectedTime,
-
           onClickDate(self) {
             const newDate = self.context.selectedDates;
             if (newDate[0] !== selectedDates[0]) {

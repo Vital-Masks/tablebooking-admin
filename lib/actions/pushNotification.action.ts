@@ -1,23 +1,26 @@
-'use server';
+"use server";
 
-import { handleError, parseStringify } from '../utils';
+import { handleError, parseStringify } from "../utils";
 import {
   ROUTE_AUTO_NOTIFICATION,
   ROUTE_PROMO_CODE,
   ROUTE_PUSH_NOTIFICATION,
-} from '@/constants/routes';
-import { fetcher, revalidate } from './fetcher';
+} from "@/constants/routes";
+import { fetcher, revalidate } from "./fetcher";
 
 const ENDPOINT = process.env.API_ENDPOINT;
 
-export const notificationAction = async (body: CreateNotificationParams, id?: string) => {
-  const newNotification = await fetcher<NotificationType>(
-    `/notification/custom${id ? '/' : ''}${id}`,
-    {
-      method: id ? 'PUT' : 'POST',
-      body: body,
-    }
-  );
+export const notificationAction = async (
+  body: CreateNotificationParams,
+  id: string | null = null
+) => {
+  const url = id ? `/notification/custom/${id}` : `/notification/custom`;
+  const method = id ? "PUT" : "POST";
+
+  const newNotification = await fetcher<NotificationType>(url, {
+    method,
+    body,
+  });
 
   if (newNotification) {
     revalidate(ROUTE_PUSH_NOTIFICATION);
@@ -39,7 +42,7 @@ export const getNotificationList = async (): Promise<
     return result;
   } catch (error) {
     handleError(
-      'An error occurred while retrieving the hospital chains',
+      "An error occurred while retrieving the hospital chains",
       error
     );
     return null;
@@ -51,7 +54,7 @@ export const getNotification = async (id: string) => {
   const result = await fetcher<NotificationType[]>(
     `/notification/custom/${id}`,
     {
-      method: 'GET',
+      method: "GET",
     }
   );
 
@@ -72,7 +75,7 @@ export const getAutoNotificationList = async (): Promise<
     return result;
   } catch (error) {
     handleError(
-      'An error occurred while retrieving the hospital chains',
+      "An error occurred while retrieving the hospital chains",
       error
     );
     return null;
@@ -80,11 +83,14 @@ export const getAutoNotificationList = async (): Promise<
 };
 
 // CREATE CUSTOM NOTIFICATION
-export const autoNotificationAction = async (body: CreateAutoNotificationParams, id?: string) => {
+export const autoNotificationAction = async (
+  body: CreateAutoNotificationParams,
+  id?: string
+) => {
   const newNotification = await fetcher<NotificationType>(
-    `/notification/automative${id ? '/' : ''}${id}`,
+    `/notification/automative${id ? "/" : ""}${id}`,
     {
-      method: id ? 'PUT' : 'POST',
+      method: id ? "PUT" : "POST",
       body: body,
     }
   );
@@ -101,7 +107,7 @@ export const getAutoNotification = async (id: string) => {
   const result = await fetcher<NotificationType[]>(
     `/notification/automative/${id}`,
     {
-      method: 'GET',
+      method: "GET",
     }
   );
 
@@ -119,7 +125,7 @@ export const getPromoList = async (): Promise<any[] | null> => {
     return result;
   } catch (error) {
     handleError(
-      'An error occurred while retrieving the hospital chains',
+      "An error occurred while retrieving the hospital chains",
       error
     );
     return null;
@@ -128,13 +134,13 @@ export const getPromoList = async (): Promise<any[] | null> => {
 
 export const getPromo = async (id: string) => {
   return await fetcher<any>(`/promocodes/${id}`, {
-    method: 'GET',
+    method: "GET",
   });
 };
 
 export const createPromoCodes = async (data: any): Promise<any | null> => {
-  const newCode = await fetcher<any>('/promocodes', {
-    method: 'POST',
+  const newCode = await fetcher<any>("/promocodes", {
+    method: "POST",
     body: data,
   });
 
@@ -150,7 +156,7 @@ export const updatePromoCode = async (
   data: any
 ): Promise<any | null> => {
   const newRestaurant = await fetcher<any>(`/promocodes/${id}`, {
-    method: 'PUT',
+    method: "PUT",
     body: data,
   });
 

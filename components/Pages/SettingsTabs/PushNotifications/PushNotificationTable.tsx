@@ -12,7 +12,7 @@ const PushNotificationTable = async () => {
       id: res._id,
       notificationTitle: res.notificationTitle,
       customersOf: res.restaurantIds.map((res: any) => res.restaurantName),
-      createdAt: moment(res.date).format('DD-MM-YYYY') + ' / ' + res.time,
+      createdAt: moment(res.dateAndTime).format('DD-MM-YYYY') + ', ' + moment(res.dateAndTime).format('hh:mm A'),
       status: 'Active',
     });
   });
