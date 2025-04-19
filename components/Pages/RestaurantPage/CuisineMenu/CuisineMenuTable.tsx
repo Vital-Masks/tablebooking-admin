@@ -1,40 +1,39 @@
-import React from 'react';
-import { columns } from './columns';
-import Table from '@/components/Common/Table';
-import { getRestaurantCuisineMenu } from '@/lib/actions/restaurant.actions';
-import PdfRenderer from '@/components/Elements/PdfRenderer';
-import Link from 'next/link';
+import React from "react";
+import { columns } from "./columns";
+import Table from "@/components/Common/Table";
+import { getRestaurantCuisineMenu } from "@/lib/actions/restaurant.actions";
+import PdfRenderer from "@/components/Elements/PdfRenderer";
+import Link from "next/link";
 
 const CuisineMenuTable = async ({ params }: any) => {
   const rowData: any[] = [];
-  let pdf: string = '';
-  let link: string = '';
+  let pdf: string = "";
+  let link: string = "";
 
-  if (params.restaurantId !== 'c') {
+  if (params.restaurantId !== "c") {
     const cuisines = await getRestaurantCuisineMenu(params.restaurantId);
 
     cuisines?.map((res: any) => {
-      if (res.pdf) {
-        pdf = res.pdf;
-        return;
-      } else if (res.link) {
-        link = res.link;
-        return;
-      }
-
+      // if (res.pdf) {
+      //   pdf = res.pdf;
+      //   return;
+      // } else if (res.link) {
+      //   link = res.link;
+      //   return;
+      // }
       rowData.push({
         id: res._id,
-        foodName: res.foodName,
-        category: res.foodCategory,
-        price: res.price,
+        foodName: res.pdf ? 'PDF' : res.foodName,
+        category: res.foodCategory ?? 'NA',
+        price: res.price ?? 'NA',
       });
     });
   }
 
   return (
     <div>
-      {!pdf && !link && <Table columns={columns} rowData={rowData} />}
-      {pdf && (
+      <Table columns={columns} rowData={rowData} />
+      {/* {pdf && (
         <div className="mt-20">
           <PdfRenderer base64String={pdf} />
         </div>
@@ -51,7 +50,7 @@ const CuisineMenuTable = async ({ params }: any) => {
             {link}
           </Link>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

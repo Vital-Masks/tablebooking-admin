@@ -17,10 +17,9 @@ import {
   ROUTE_PAYMENTS,
   ROUTE_CUSTOMERS,
   ROUTE_USERROLE,
-  ROUTE_SETTING,
-  ROUTE_SUPPORT,
   ROUTE_HOSPITAL_CHAIN,
   ROUTE_PUSH_NOTIFICATION,
+  ROUTE_DEMO_INQUIRY,
 } from '../routes';
 
 export const menuItems = [
@@ -84,7 +83,7 @@ export const menuItems = [
     title: 'Support',
     Icon: IconChat,
     childItems: [],
-    route: ROUTE_SUPPORT,
+    route: ROUTE_DEMO_INQUIRY,
   },
   {
     id: 'hospitalChain',

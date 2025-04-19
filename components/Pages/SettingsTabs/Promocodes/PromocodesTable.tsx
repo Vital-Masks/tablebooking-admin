@@ -5,7 +5,7 @@ import { getPromoList } from '@/lib/actions/pushNotification.action';
 const PromocodesTable = async () => {
   const rowData: any[] = [];
   const promos = await getPromoList();
-  console.log('>> ', promos);
+
   promos?.map((res: any) => {
     rowData.push({
       id: res._id,

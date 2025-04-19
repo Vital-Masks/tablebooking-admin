@@ -238,3 +238,23 @@ declare type CreateBannerParams = {
   validTillTime: string;
   isAvailable: string;
 };
+
+declare type InquiryType = {
+  _id?: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  contactNo: string;
+  email: string;
+  companyName: string;
+  status: string;
+};
+
+declare type CreateInquiryParams = {
+  firstName: string;
+  lastName: string;
+  contactNo: string;
+  email: string;
+  companyName: string;
+  status: string;
+};
