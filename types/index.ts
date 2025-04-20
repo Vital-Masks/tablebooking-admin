@@ -177,6 +177,7 @@ declare type Reservation = {
   diningArea?: any;
   occasion?: string;
   specialRequest?: string;
+  promocode?: string;
   tableNo?: string;
 };
 

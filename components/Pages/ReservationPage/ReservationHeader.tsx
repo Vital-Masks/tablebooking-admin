@@ -1,55 +1,60 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
-import FormComponent from '@/components/Common/Form';
-import FormSlider from '@/components/Common/Form/FormSlider';
-import PageHeader from '@/components/Elements/PageHeader';
+import FormComponent from "@/components/Common/Form";
+import FormSlider from "@/components/Common/Form/FormSlider";
+import PageHeader from "@/components/Elements/PageHeader";
 
-import { handleError } from '@/lib/utils';
-import { ROUTE_RESERVATIONS } from '@/constants/routes';
+import { handleError } from "@/lib/utils";
+import { ROUTE_RESERVATIONS } from "@/constants/routes";
 import {
   tableReservationFormField,
   tableReservationFormSchema,
-} from '@/constants/FormsDataJs/TableReservationForm';
+} from "@/constants/FormsDataJs/TableReservationForm";
 import {
   createReservation,
   getReservation,
   updateReservation,
-} from '@/lib/actions/reservation.action';
-import { createUser, getUserByEmail } from '@/lib/actions/user.action';
-import { IconEye, IconXCircle } from '@/components/Icons';
+} from "@/lib/actions/reservation.action";
+import { createUser, getUserByEmail } from "@/lib/actions/user.action";
+import { IconEye, IconXCircle } from "@/components/Icons";
+import Modal from "@/components/Common/Modal";
 
 const ReservationHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const reservationId = searchParams.get('reservationId') ?? null;
+  const reservationId = searchParams.get("reservationId") ?? null;
+  const cancelReservation = searchParams.get("cancelReservation") ?? null;
 
+  const [openModal, setOpenModal] = useState(false);
+  const [reason, setReason] = useState("");
   const [createForm, setCreateForm] = useState(false);
   const [viewForm, setViewForm] = useState(false);
   const [reservation, setReservation] = useState<any>({});
   const [initialValues, setInitialValues] = useState({
-    date: '',
-    time: '',
-    firstname: '',
-    lastname: '',
-    contactNumber: '',
-    email: '',
-    restaurant: '',
-    dining: '',
-    guestSize: '',
-    diningarea: '',
-    occasion: '',
-    specialRequest: '',
-    tableNo: '',
-    status: '',
+    date: "",
+    time: "",
+    firstname: "",
+    lastname: "",
+    contactNumber: "",
+    email: "",
+    restaurant: "",
+    dining: "",
+    guestSize: "",
+    diningarea: "",
+    occasion: "",
+    specialRequest: "",
+    tableNo: "",
+    status: "",
+    promocode: "",
   });
 
   const pageHeaderData = {
-    title: 'Reservations',
+    title: "Reservations",
     button1: {
-      title: 'Add New Reservation',
+      title: "Add New Reservation",
       action: () => setCreateForm(true),
     },
   };
@@ -63,29 +68,41 @@ const ReservationHeader = () => {
     }
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    if (cancelReservation) {
+      router.push(ROUTE_RESERVATIONS);
+    }
+  };
+
   const handleFormSubmit = async (data: any) => {
     try {
       const userEmail = data.email;
       const isUserExist = await getUserByEmail(userEmail);
 
       if (isUserExist?.[0]) {
-        data['guestUserId'] = isUserExist[0]._id;
+        data["guestUserId"] = isUserExist[0]._id;
       } else {
         const userData = {
           firstName: data.firstName,
           lastName: data.lastName,
           contactNo: data.contactNumber,
           email: data.email,
-          password: '123456',
+          password: "123456",
         };
         const newUser = await createUser(userData);
         if (newUser.error) {
         } else {
-          data['guestUserId'] = newUser._id;
+          data["guestUserId"] = newUser._id;
         }
       }
 
-      if (reservationId) {
+      if (cancelReservation) {
+        data["reason"] = reason;
+        console.log(">>", data);
+        await updateReservation(cancelReservation, data);
+      } else if (reservationId) {
+        console.log(">>", data);
         await updateReservation(reservationId, data);
       } else {
         await createReservation(data);
@@ -93,7 +110,7 @@ const ReservationHeader = () => {
       setCreateForm(false);
     } catch (error) {
       handleError(
-        'An error occurred while submitting the hospital chain form:',
+        "An error occurred while submitting the hospital chain form:",
         error
       );
     }
@@ -101,28 +118,28 @@ const ReservationHeader = () => {
 
   const fetchReservation = async (id: string) => {
     try {
-      setCreateForm(true);
       const response = await getReservation(id);
       setReservation(response);
       setInitialValues({
         date: response.date,
-        time: response.time?.replace('.', ':'),
+        time: response.time?.replace(".", ":"),
         firstname: response.guestUserId?.firstName,
         lastname: response.guestUserId?.firstName,
         contactNumber: response.guestUserId?.contactNo,
         email: response.guestUserId?.email,
         restaurant: response.restaurantId?._id,
         dining: response.dining?._id,
-        guestSize: response.guestSize || '',
+        guestSize: response.guestSize || "",
         diningarea: response.diningArea?._id,
-        occasion: response.occasion || '',
-        specialRequest: response.specialRequest || '',
-        tableNo: response.tableNo || '',
+        occasion: response.occasion || "",
+        specialRequest: response.specialRequest || "",
+        tableNo: response.tableNo || "",
         status: response.status,
+        promocode: response.promocode || "",
       });
     } catch (error) {
       handleError(
-        'An error occurred while submitting the hospital chain form:',
+        "An error occurred while submitting the hospital chain form:",
         error
       );
     }
@@ -130,9 +147,17 @@ const ReservationHeader = () => {
 
   useEffect(() => {
     if (reservationId) {
+      setCreateForm(true);
       fetchReservation(reservationId);
     }
   }, [reservationId]);
+
+  useEffect(() => {
+    if (cancelReservation) {
+      fetchReservation(cancelReservation);
+      setOpenModal(true);
+    }
+  }, [cancelReservation]);
 
   return (
     <>
@@ -157,20 +182,20 @@ const ReservationHeader = () => {
             <div className="w-14 h-14 rounded-full bg-neutral-100"></div>
             <div>
               <h1 className="text-base font-bold">
-                {initialValues.firstname ?? 'Undefined'}{' '}
-                {initialValues.lastname ?? 'Undefined'}
+                {initialValues.firstname ?? "Undefined"}{" "}
+                {initialValues.lastname ?? "Undefined"}
               </h1>
               <div className="flex items-center gap-5">
                 <div className="flex itewms-center gap-2">
                   <IconEye />
                   <span className="text-sm text-neutral-600">
-                    {initialValues.email ?? 'Undefined'}
+                    {initialValues.email ?? "Undefined"}
                   </span>
                 </div>
                 <div className="flex itewms-center gap-2">
                   <IconEye />
                   <span className="text-sm text-neutral-600">
-                    {initialValues.contactNumber ?? 'Undefined'}
+                    {initialValues.contactNumber ?? "Undefined"}
                   </span>
                 </div>
               </div>
@@ -215,24 +240,30 @@ const ReservationHeader = () => {
               {reservation.date} - {reservation.time}
             </p>
           </div>
-
-          {/* <div>
-            <h1>View Reservation</h1>
-            <p>First Name: {initialValues.firstname}</p>
-            <p>Last Name: {initialValues.lastname}</p>
-            <p>Contact Number: {initialValues.contactNumber}</p>
-            <p>Email: {initialValues.email}</p>
-            <p>Restaurant: {initialValues.restaurant}</p>
-            <p>Reserved For: {initialValues.reservedfor}</p>
-            <p>Pax: {initialValues.pax}</p>
-            <p>Dining Area: {initialValues.diningarea}</p>
-            <p>Occasion: {initialValues.occasion}</p>
-            <p>Special Note: {initialValues.specialnote}</p>
-            <p>Table No: {initialValues.tableno}</p>
-            <p>Status: {initialValues.status}</p>
-          </div> */}
         </div>
       </FormSlider>
+      <Modal
+        open={openModal}
+        setOpen={handleCloseModal}
+        title="Reason for cancellation"
+      >
+        <div>
+          <label>Reason</label>
+          <input
+            name="reason"
+            type="text"
+            className="form-input"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
+          <button
+            className="btn btn-primary !mt-6 shadow-none w-full"
+            onClick={handleFormSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };

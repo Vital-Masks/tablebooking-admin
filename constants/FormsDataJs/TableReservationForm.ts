@@ -71,6 +71,12 @@ export const tableReservationFormField = [
       },
     ],
   },
+  {
+    id: 'promocode',
+    name: 'promocode',
+    label: 'Promo Code',
+    type: 'text',
+  },
 ];
 
 export const tableReservationFormSchema = Yup.object().shape({
@@ -115,4 +121,5 @@ export const tableReservationFormSchema = Yup.object().shape({
     .max(10, 'Max characters 10 only allowed')
     .required('This field cannot be empty'),
   status: Yup.string().required('This field cannot be empty'),
+  promocode: Yup.string().min(3, 'Min characters 3 only allowed').max(6, 'Max characters 10 only allowed'),
 });

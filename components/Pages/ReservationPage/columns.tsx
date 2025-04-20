@@ -1,6 +1,6 @@
 "use client";
 
-import { IconEye } from "@/components/Icons";
+import { IconEye, IconTrash } from "@/components/Icons";
 import { ROUTE_RESERVATIONS } from "@/constants/routes";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
@@ -27,9 +27,12 @@ export const columns = [
     titleClassName: "!text-center",
     render: ({ id }: any) => (
       <div className="flex items-center gap-4 mx-auto w-max">
-        <Link href={`${ROUTE_RESERVATIONS}?reservationId=${id}`}>
-          <IconEye />
-        </Link>
+          <Link href={`${ROUTE_RESERVATIONS}?reservationId=${id}`}>
+            <IconEye />
+          </Link>
+          <Link href={`${ROUTE_RESERVATIONS}?cancelReservation=${id}`}>
+            <IconTrash />
+          </Link>
       </div>
     ),
   },
