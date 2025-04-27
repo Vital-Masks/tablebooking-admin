@@ -115,7 +115,7 @@ export default function GeneralDetailForm({
       const data = returnCommonObject(initialValues, generalDetails);
       data['registerationNumber'] =
         generalDetails?.hospitalityChainId?.registrationNumber;
-      data['hospitalityChainId'] = generalDetails?.hospitalityChainId?._id;
+      data['hospitalityChainId'] = generalDetails?.hospitalityChainId;
       data['coverImage'] = generalDetails.images;
       setInitialValues(data);
     }
@@ -132,7 +132,7 @@ export default function GeneralDetailForm({
     const options2 = Object.entries(utilities?.[0].Cuisine).map(
       ([key, value]) => ({
         label: value,
-        value: key,
+        value: value,
       })
     );
 
@@ -144,28 +144,28 @@ export default function GeneralDetailForm({
     const dinningStyleOptions = Object.entries(utilities?.[0].dinningStyle).map(
       ([key, value]) => ({
         label: value,
-        value: key,
+        value: value,
       })
     );
 
     const dressCodeOptions = Object.entries(utilities?.[0].dressCode).map(
       ([key, value]) => ({
         label: value,
-        value: key,
+        value: value,
       })
     );
 
     const paymentOptions = Object.entries(utilities?.[0].paymentOptions).map(
       ([key, value]) => ({
         label: value,
-        value: key,
+        value: value,
       })
     );
 
     const currencyOptions = Object.entries(utilities?.[0].currency).map(
       ([key, value]) => ({
         label: value,
-        value: key,
+        value: value,
       })
     );
 
