@@ -20,16 +20,11 @@ import {
 } from "@/lib/actions/reservation.action";
 import { createUser, getUserByEmail } from "@/lib/actions/user.action";
 import { IconEye, IconXCircle } from "@/components/Icons";
-import Modal from "@/components/Common/Modal";
 
 const ReservationHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const reservationId = searchParams.get("reservationId") ?? null;
-  const cancelReservation = searchParams.get("cancelReservation") ?? null;
-
-  const [openModal, setOpenModal] = useState(false);
-  const [reason, setReason] = useState("");
   const [createForm, setCreateForm] = useState(false);
   const [viewForm, setViewForm] = useState(false);
   const [reservation, setReservation] = useState<any>({});
@@ -48,7 +43,7 @@ const ReservationHeader = () => {
     specialRequest: "",
     tableNo: "",
     status: "",
-    promocode: "",
+    promocode: null,
   });
 
   const pageHeaderData = {
@@ -68,14 +63,7 @@ const ReservationHeader = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    if (cancelReservation) {
-      router.push(ROUTE_RESERVATIONS);
-    }
-  };
-
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (e: any, data: any) => {
     try {
       const userEmail = data.email;
       const isUserExist = await getUserByEmail(userEmail);
@@ -97,12 +85,7 @@ const ReservationHeader = () => {
         }
       }
 
-      if (cancelReservation) {
-        data["reason"] = reason;
-        console.log(">>", data);
-        await updateReservation(cancelReservation, data);
-      } else if (reservationId) {
-        console.log(">>", data);
+      if (reservationId) {
         await updateReservation(reservationId, data);
       } else {
         await createReservation(data);
@@ -135,7 +118,7 @@ const ReservationHeader = () => {
         specialRequest: response.specialRequest || "",
         tableNo: response.tableNo || "",
         status: response.status,
-        promocode: response.promocode || "",
+        promocode: response.promocode || null,
       });
     } catch (error) {
       handleError(
@@ -147,17 +130,16 @@ const ReservationHeader = () => {
 
   useEffect(() => {
     if (reservationId) {
+      tableReservationFormField.push({
+        id: "reason",
+        name: "reason",
+        label: "Reason for cancellation (optional)",
+        type: "text",
+      });
       setCreateForm(true);
       fetchReservation(reservationId);
     }
   }, [reservationId]);
-
-  useEffect(() => {
-    if (cancelReservation) {
-      fetchReservation(cancelReservation);
-      setOpenModal(true);
-    }
-  }, [cancelReservation]);
 
   return (
     <>
@@ -242,28 +224,6 @@ const ReservationHeader = () => {
           </div>
         </div>
       </FormSlider>
-      <Modal
-        open={openModal}
-        setOpen={handleCloseModal}
-        title="Reason for cancellation"
-      >
-        <div>
-          <label>Reason</label>
-          <input
-            name="reason"
-            type="text"
-            className="form-input"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-          />
-          <button
-            className="btn btn-primary !mt-6 shadow-none w-full"
-            onClick={handleFormSubmit}
-          >
-            Submit
-          </button>
-        </div>
-      </Modal>
     </>
   );
 };

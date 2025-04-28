@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { IconCaretsDown } from '../Icons';
 import { useDispatch } from 'react-redux';
 import { toggleSidebar } from '@/store/themeSlice';
+import Image from 'next/image';
 
 const SidebarHead = () => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const SidebarHead = () => {
     <div className="flex items-center justify-between px-4 py-3">
       <Link href="/" className="flex items-center main-logo shrink-0">
         <span className="align-middle text-2xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">
-          RESERVED
+        <Image src="/logo.png" alt="logo" width={100} height={100} className="h-5 !w-full object-contain" />
         </span>
       </Link>
 

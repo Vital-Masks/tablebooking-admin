@@ -30,9 +30,6 @@ export const columns = [
           <Link href={`${ROUTE_RESERVATIONS}?reservationId=${id}`}>
             <IconEye />
           </Link>
-          <Link href={`${ROUTE_RESERVATIONS}?cancelReservation=${id}`}>
-            <IconTrash />
-          </Link>
       </div>
     ),
   },
