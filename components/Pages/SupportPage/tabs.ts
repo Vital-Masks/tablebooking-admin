@@ -1,6 +1,6 @@
 export const supportTabs = {
   support1: "demo-inquiry",
-  support2: "support-2",
+  support2: "restaurant-inquiry",
 };
 
 export const tabs = [
@@ -11,7 +11,7 @@ export const tabs = [
   },
   {
     id: supportTabs.support2,
-    name: "Support 2",
+    name: "Restaurant Inquiry",
     description: "Update your general details here",
   },
 ];

@@ -251,6 +251,16 @@ declare type InquiryType = {
   status: string;
 };
 
+declare type RestaurantInquiryType = {
+  _id?: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  contactNo: string;
+  email: string;
+  inquiryRelatedTo: string;
+};
+
 declare type CreateInquiryParams = {
   firstName: string;
   lastName: string;

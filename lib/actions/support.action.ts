@@ -28,17 +28,20 @@ export const getInquiry = async (id: string) => {
   });
 
   return result[0];
-  };
+};
 
 export const createInquiry = async (
   data: any,
   id?: string
 ): Promise<any | null> => {
   try {
-    const newCode = await fetcher<any>(`/demoInquiry${id ? "/" : ""}${id ?? ""}`, {
-      method: id ? "PUT" : "POST",
-      body: data,
-    });
+    const newCode = await fetcher<any>(
+      `/demoInquiry${id ? "/" : ""}${id ?? ""}`,
+      {
+        method: id ? "PUT" : "POST",
+        body: data,
+      }
+    );
 
     if (newCode) {
       revalidate(ROUTE_DEMO_INQUIRY);
@@ -49,4 +52,34 @@ export const createInquiry = async (
     handleError("An error occurred while creating the inquiry", error);
     return null;
   }
+};
+
+// GET RESTAURANT INQUIRY
+export const getRestaurantInquiryList = async (): Promise<
+  RestaurantInquiryType[] | null
+> => {
+  try {
+    const response = await fetch(
+      `${ENDPOINT}/restaurantInquiry/getAllRestaurantInquirys`
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    const { result }: { result: RestaurantInquiryType[] } = await response.json();
+    return result;
+  } catch (error) {
+    handleError("An error occurred while retrieving the inquiry list", error);
+    return null;
+  }
+};
+
+export const getRestaurantInquiry = async (id: string) => {
+  const result = await fetcher<RestaurantInquiryType[]>(
+    `/restaurantInquiry/${id}`,
+    {
+      method: "GET",
+    }
+  );
+
+  return result[0];
 };

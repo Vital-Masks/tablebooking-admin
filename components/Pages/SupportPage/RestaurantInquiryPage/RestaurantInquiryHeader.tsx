@@ -7,11 +7,14 @@ import FormComponent from "@/components/Common/Form";
 import FormSlider from "@/components/Common/Form/FormSlider";
 import PageHeader from "@/components/Elements/PageHeader";
 import { handleError, returnCommonObject } from "@/lib/utils";
-import { ROUTE_DEMO_INQUIRY } from "@/constants/routes";
-import { createInquiry, getInquiry } from "@/lib/actions/support.action";
-import { inquiryFormField, inquiryFormSchema } from "@/constants/FormsDataJs/inquiryForm";
+import { ROUTE_RESTAURANT_INQUIRY } from "@/constants/routes";
+import { createInquiry, getRestaurantInquiry } from "@/lib/actions/support.action";
+import {
+  inquiryFormField,
+  inquiryFormSchema,
+} from "@/constants/FormsDataJs/inquiryForm";
 
-const InquiryHeader = () => {
+const RestaurantInquiryHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const inquiryId = searchParams.get("inquiryId") ?? null;
@@ -27,7 +30,7 @@ const InquiryHeader = () => {
   });
 
   const pageHeaderData = {
-    title: "Inquiry",
+    title: "Restaurant Inquiry",
     // button1: {
     //   title: "Create Inquiry",
     //   action: () => setCreateForm(true),
@@ -37,7 +40,7 @@ const InquiryHeader = () => {
   const handleCloseForm = () => {
     setCreateForm(false);
     if (inquiryId) {
-      router.push(ROUTE_DEMO_INQUIRY);
+      router.push(ROUTE_RESTAURANT_INQUIRY);
     }
   };
 
@@ -45,7 +48,7 @@ const InquiryHeader = () => {
     try {
       if (inquiryId) {
         await createInquiry(data, inquiryId);
-        router.push(ROUTE_DEMO_INQUIRY);
+        router.push(ROUTE_RESTAURANT_INQUIRY);
       } else {
         await createInquiry(data);
       }
@@ -61,7 +64,8 @@ const InquiryHeader = () => {
   const fetchInquiry = async (id: string) => {
     try {
       setCreateForm(true);
-      const response = await getInquiry(id);
+      const response = await getRestaurantInquiry(id);
+      console.log("response >>", response);
       const commonObj = returnCommonObject(initialValues, response);
       setInitialValues({
         ...commonObj,
@@ -100,4 +104,4 @@ const InquiryHeader = () => {
   );
 };
 
-export default InquiryHeader;
+export default RestaurantInquiryHeader;

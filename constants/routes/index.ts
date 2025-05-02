@@ -7,6 +7,7 @@ export const ROUTE_PAYMENTS = ROUTE_DASHBOARD + '/payment';
 export const ROUTE_USERROLE = ROUTE_DASHBOARD + '/user-role';
 export const ROUTE_SUPPORT = ROUTE_DASHBOARD + '/support';
 export const ROUTE_DEMO_INQUIRY = ROUTE_SUPPORT + '/demo-inquiry';
+export const ROUTE_RESTAURANT_INQUIRY = ROUTE_SUPPORT + '/restaurant-inquiry';
 export const ROUTE_SETTING = ROUTE_DASHBOARD + '/setting';
 export const ROUTE_PUSH_NOTIFICATION = ROUTE_SETTING + '/push-notifications';
 export const ROUTE_AUTO_NOTIFICATION = ROUTE_SETTING + '/automatice-notifications';
