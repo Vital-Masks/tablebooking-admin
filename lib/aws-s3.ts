@@ -1,3 +1,22 @@
+
+import { S3Client, DeleteObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
+
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const region = process.env.AWS_REGION;
+
+if (!accessKeyId || !secretAccessKey || !region) {
+  throw new Error("Missing AWS environment variables");
+}
+
+const s3 = new S3Client({
+  region,
+  credentials: {
+    accessKeyId,
+    secretAccessKey,
+  },
+});
+
 export async function uploadFileToS3(file: File, imageCategory: string): Promise<string> {
   try {
     // Ask backend for a pre-signed URL
@@ -36,109 +55,34 @@ export async function uploadFileToS3(file: File, imageCategory: string): Promise
   }
 }
 
-// /**
-//  * Get a signed URL for a file in S3
-//  * @param key - The key (path) of the file in S3
-//  * @param expiresIn - The number of seconds until the URL expires (default: 3600)
-//  * @returns A signed URL that can be used to access the file
-//  */
-// export async function getSignedUrlForFile(
-//   key: string,
-//   expiresIn: number = 3600
-// ): Promise<string> {
-//   try {
-//     const command = new GetObjectCommand({
-//       Bucket: BUCKET_NAME,
-//       Key: key,
-//     });
 
-//     return await getSignedUrl(s3Client, command, { expiresIn });
-//   } catch (error) {
-//     console.error('Error generating signed URL:', error);
-//     throw new Error('Failed to generate signed URL');
-//   }
-// }
 
-// /**
-//  * Delete a file from S3
-//  * @param key - The key (path) of the file to delete
-//  * @returns A boolean indicating success
-//  */
-// export async function deleteFileFromS3(key: string): Promise<boolean> {
-//   try {
-//     const command = new DeleteObjectCommand({
-//       Bucket: BUCKET_NAME,
-//       Key: key,
-//     });
+export async function deleteFileFromS3(key:string): Promise<void> {
+  const command = new DeleteObjectCommand({
+    Bucket: process.env.AWS_IMAGE_BUCKET!,
+    Key: key,
+  });
 
-//     await s3Client.send(command);
-//     return true;
-//   } catch (error) {
-//     console.error('Error deleting file from S3:', error);
-//     throw new Error('Failed to delete file from S3');
-//   }
-// }
+  try {
+    await s3.send(command);
+    console.log(`Deleted: ${key}`);
+  } catch (err) {
+    console.error('S3 Delete Error:', err);
+    throw err;
+  }
+}
 
-// /**
-//  * List files in a directory in S3
-//  * @param prefix - The prefix (directory path) to list files from
-//  * @returns An array of file keys
-//  */
-// export async function listFilesInS3(prefix: string): Promise<string[]> {
-//   try {
-//     const command = new ListObjectsV2Command({
-//       Bucket: BUCKET_NAME,
-//       Prefix: prefix,
-//     });
+export async function fileExistsInS3(key: string): Promise<boolean> {
+  try {
+    const command = new HeadObjectCommand({
+      Bucket: process.env.AWS_IMAGE_BUCKET!,
+      Key: key,
+    });
 
-//     const response = await s3Client.send(command);
-//     return response.Contents?.map((item) => item.Key || '') || [];
-//   } catch (error) {
-//     console.error('Error listing files in S3:', error);
-//     throw new Error('Failed to list files in S3');
-//   }
-// }
+    await s3.send(command);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
 
-// /**
-//  * Check if a file exists in S3
-//  * @param key - The key (path) of the file to check
-//  * @returns A boolean indicating if the file exists
-//  */
-// export async function fileExistsInS3(key: string): Promise<boolean> {
-//   try {
-//     const command = new HeadObjectCommand({
-//       Bucket: BUCKET_NAME,
-//       Key: key,
-//     });
-
-//     await s3Client.send(command);
-//     return true;
-//   } catch (error) {
-//     return false;
-//   }
-// }
-
-// /**
-//  * Get file metadata from S3
-//  * @param key - The key (path) of the file
-//  * @returns File metadata
-//  */
-// export async function getFileMetadata(key: string) {
-//   try {
-//     const command = new HeadObjectCommand({
-//       Bucket: BUCKET_NAME,
-//       Key: key,
-//     });
-
-//     const response = await s3Client.send(command);
-//     return {
-//       contentType: response.ContentType,
-//       contentLength: response.ContentLength,
-//       lastModified: response.LastModified,
-//       etag: response.ETag,
-//     };
-//   } catch (error) {
-//     console.error('Error getting file metadata:', error);
-//     throw new Error('Failed to get file metadata');
-//   }
-// }
