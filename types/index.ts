@@ -96,7 +96,7 @@ declare type CreateCuisineMenuParams = {
   cuisine?: string;
   hospitalityChainId?: string;
   restaurantId?: string;
-  pdf?: string;
+  pdf?: string[];
   link?: string;
 };
 

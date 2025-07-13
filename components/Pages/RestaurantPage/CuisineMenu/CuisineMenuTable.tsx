@@ -1,56 +1,40 @@
+
 import React from "react";
 import { columns } from "./columns";
 import Table from "@/components/Common/Table";
 import { getRestaurantCuisineMenu } from "@/lib/actions/restaurant.actions";
-import PdfRenderer from "@/components/Elements/PdfRenderer";
-import Link from "next/link";
+import Image from "next/image";
 
 const CuisineMenuTable = async ({ params }: any) => {
   const rowData: any[] = [];
-  let pdf: string = "";
-  let link: string = "";
+  let PDF_RES: any = null;
 
   if (params.restaurantId !== "c") {
-    const cuisines = await getRestaurantCuisineMenu(params.restaurantId);
+    const cuisines: any = await getRestaurantCuisineMenu(params.restaurantId);
+    PDF_RES = cuisines?.findLast((res: any) => res.pdf);
+
 
     cuisines?.map((res: any) => {
-      // if (res.pdf) {
-      //   pdf = res.pdf;
-      //   return;
-      // } else if (res.link) {
-      //   link = res.link;
-      //   return;
-      // }
       rowData.push({
         id: res._id,
-        foodName: res.pdf ? 'PDF' : res.foodName,
-        category: res.foodCategory ?? 'NA',
-        price: res.price ?? 'NA',
+        foodName: res.pdf ? "Menu File" : res.link ? "Menu Link" : res.foodName,
+        category: res.foodCategory ?? "N/A",
+        price: res.price ?? "N/A",
       });
     });
   }
 
   return (
-    <div>
-      <Table columns={columns} rowData={rowData} />
-      {/* {pdf && (
-        <div className="mt-20">
-          <PdfRenderer base64String={pdf} />
-        </div>
-      )}
-      {link && (
-        <div className="mt-20 ml-5 flex items-center gap-2">
-          <p>Visit the url:</p>{' '}
-          <Link
-            href={link}
-            passHref={true}
-            target="_blank"
-            className="underline text-blue-700"
-          >
-            {link}
-          </Link>
-        </div>
-      )} */}
+    <div className="p-5">
+      {PDF_RES ? <div className="flex w-[500px] h-[700px] overflow-x-auto border border-gray-300 rounded-md snap-x snap-mandatory">
+        {PDF_RES?.pdf?.map((res: any) => {
+          return (
+            <div key={res} className="w-full h-full flex-1 p-2 snap-start">
+              <Image src={res} alt="PDF" className="w-full h-full object-cover bg-gray-200" width={480} height={480} />
+            </div>
+          );
+        })}
+      </div> : <Table columns={columns} rowData={rowData} />}
     </div>
   );
 };

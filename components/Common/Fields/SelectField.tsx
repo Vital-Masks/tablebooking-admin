@@ -1,5 +1,7 @@
+'use client';
+
 import { FieldProps } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 
 interface Option {
@@ -25,6 +27,11 @@ export const SelectField = ({
   hasError = false,
   disabled = false
 }: CustomSelectProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const onChange = (option: Option | Option[]) => {
     form.setFieldValue(
@@ -47,8 +54,17 @@ export const SelectField = ({
     }
   };
 
+  if (!isMounted) {
+    return (
+      <div className={`${className || ''} ${hasError ? '!border-red-500 !bg-red-50' : '!border-white-light'} border rounded-md p-2 min-h-[38px] flex items-center`}>
+        <span className="text-gray-400">{placeholder || 'Loading...'}</span>
+      </div>
+    );
+  }
+
   return (
     <Select
+      instanceId={field.name}
       className={className}
       name={field.name}
       value={getValue()}
