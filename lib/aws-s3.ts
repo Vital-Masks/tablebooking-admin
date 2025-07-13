@@ -1,4 +1,4 @@
-
+'use server'
 import { S3Client, DeleteObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
@@ -55,7 +55,10 @@ export async function uploadFileToS3(file: File, imageCategory: string): Promise
   }
 }
 
-
+export async function uploadMultipleFilesToS3(files: File[], imageCategory: string): Promise<string[]> {
+  const uploadPromises = files.map(file => uploadFileToS3(file, imageCategory));
+  return Promise.all(uploadPromises);
+}
 
 export async function deleteFileFromS3(key:string): Promise<void> {
   const command = new DeleteObjectCommand({

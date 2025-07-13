@@ -1,50 +1,50 @@
-'use client';
+"use client";
 
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import {
   Dialog,
   DialogPanel,
   Transition,
   TransitionChild,
-} from '@headlessui/react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import FormComponent from '@/components/Common/Form';
-import FormSlider from '@/components/Common/Form/FormSlider';
-import Button from '@/components/Elements/Button';
+} from "@headlessui/react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import FormComponent from "@/components/Common/Form";
+import FormSlider from "@/components/Common/Form/FormSlider";
+import Button from "@/components/Elements/Button";
 import {
   foodFormField,
   foodFormSchema,
-} from '@/constants/FormsDataJs/CuisineForm';
+} from "@/constants/FormsDataJs/CuisineForm";
 import {
   createRestaurantCuisineMenu,
   getRestaurantCuisineMenuById,
   updateRestaurantCuisineMenu,
-} from '@/lib/actions/restaurant.actions';
+} from "@/lib/actions/restaurant.actions";
 import {
-  convertImageToBase64,
   findField,
   handleError,
   returnCommonObject,
-} from '@/lib/utils';
-import toast from 'react-hot-toast';
-import ToastBanner from '@/components/Elements/ToastBanner';
-import { getUtilities } from '@/lib/actions/utilities.actions';
+} from "@/lib/utils";
+import toast from "react-hot-toast";
+import ToastBanner from "@/components/Elements/ToastBanner";
+import { getUtilities } from "@/lib/actions/utilities.actions";
+import { uploadMultipleFilesToS3 } from "@/lib/aws-s3";
 
 const CuisineMenuForm = ({ params }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const cuisineId = searchParams.get('edit');
+  const cuisineId = searchParams.get("edit");
 
   const [modal1, setModal1] = useState(false);
 
   const defaultInitialValues = useMemo(
     () => ({
-      foodName: '',
-      foodCategory: '',
-      description: '',
-      price: '',
-      cousineType: '',
+      foodName: "",
+      foodCategory: "",
+      description: "",
+      price: "",
+      cousineType: "",
     }),
     []
   );
@@ -59,7 +59,7 @@ const CuisineMenuForm = ({ params }: any) => {
   };
 
   const fetchCuisineMenuData = async () => {
-    if (!cuisineId || params.restaurantId === 'c') return;
+    if (!cuisineId || params.restaurantId === "c") return;
 
     try {
       const response = await getRestaurantCuisineMenuById(
@@ -68,14 +68,13 @@ const CuisineMenuForm = ({ params }: any) => {
       );
 
       if (response) {
-
         const data = returnCommonObject(defaultInitialValues, response);
         setInitialValues(data);
         setIsFormOpen(true);
       }
     } catch (error) {
       handleError(
-        'An error occurred while fetching cuisine menu details:',
+        "An error occurred while fetching cuisine menu details:",
         error
       );
     }
@@ -83,7 +82,7 @@ const CuisineMenuForm = ({ params }: any) => {
 
   const handleSubmit = async (data: CreateCuisineMenuParams) => {
     try {
-      if (params.restaurantId === 'c') {
+      if (params.restaurantId === "c") {
         toast.custom((t) => (
           <ToastBanner
             t={t}
@@ -114,7 +113,7 @@ const CuisineMenuForm = ({ params }: any) => {
         <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
       ));
       handleError(
-        'An error occurred while submitting the cuisine menu form:',
+        "An error occurred while submitting the cuisine menu form:",
         error
       );
     }
@@ -123,15 +122,24 @@ const CuisineMenuForm = ({ params }: any) => {
   const handlePDFSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
-    const file: any = formData.get('pdfFile') as File | null;
-    const url = formData.get('url') as string | null;
-
-    if (file.size > 0) {
-      const blob = new Blob([file], { type: file.type });
-      const base64 = await convertImageToBase64(blob);
-      handleSubmit({ pdf: base64 });
+    const url = formData.get("url") as string | null;
+    const files: any = formData.getAll("imgFile") as File[];
+    if (files.length > 0) {
+      const imageUrls = await uploadMultipleFilesToS3(
+        files,
+        "restaurant-menu-images"
+      );
+      handleSubmit({ pdf: imageUrls });
     } else if (url) {
       handleSubmit({ link: url });
+    } else {
+      toast.custom((t) => (
+        <ToastBanner
+          t={t}
+          type="ERROR"
+          message="Please upload an image or enter a URL"
+        />
+      ));
     }
   };
 
@@ -151,7 +159,7 @@ const CuisineMenuForm = ({ params }: any) => {
         })
       );
 
-      findField(foodFormField, 'foodCategory')['options'] = options;
+      findField(foodFormField, "foodCategory")["options"] = options;
 
       const options2 = Object.entries(utilities?.[0].Cuisine).map(
         ([key, value]) => ({
@@ -159,7 +167,7 @@ const CuisineMenuForm = ({ params }: any) => {
           value: value,
         })
       );
-      findField(foodFormField, 'cousineType')['options'] = options2;
+      findField(foodFormField, "cousineType")["options"] = options2;
     };
     fetchUtilities();
   }, []);
@@ -194,7 +202,10 @@ const CuisineMenuForm = ({ params }: any) => {
                   as="div"
                   className="panel border-0 p-0 rounded-lg overflow-hidden my-8 w-full max-w-lg text-black"
                 >
-                  <form onSubmit={handlePDFSubmit}>
+                  <form
+                    onSubmit={handlePDFSubmit}
+                    encType="multipart/form-data"
+                  >
                     <div className="flex bg-[#fbfbfb] items-center justify-between px-5 py-3">
                       <div className="text-lg font-bold">Upload</div>
                       <button
@@ -207,12 +218,13 @@ const CuisineMenuForm = ({ params }: any) => {
                     </div>
                     <div className="p-5">
                       <div>
-                        <label htmlFor="pdfFile">Upload your PDF file</label>
+                        <label htmlFor="imgFile">Upload your Image file</label>
                         <input
-                          id="pdfFile"
-                          name="pdfFile"
+                          id="imgFile"
+                          name="imgFile"
                           type="file"
-                          accept="application/pdf"
+                          accept="image/*"
+                          multiple={true}
                           className="form-input file:py-2 file:px-4 file:border-0 file:font-semibold p-0 file:bg-primary/90 ltr:file:mr-5 rtl:file-ml-5 file:text-white file:hover:bg-primary"
                         />
                       </div>
