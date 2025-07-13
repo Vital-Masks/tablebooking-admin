@@ -30,7 +30,7 @@ export async function uploadFileToS3(file: File, imageCategory: string): Promise
       }),
     });
 
-    const { signedUrl, publicUrl } = await res.json();
+    const { signedUrl, publicUrl, key } = await res.json();
     console.log("Received signed URL:", signedUrl);
 
     //Upload directly to S3
@@ -47,8 +47,8 @@ export async function uploadFileToS3(file: File, imageCategory: string): Promise
     }
 
     console.log("Upload response:", upload);
-
-    return publicUrl; // Return the public URL of the uploaded file
+    console.log("File key uploaded successfully:", key);
+    return key; // Return the key of the uploaded file
   } catch (error) {
     console.error("Error uploading file to S3:", error);
     throw new Error("Failed to upload file to S3");
