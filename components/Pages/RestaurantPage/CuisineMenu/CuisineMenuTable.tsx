@@ -26,10 +26,10 @@ const CuisineMenuTable = async ({ params }: any) => {
 
   return (
     <div className="p-5">
-      {PDF_RES ? <div className="flex w-[500px] h-[700px] overflow-x-auto border border-gray-300 rounded-md snap-x snap-mandatory">
+      {PDF_RES ? <div className="flex w-[500px] h-[700px] overflow-x-auto border border-gray-300 rounded-md snap-x snap-mandatory touch-pan-x">
         {PDF_RES?.pdf?.map((res: any) => {
           return (
-            <div key={res} className="w-full h-full flex-1 p-2 snap-start">
+            <div key={res} className="min-w-[500px] h-full flex-1 p-2 snap-start">
               <Image src={res} alt="PDF" className="w-full h-full object-cover bg-gray-200" width={480} height={480} />
             </div>
           );

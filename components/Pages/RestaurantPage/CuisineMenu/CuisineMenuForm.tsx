@@ -129,6 +129,7 @@ const CuisineMenuForm = ({ params }: any) => {
         files,
         "restaurant-menu-images"
       );
+
       handleSubmit({ pdf: imageUrls });
     } else if (url) {
       handleSubmit({ link: url });

@@ -61,6 +61,7 @@ export default function GeneralDetailForm({
         data.coverImage.map(async (img: any) => {
           if (img.preview) {
             const url = await uploadFileToS3(img.preview, "restaurant-images");
+            console.log(">>", url);
             return { photo: url };
           }
           return img;

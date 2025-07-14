@@ -94,7 +94,7 @@ const FilePicker: FC<FilePickerProps> = ({
           (uploadedFile?.photo || uploadedFile?.preview) && !hasError ? (
             <>
               <Image
-                src={uploadedFile.photo || uploadedFile.preview}
+                src={uploadedFile.photo || URL.createObjectURL(uploadedFile.preview)}
                 className="w-full aspect-square object-cover rounded-sm border rounded relative w-full aspect-square bg-neutral-50 flex items-center justify-center"
                 alt={`img_${fileIndex}`}
                 width={420}
