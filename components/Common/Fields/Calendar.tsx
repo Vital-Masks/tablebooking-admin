@@ -3,19 +3,22 @@ import VanillaCalendar from './VanillaCalendar';
 import moment from 'moment';
 
 const Calendar = ({ name, values, setFieldValue, hasTime, hasError }: any) => {
-  const [selectedDates, setSelectedDates] = useState<any[]>([new Date()]);
-  const [selectedMonth, setSelectedMonth] = useState<any>([
-    new Date().getMonth(),
-  ]);
-  const [selectedYear, setSelectedYear] = useState<any>([
-    new Date().getFullYear(),
-  ]);
-  const [selectedTime, setSelectedTime] = useState<string>(
-    moment().format('hh:mm A')
-  );
+  const [isClient, setIsClient] = useState(false);
+  const [selectedDates, setSelectedDates] = useState<any[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState<any>([]);
+  const [selectedYear, setSelectedYear] = useState<any>([]);
+  const [selectedTime, setSelectedTime] = useState<string>('');
 
   useEffect(() => {
-    if (!values || !values[name]) return;
+    setIsClient(true);
+    setSelectedDates([new Date()]);
+    setSelectedMonth([new Date().getMonth()]);
+    setSelectedYear([new Date().getFullYear()]);
+    setSelectedTime(moment().format('hh:mm A'));
+  }, []);
+
+  useEffect(() => {
+    if (!isClient || !values || !values[name]) return;
     
     const currentValue = values[name];
     const formattedCurrentDate = moment(currentValue).format('YYYY-MM-DD');
@@ -34,7 +37,17 @@ const Calendar = ({ name, values, setFieldValue, hasTime, hasError }: any) => {
       setSelectedMonth([new Date(currentValue).getMonth()]);
       setSelectedYear([new Date(currentValue).getFullYear()]);
     }
-  }, [values, name]);
+  }, [values, name, isClient]);
+
+  if (!isClient) {
+    return (
+      <div className="min-w-full w-full border rounded-lg">
+        <div className="w-full mx-auto border !min-w-full p-4 text-gray-500">
+          Loading calendar...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-w-full w-full border rounded-lg">

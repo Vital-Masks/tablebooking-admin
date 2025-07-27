@@ -17,14 +17,10 @@ const CustomDatesCalendar = ({
   values,
   setFieldValue,
 }: Props) => {
-  const [selectedDates, setSelectedDates] = useState<any[]>([new Date()]);
-
-  const [selectedMonth, setSelectedMonth] = useState<any>([
-    new Date().getMonth(),
-  ]);
-  const [selectedYear, setSelectedYear] = useState<any>([
-    new Date().getFullYear(),
-  ]);
+  const [isClient, setIsClient] = useState(false);
+  const [selectedDates, setSelectedDates] = useState<any[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState<any>([]);
+  const [selectedYear, setSelectedYear] = useState<any>([]);
 
   // Memoize the days array to avoid unnecessary re-creation on every render
   const days = useMemo(
@@ -41,6 +37,15 @@ const CustomDatesCalendar = ({
   );
 
   useEffect(() => {
+    setIsClient(true);
+    setSelectedDates([new Date()]);
+    setSelectedMonth([new Date().getMonth()]);
+    setSelectedYear([new Date().getFullYear()]);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+    
     if (values["dateType"] === "Custom Date") {
       setSelectedDates([values["dateFrom"]]);
       setSelectedMonth([new Date(values["dateFrom"]).getMonth()]);
@@ -53,7 +58,20 @@ const CustomDatesCalendar = ({
         setSelectedDates([`${values["dateFrom"]}:${values["dateTo"]}`]);
       }
     }
-  }, [values]);
+  }, [values, isClient]);
+
+  if (!isClient) {
+    return (
+      <div className="flex flex-col gap-5">
+        <div>
+          <label htmlFor="dateType">Date Type</label>
+          <div className="w-full p-4 text-gray-500 border border-gray-300 rounded">
+            Loading calendar...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-5">

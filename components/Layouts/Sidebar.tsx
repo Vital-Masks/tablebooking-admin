@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '@/store';
 import { menuItems } from '@/constants/routeConfig';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toggleSidebar } from '@/store/themeSlice';
 
 import Profile from '../Elements/Profile';
@@ -13,12 +13,17 @@ const Sidebar = () => {
   const pathname = usePathname();
   const dispatch = useDispatch();
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    if (window.innerWidth < 1024 && themeConfig.sidebar) {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient && window.innerWidth < 1024 && themeConfig.sidebar) {
       dispatch(toggleSidebar());
     }
-  }, [pathname]);
+  }, [pathname, isClient, themeConfig.sidebar, dispatch]);
 
   return (
     <div>

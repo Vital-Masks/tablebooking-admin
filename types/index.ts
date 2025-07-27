@@ -17,6 +17,9 @@ declare type Restaurant = {
 };
 
 declare type CreateRestaurantGeneralParams = {
+  closeTime: any;
+  openTime: any;
+  openingDays: any;
   restaurantName: string;
   restaurantType: string;
   contactNumber: string;
@@ -36,6 +39,7 @@ declare type CreateRestaurantGeneralParams = {
   hospitalityChainId?: string;
   images: any;
   coverImage: any;
+  openingTimes: any;
 };
 
 declare type HospitalChain = {

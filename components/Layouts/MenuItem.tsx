@@ -40,7 +40,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
     <>
       <Link
         href={route}
-        className={`nav-link group w-full ${isActive(route) && 'active'}`}
+        className={`nav-link group w-full ${isActive(route)  && 'active'}`}
         onClick={() => toggleMenu(id)}
       >
         <div className="flex items-center">

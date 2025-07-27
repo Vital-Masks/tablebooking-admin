@@ -21,6 +21,7 @@ import {
   bannerImageAction,
   getBannerImage,
 } from "@/lib/actions/bannerImage.action";
+import { uploadFileToS3 } from "@/lib/aws-s3";
 
 const BannerHeader = () => {
   const searchParams = useSearchParams();
@@ -69,15 +70,11 @@ const BannerHeader = () => {
 
   const handleFormSubmit = async (data: CreateBannerParams) => {
     const coverImage: any = data.coverImage[0];
-
-    if (coverImage instanceof Blob) {
-      const base64 = await convertImageToBase64(coverImage);
-      data.coverImage = { photo: base64 };
-    }
+    const url = await uploadFileToS3(coverImage.preview, "banner-images");
 
     const body = {
       bannerName: data.bannerName,
-      bannerFor: data.bannerFor,
+      bannerFor: Array.isArray(data.bannerFor) ? data.bannerFor : [data.bannerFor],
       redirectFor: data.redirectFor,
       coverImage: data.coverImage,
       validFromDateTime: moment(

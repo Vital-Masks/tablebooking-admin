@@ -10,11 +10,7 @@ import {
   createRestaurantGeneral,
   updateRestaurantGeneral,
 } from "@/lib/actions/restaurant.actions";
-import {
-  findField,
-  handleError,
-  returnCommonObject,
-} from "@/lib/utils";
+import { findField, handleError, returnCommonObject } from "@/lib/utils";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
 import { timezones } from "@/constants/timezones";
@@ -48,6 +44,7 @@ export default function GeneralDetailForm({
     cousines: [],
     timeZone: "",
     availabilityStatus: "",
+    openingDays: [],
     openTime: "",
     closeTime: "",
     isPromoted: false,
@@ -70,24 +67,32 @@ export default function GeneralDetailForm({
 
       data.images = images;
 
-       if (restaurantId !== 'c') {
-         await updateRestaurantGeneral(restaurantId, data);
-         toast.custom((t) => (
-           <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
-         ));
-         return;
-       }
+      const openingTimes = data.openingDays.map((day: any) => ({
+        day: day,
+        openTime: data.openTime,
+        closeTime: data.closeTime,
+      }));
 
-       // Create new restaurant and handle response
-       const response = await createRestaurantGeneral(data);
-       toast.custom((t) => (
-         <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
-       ));
-       // Navigate and fetch details if response contains IDs
-       if (response?._id) {
-         const { _id: restaurantId } = response;
-         router.push(`/dashboard/restaurant/${restaurantId}/general-detail`);
-       }
+      data.openingTimes = openingTimes;
+
+      if (restaurantId !== "c") {
+        await updateRestaurantGeneral(restaurantId, data);
+        toast.custom((t) => (
+          <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
+        ));
+        return;
+      }
+
+      // Create new restaurant and handle response
+      const response = await createRestaurantGeneral(data);
+      toast.custom((t) => (
+        <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
+      ));
+      // Navigate and fetch details if response contains IDs
+      if (response?._id) {
+        const { _id: restaurantId } = response;
+        router.push(`/dashboard/restaurant/${restaurantId}/general-detail`);
+      }
     } catch (error) {
       // General error handling
       toast.custom((t) => (
@@ -114,6 +119,11 @@ export default function GeneralDetailForm({
   useEffect(() => {
     if (generalDetails) {
       const data = returnCommonObject(initialValues, generalDetails);
+      const openingDays = generalDetails?.openingTimes.map((day: any) => {
+        return day.day;
+      });
+      data["openingDays"] = openingDays;
+
       data["registerationNumber"] =
         generalDetails?.hospitalityChainId?.registrationNumber ?? "";
       data["hospitalityChainId"] = generalDetails?.hospitalityChainId;

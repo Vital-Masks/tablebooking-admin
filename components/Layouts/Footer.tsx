@@ -1,7 +1,13 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Footer = () => {
+  const [currentYear, setCurrentYear] = useState('');
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear().toString());
+  }, []);
+
   return (
     <footer className="mx-4 max-w-screen-xl xl:mx-auto lg:w-full">
       <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24 lg:flex lg:items-center lg:justify-between">
@@ -24,7 +30,7 @@ const Footer = () => {
             </button>
         </div>
         <p className="mt-8 text-xs leading-5 text-gray-500 md:order-1 md:mt-0">
-          &copy; {new Date().getFullYear()} Reserved, Inc. All rights reserved.
+          &copy; {currentYear} Reserved, Inc. All rights reserved.
         </p>
       </div>
     </footer>
