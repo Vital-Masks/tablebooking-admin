@@ -119,7 +119,7 @@ export default function GeneralDetailForm({
   useEffect(() => {
     if (generalDetails) {
       const data = returnCommonObject(initialValues, generalDetails);
-      const openingDays = generalDetails?.openingTimes.map((day: any) => {
+      const openingDays = generalDetails?.openingTimes?.map((day: any) => {
         return day.day;
       });
       data["openingDays"] = openingDays;

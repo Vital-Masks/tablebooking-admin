@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 import FormComponent from "@/components/Common/Form";
@@ -21,125 +21,439 @@ import {
 import { createUser, getUserByEmail } from "@/lib/actions/user.action";
 import { IconEye, IconXCircle } from "@/components/Icons";
 
+// Types
+interface ReservationFormData {
+  date: string;
+  time: string;
+  firstname: string;
+  lastname: string;
+  contactNumber: string;
+  email: string;
+  restaurant: string;
+  dining: string;
+  guestSize: string;
+  diningarea: string;
+  occasion: string;
+  specialRequest: string;
+  tableNo: string;
+  status: string;
+  promocode: string;
+  reason?: string;
+  guestUserId?: string;
+}
+
+interface ReservationData {
+  _id?: string;
+  date: string;
+  time: string;
+  guestUserId?: {
+    firstName: string;
+    lastName: string;
+    contactNo: string;
+    email: string;
+  };
+  restaurantId?: {
+    _id: string;
+    restaurantName: string;
+  };
+  dining?: {
+    _id: string;
+    diningName: string;
+  };
+  diningArea?: {
+    _id: string;
+    sectionName: string;
+  };
+  guestSize?: string;
+  occasion?: string;
+  specialRequest?: string;
+  tableNo?: string;
+  status?: string;
+  promocode?: string;
+}
+
+// Initial form values
+const INITIAL_FORM_VALUES: ReservationFormData = {
+  date: "",
+  time: "",
+  firstname: "",
+  lastname: "",
+  contactNumber: "",
+  email: "",
+  restaurant: "",
+  dining: "",
+  guestSize: "",
+  diningarea: "",
+  occasion: "",
+  specialRequest: "",
+  tableNo: "",
+  status: "",
+  promocode: "",
+};
+
+// Custom hook for managing reservation data
+const useReservationData = (reservationId: string | null) => {
+  const [reservation, setReservation] = useState<ReservationData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchReservation = useCallback(async (id: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await getReservation(id);
+      setReservation(response);
+    } catch (err) {
+      setError("Failed to fetch reservation details");
+      console.error("Error fetching reservation:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const resetReservation = useCallback(() => {
+    setReservation(null);
+    setError(null);
+  }, []);
+
+  return {
+    reservation,
+    isLoading,
+    error,
+    fetchReservation,
+    resetReservation,
+  };
+};
+
+// Custom hook for managing form state
+const useFormState = () => {
+  const [createForm, setCreateForm] = useState(false);
+  const [viewForm, setViewForm] = useState(false);
+  const [initialValues, setInitialValues] = useState<ReservationFormData>(INITIAL_FORM_VALUES);
+
+  const openCreateForm = useCallback(() => setCreateForm(true), []);
+  const openViewForm = useCallback(() => setViewForm(true), []);
+  
+  const closeForms = useCallback(() => {
+    setCreateForm(false);
+    setViewForm(false);
+    setInitialValues(INITIAL_FORM_VALUES);
+  }, []);
+
+  const updateInitialValues = useCallback((values: Partial<ReservationFormData>) => {
+    setInitialValues(prev => ({ ...prev, ...values }));
+  }, []);
+
+  return {
+    createForm,
+    viewForm,
+    initialValues,
+    openCreateForm,
+    openViewForm,
+    closeForms,
+    updateInitialValues,
+  };
+};
+
+// User management hook
+const useUserManagement = () => {
+  const handleUserCreation = useCallback(async (userData: {
+    firstName: string;
+    lastName: string;
+    contactNo: string;
+    email: string;
+  }) => {
+    try {
+      const newUser = await createUser({
+        ...userData,
+        password: "123456", // Consider making this configurable
+      });
+      
+      if (newUser.error) {
+        throw new Error(newUser.error);
+      }
+      
+      return newUser._id;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
+  }, []);
+
+  const getOrCreateUser = useCallback(async (formData: ReservationFormData) => {
+    try {
+      const userEmail = formData.email;
+      const existingUser = await getUserByEmail(userEmail);
+
+      if (existingUser?.[0]) {
+        return existingUser[0]._id;
+      } else {
+        const userData = {
+          firstName: formData.firstname,
+          lastName: formData.lastname,
+          contactNo: formData.contactNumber,
+          email: formData.email,
+        };
+        return await handleUserCreation(userData);
+      }
+    } catch (error) {
+      console.error("Error in user management:", error);
+      throw error;
+    }
+  }, [handleUserCreation]);
+
+  return { getOrCreateUser };
+};
+
+// Reservation details view component
+const ReservationDetailsView = ({
+  reservation,
+  initialValues,
+  onClose,
+}: {
+  reservation: ReservationData | null;
+  initialValues: ReservationFormData;
+  onClose: () => void;
+}) => {
+  if (!reservation) return null;
+
+  return (
+    <div className="grid grid-cols-4 p-10 relative">
+      <button 
+        className="absolute top-5 right-5 hover:bg-gray-100 p-1 rounded transition-colors" 
+        onClick={onClose}
+        aria-label="Close reservation details"
+      >
+        <IconXCircle />
+      </button>
+      
+      <div className="col-span-4 flex items-center gap-4 border p-4 mt-4 rounded-t-sm">
+        <div className="w-14 h-14 rounded-full bg-neutral-100 flex items-center justify-center">
+          <span className="text-lg font-semibold text-gray-600">
+            {initialValues.firstname?.[0]?.toUpperCase() || "U"}
+          </span>
+        </div>
+        <div>
+          <h1 className="text-base font-bold">
+            {initialValues.firstname || "Undefined"} {initialValues.lastname || "Undefined"}
+          </h1>
+          <div className="flex items-center gap-5">
+            <div className="flex items-center gap-2">
+              <IconEye />
+              <span className="text-sm text-neutral-600">
+                {initialValues.email || "Undefined"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <IconEye />
+              <span className="text-sm text-neutral-600">
+                {initialValues.contactNumber || "Undefined"}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="ml-auto">
+          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+            initialValues.status === 'Booked' ? 'bg-green-100 text-green-800' :
+            initialValues.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+            'bg-red-100 text-red-800'
+          }`}>
+            {initialValues.status}
+          </span>
+        </div>
+      </div>
+      
+      <div className="border p-4 border-t-0">
+        <p className="font-bold text-neutral-500">Restaurant</p>
+        <p className="text-base text-neutral-900">
+          {reservation.restaurantId?.restaurantName || "N/A"}
+        </p>
+      </div>
+      
+      <div className="border p-4 border-t-0">
+        <p className="font-bold text-neutral-500">Dining</p>
+        <p className="text-base text-neutral-900">
+          {reservation.dining?.diningName || "N/A"}
+        </p>
+      </div>
+      
+      <div className="border p-4 border-t-0">
+        <p className="font-bold text-neutral-500">Dining Area</p>
+        <p className="text-base text-neutral-900">
+          {reservation.diningArea?.sectionName || "N/A"}
+        </p>
+      </div>
+      
+      <div className="border p-4 border-t-0">
+        <p className="font-bold text-neutral-500">Guest Size</p>
+        <p className="text-base text-neutral-900">
+          {reservation.guestSize || "N/A"}
+        </p>
+      </div>
+      
+      <div className="border p-4 border-t-0">
+        <p className="font-bold text-neutral-500">Occasion</p>
+        <p className="text-base text-neutral-900">
+          {reservation.occasion || "N/A"}
+        </p>
+      </div>
+      
+      <div className="border p-4 border-t-0">
+        <p className="font-bold text-neutral-500">Table</p>
+        <p className="text-base text-neutral-900">
+          {reservation.tableNo || "N/A"}
+        </p>
+      </div>
+      
+      <div className="border p-4 border-t-0 col-span-2">
+        <p className="font-bold text-neutral-500">Date & Time</p>
+        <p className="text-neutral-900">
+          {reservation.date} - {reservation.time}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+ReservationDetailsView.displayName = 'ReservationDetailsView';
+
 const ReservationHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const reservationId = searchParams.get("reservationId") ?? null;
-  const [createForm, setCreateForm] = useState(false);
-  const [viewForm, setViewForm] = useState(false);
-  const [reservation, setReservation] = useState<any>({});
-  const [initialValues, setInitialValues] = useState({
-    date: "",
-    time: "",
-    firstname: "",
-    lastname: "",
-    contactNumber: "",
-    email: "",
-    restaurant: "",
-    dining: "",
-    guestSize: "",
-    diningarea: "",
-    occasion: "",
-    specialRequest: "",
-    tableNo: "",
-    status: "",
-    promocode: null,
-  });
+  const reservationId = searchParams.get("reservationId");
+  
+  const {
+    reservation,
+    isLoading: isLoadingReservation,
+    error: reservationError,
+    fetchReservation,
+    resetReservation,
+  } = useReservationData(reservationId);
 
-  const pageHeaderData = {
+  const {
+    createForm,
+    viewForm,
+    initialValues,
+    openCreateForm,
+    openViewForm,
+    closeForms,
+    updateInitialValues,
+  } = useFormState();
+
+  const { getOrCreateUser } = useUserManagement();
+
+  // Memoized page header data
+  const pageHeaderData = useMemo(() => ({
     title: "Reservations",
     button1: {
       title: "Add New Reservation",
-      action: () => setCreateForm(true),
+      action: openCreateForm,
     },
-  };
+  }), [openCreateForm]);
 
-  const handleCloseForm = () => {
-    setCreateForm(false);
-    setViewForm(false);
-    setReservation({});
-    if (reservationId) {
-      router.push(ROUTE_RESERVATIONS);
-    }
-  };
-
-  const handleFormSubmit = async (e: any, data: any) => {
-    try {
-      const userEmail = data.email;
-      const isUserExist = await getUserByEmail(userEmail);
-
-      if (isUserExist?.[0]) {
-        data["guestUserId"] = isUserExist[0]._id;
-      } else {
-        const userData = {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          contactNo: data.contactNumber,
-          email: data.email,
-          password: "123456",
-        };
-        const newUser = await createUser(userData);
-        if (newUser.error) {
-        } else {
-          data["guestUserId"] = newUser._id;
+  // Memoized form fields with conditional reason field
+  const formFields = useMemo(() => {
+    // Create a new array with the base fields
+    const baseFields = [...tableReservationFormField];
+    
+    // Only add reason field if we're editing (reservationId exists) and it's not already present
+    if (reservationId && !baseFields.find(field => field.id === "reason")) {
+      return [
+        ...baseFields,
+        {
+          id: "reason",
+          name: "reason",
+          label: "Reason for cancellation (optional)",
+          type: "text",
         }
-      }
+      ];
+    }
+    
+    return baseFields;
+  }, [reservationId]);
 
+  // Handle form submission
+  const handleFormSubmit = useCallback(async (e: any, data: ReservationFormData) => {
+    try {
+      // Get or create user
+      const userId = await getOrCreateUser(data);
+      data.guestUserId = userId;
+
+      // Create or update reservation
       if (reservationId) {
         await updateReservation(reservationId, data);
       } else {
         await createReservation(data);
       }
-      setCreateForm(false);
+      
+      closeForms();
+      
+      // Redirect if editing
+      if (reservationId) {
+        router.push(ROUTE_RESERVATIONS);
+      }
     } catch (error) {
       handleError(
-        "An error occurred while submitting the hospital chain form:",
+        "An error occurred while submitting the reservation form:",
         error
       );
     }
-  };
+  }, [reservationId, getOrCreateUser, closeForms, router]);
 
-  const fetchReservation = async (id: string) => {
-    try {
-      const response = await getReservation(id);
-      setReservation(response);
-      setInitialValues({
-        date: response.date,
-        time: response.time?.replace(".", ":"),
-        firstname: response.guestUserId?.firstName,
-        lastname: response.guestUserId?.firstName,
-        contactNumber: response.guestUserId?.contactNo,
-        email: response.guestUserId?.email,
-        restaurant: response.restaurantId?._id,
-        dining: response.dining?._id,
-        guestSize: response.guestSize || "",
-        diningarea: response.diningArea?._id,
-        occasion: response.occasion || "",
-        specialRequest: response.specialRequest || "",
-        tableNo: response.tableNo || "",
-        status: response.status,
-        promocode: response.promocode || null,
+  // Handle form close
+  const handleCloseForm = useCallback(() => {
+    closeForms();
+    resetReservation();
+    if (reservationId) {
+      router.push(ROUTE_RESERVATIONS);
+    }
+  }, [closeForms, resetReservation, reservationId, router]);
+
+  // Update initial values when reservation data is loaded
+  useEffect(() => {
+    if (reservation) {
+      updateInitialValues({
+        date: reservation.date || "",
+        time: reservation.time?.replace(".", ":") || "",
+        firstname: reservation.guestUserId?.firstName || "",
+        lastname: reservation.guestUserId?.lastName || "",
+        contactNumber: reservation.guestUserId?.contactNo || "",
+        email: reservation.guestUserId?.email || "",
+        restaurant: reservation.restaurantId?._id || "",
+        dining: reservation.dining?._id || "",
+        guestSize: reservation.guestSize || "",
+        diningarea: reservation.diningArea?._id || "",
+        occasion: reservation.occasion || "",
+        specialRequest: reservation.specialRequest || "",
+        tableNo: reservation.tableNo || "",
+        status: reservation.status || "",
+        promocode: reservation.promocode || "",
       });
-    } catch (error) {
-      handleError(
-        "An error occurred while submitting the hospital chain form:",
-        error
-      );
     }
-  };
+  }, [reservation, updateInitialValues]);
 
+  // Fetch reservation data when reservationId changes
   useEffect(() => {
     if (reservationId) {
-      tableReservationFormField.push({
-        id: "reason",
-        name: "reason",
-        label: "Reason for cancellation (optional)",
-        type: "text",
-      });
-      setCreateForm(true);
+      openCreateForm();
       fetchReservation(reservationId);
     }
-  }, [reservationId]);
+  }, [reservationId, openCreateForm, fetchReservation]);
+
+  // Show error state
+  if (reservationError) {
+    return (
+      <div className="p-4 text-center">
+        <p className="text-red-600 mb-2">Error loading reservation details</p>
+        <button
+          onClick={() => fetchReservation(reservationId!)}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -147,85 +461,26 @@ const ReservationHeader = () => {
 
       <FormSlider isOpen={createForm}>
         <FormComponent
-          title="Make a Reservation"
-          fields={tableReservationFormField}
+          title={reservationId ? "Edit Reservation" : "Make a Reservation"}
+          fields={formFields}
           initialValues={initialValues}
           validationSchema={tableReservationFormSchema}
           handleSubmit={handleFormSubmit}
-          closeForm={() => handleCloseForm()}
+          closeForm={handleCloseForm}
         />
       </FormSlider>
+      
       <FormSlider isOpen={viewForm} className="!min-w-[800px]">
-        <div className="grid grid-cols-4 p-10 relative">
-          <button className="absolute top-5 right-5" onClick={handleCloseForm}>
-            <IconXCircle />
-          </button>
-          <div className="col-span-4 flex items-center gap-4 border p-4 mt-4 rounded-t-sm">
-            <div className="w-14 h-14 rounded-full bg-neutral-100"></div>
-            <div>
-              <h1 className="text-base font-bold">
-                {initialValues.firstname ?? "Undefined"}{" "}
-                {initialValues.lastname ?? "Undefined"}
-              </h1>
-              <div className="flex items-center gap-5">
-                <div className="flex itewms-center gap-2">
-                  <IconEye />
-                  <span className="text-sm text-neutral-600">
-                    {initialValues.email ?? "Undefined"}
-                  </span>
-                </div>
-                <div className="flex itewms-center gap-2">
-                  <IconEye />
-                  <span className="text-sm text-neutral-600">
-                    {initialValues.contactNumber ?? "Undefined"}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="ml-auto">Status: {initialValues.status}</div>
-          </div>
-          <div className="border p-4 border-t-0">
-            <p className="font-bold text-neutral-500">Restaurant</p>
-            <p className="text-base text-neutral-900">
-              {reservation.restaurantId?.restaurantName}
-            </p>
-          </div>
-          <div className="border p-4 border-t-0">
-            <p className="font-bold text-neutral-500">Dining</p>
-            <p className="text-base text-neutral-900">
-              {reservation.dining?.diningName}
-            </p>
-          </div>
-          <div className="border p-4 border-t-0">
-            <p className="font-bold text-neutral-500">Dining Area</p>
-            <p className="text-base text-neutral-900">
-              {reservation.diningArea?.sectionName}
-            </p>
-          </div>
-          <div className="border p-4 border-t-0">
-            <p className="font-bold text-neutral-500">Guest Size</p>
-            <p className="text-base text-neutral-900">
-              {reservation.guestSize}
-            </p>
-          </div>
-          <div className="border p-4 border-t-0">
-            <p className="font-bold text-neutral-500">Occation</p>
-            <p className="text-base text-neutral-900">{reservation.occasion}</p>
-          </div>
-          <div className="border p-4 border-t-0">
-            <p className="font-bold text-neutral-500">Table</p>
-            <p className="text-base text-neutral-900">{reservation.tableno}</p>
-          </div>
-          <div className="border p-4 border-t-0 col-span-2">
-            <p className="font-bold text-neutral-500">Date time</p>
-            <p className="text-neutral-900">
-              {reservation.date} - {reservation.time}
-            </p>
-          </div>
-        </div>
+        <ReservationDetailsView
+          reservation={reservation}
+          initialValues={initialValues}
+          onClose={handleCloseForm}
+        />
       </FormSlider>
     </>
   );
 };
+
+ReservationHeader.displayName = 'ReservationHeader';
 
 export default ReservationHeader;
