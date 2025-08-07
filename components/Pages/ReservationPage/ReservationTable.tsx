@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import Table from "@/components/Common/Table";
 import { columns } from "./columns";
 import { getReservationList } from "@/lib/actions/reservation.action";
@@ -184,17 +184,17 @@ const ReservationTable = () => {
   }, [restaurants, selectedRestaurantId]);
 
   // Initialize data on component mount
-  useMemo(() => {
+  useEffect(() => {
     fetchRestaurants();
   }, [fetchRestaurants]);
 
   // Fetch reservations when restaurant selection changes
-  useMemo(() => {
+  useEffect(() => {
     fetchReservations();
   }, [fetchReservations]);
 
   // Set first restaurant as default when restaurants are loaded
-  useMemo(() => {
+  useEffect(() => {
     if (restaurants.length > 0 && !selectedRestaurantId) {
       setSelectedRestaurantId(restaurants[0]._id || restaurants[0].id);
     }

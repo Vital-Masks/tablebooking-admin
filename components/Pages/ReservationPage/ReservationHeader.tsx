@@ -20,6 +20,7 @@ import {
 } from "@/lib/actions/reservation.action";
 import { createUser, getUserByEmail } from "@/lib/actions/user.action";
 import { IconEye, IconXCircle } from "@/components/Icons";
+import toast from "react-hot-toast";
 
 // Types
 interface ReservationFormData {
@@ -129,20 +130,24 @@ const useReservationData = (reservationId: string | null) => {
 const useFormState = () => {
   const [createForm, setCreateForm] = useState(false);
   const [viewForm, setViewForm] = useState(false);
-  const [initialValues, setInitialValues] = useState<ReservationFormData>(INITIAL_FORM_VALUES);
+  const [initialValues, setInitialValues] =
+    useState<ReservationFormData>(INITIAL_FORM_VALUES);
 
   const openCreateForm = useCallback(() => setCreateForm(true), []);
   const openViewForm = useCallback(() => setViewForm(true), []);
-  
+
   const closeForms = useCallback(() => {
     setCreateForm(false);
     setViewForm(false);
     setInitialValues(INITIAL_FORM_VALUES);
   }, []);
 
-  const updateInitialValues = useCallback((values: Partial<ReservationFormData>) => {
-    setInitialValues(prev => ({ ...prev, ...values }));
-  }, []);
+  const updateInitialValues = useCallback(
+    (values: Partial<ReservationFormData>) => {
+      setInitialValues((prev) => ({ ...prev, ...values }));
+    },
+    []
+  );
 
   return {
     createForm,
@@ -157,50 +162,58 @@ const useFormState = () => {
 
 // User management hook
 const useUserManagement = () => {
-  const handleUserCreation = useCallback(async (userData: {
-    firstName: string;
-    lastName: string;
-    contactNo: string;
-    email: string;
-  }) => {
-    try {
-      const newUser = await createUser({
-        ...userData,
-        password: "123456", // Consider making this configurable
-      });
-      
-      if (newUser.error) {
-        throw new Error(newUser.error);
-      }
-      
-      return newUser._id;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      throw error;
-    }
-  }, []);
+  const handleUserCreation = useCallback(
+    async (userData: {
+      firstName: string;
+      lastName: string;
+      contactNo: string;
+      email: string;
+    }) => {
+      try {
+        const newUser = await createUser({
+          ...userData,
+          password: "123456", // Consider making this configurable
+        });
 
-  const getOrCreateUser = useCallback(async (formData: ReservationFormData) => {
-    try {
-      const userEmail = formData.email;
-      const existingUser = await getUserByEmail(userEmail);
+        if (newUser.error) {
+          throw new Error(newUser.error);
+        }
 
-      if (existingUser?.[0]) {
-        return existingUser[0]._id;
-      } else {
-        const userData = {
-          firstName: formData.firstname,
-          lastName: formData.lastname,
-          contactNo: formData.contactNumber,
-          email: formData.email,
-        };
-        return await handleUserCreation(userData);
+        return newUser._id;
+      } catch (error) {
+        console.error("Error creating user:", error);
+        throw error;
       }
-    } catch (error) {
-      console.error("Error in user management:", error);
-      throw error;
-    }
-  }, [handleUserCreation]);
+    },
+    []
+  );
+
+  const getOrCreateUser = useCallback(
+    async (formData: ReservationFormData) => {
+      try {
+        console.log("formData >>>", formData);
+        const userEmail = formData.email;
+        const existingUser = await getUserByEmail(userEmail);
+
+        if (existingUser?.[0]) {
+          return existingUser[0]._id;
+        } else {
+          const userData = {
+            firstName: formData.firstname,
+            lastName: formData.lastname,
+            contactNo: formData.contactNumber,
+            email: formData.email,
+          };
+          const newUserId = await handleUserCreation(userData);
+          return newUserId;
+        }
+      } catch (error) {
+        console.error("Error in user management:", error);
+        throw error; // Re-throw the error to be handled by the calling function
+      }
+    },
+    [handleUserCreation]
+  );
 
   return { getOrCreateUser };
 };
@@ -219,14 +232,14 @@ const ReservationDetailsView = ({
 
   return (
     <div className="grid grid-cols-4 p-10 relative">
-      <button 
-        className="absolute top-5 right-5 hover:bg-gray-100 p-1 rounded transition-colors" 
+      <button
+        className="absolute top-5 right-5 hover:bg-gray-100 p-1 rounded transition-colors"
         onClick={onClose}
         aria-label="Close reservation details"
       >
         <IconXCircle />
       </button>
-      
+
       <div className="col-span-4 flex items-center gap-4 border p-4 mt-4 rounded-t-sm">
         <div className="w-14 h-14 rounded-full bg-neutral-100 flex items-center justify-center">
           <span className="text-lg font-semibold text-gray-600">
@@ -235,7 +248,8 @@ const ReservationDetailsView = ({
         </div>
         <div>
           <h1 className="text-base font-bold">
-            {initialValues.firstname || "Undefined"} {initialValues.lastname || "Undefined"}
+            {initialValues.firstname || "Undefined"}{" "}
+            {initialValues.lastname || "Undefined"}
           </h1>
           <div className="flex items-center gap-5">
             <div className="flex items-center gap-2">
@@ -253,58 +267,62 @@ const ReservationDetailsView = ({
           </div>
         </div>
         <div className="ml-auto">
-          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-            initialValues.status === 'Booked' ? 'bg-green-100 text-green-800' :
-            initialValues.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-            'bg-red-100 text-red-800'
-          }`}>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              initialValues.status === "Booked"
+                ? "bg-green-100 text-green-800"
+                : initialValues.status === "Pending"
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-red-100 text-red-800"
+            }`}
+          >
             {initialValues.status}
           </span>
         </div>
       </div>
-      
+
       <div className="border p-4 border-t-0">
         <p className="font-bold text-neutral-500">Restaurant</p>
         <p className="text-base text-neutral-900">
           {reservation.restaurantId?.restaurantName || "N/A"}
         </p>
       </div>
-      
+
       <div className="border p-4 border-t-0">
         <p className="font-bold text-neutral-500">Dining</p>
         <p className="text-base text-neutral-900">
           {reservation.dining?.diningName || "N/A"}
         </p>
       </div>
-      
+
       <div className="border p-4 border-t-0">
         <p className="font-bold text-neutral-500">Dining Area</p>
         <p className="text-base text-neutral-900">
           {reservation.diningArea?.sectionName || "N/A"}
         </p>
       </div>
-      
+
       <div className="border p-4 border-t-0">
         <p className="font-bold text-neutral-500">Guest Size</p>
         <p className="text-base text-neutral-900">
           {reservation.guestSize || "N/A"}
         </p>
       </div>
-      
+
       <div className="border p-4 border-t-0">
         <p className="font-bold text-neutral-500">Occasion</p>
         <p className="text-base text-neutral-900">
           {reservation.occasion || "N/A"}
         </p>
       </div>
-      
+
       <div className="border p-4 border-t-0">
         <p className="font-bold text-neutral-500">Table</p>
         <p className="text-base text-neutral-900">
           {reservation.tableNo || "N/A"}
         </p>
       </div>
-      
+
       <div className="border p-4 border-t-0 col-span-2">
         <p className="font-bold text-neutral-500">Date & Time</p>
         <p className="text-neutral-900">
@@ -315,13 +333,13 @@ const ReservationDetailsView = ({
   );
 };
 
-ReservationDetailsView.displayName = 'ReservationDetailsView';
+ReservationDetailsView.displayName = "ReservationDetailsView";
 
 const ReservationHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const reservationId = searchParams.get("reservationId");
-  
+
   const {
     reservation,
     isLoading: isLoadingReservation,
@@ -343,62 +361,70 @@ const ReservationHeader = () => {
   const { getOrCreateUser } = useUserManagement();
 
   // Memoized page header data
-  const pageHeaderData = useMemo(() => ({
-    title: "Reservations",
-    button1: {
-      title: "Add New Reservation",
-      action: openCreateForm,
-    },
-  }), [openCreateForm]);
-
-  // Memoized form fields with conditional reason field
-  const formFields = useMemo(() => {
-    // Create a new array with the base fields
-    const baseFields = [...tableReservationFormField];
-    
-    // Only add reason field if we're editing (reservationId exists) and it's not already present
-    if (reservationId && !baseFields.find(field => field.id === "reason")) {
-      return [
-        ...baseFields,
-        {
-          id: "reason",
-          name: "reason",
-          label: "Reason for cancellation (optional)",
-          type: "text",
-        }
-      ];
-    }
-    
-    return baseFields;
-  }, [reservationId]);
+  const pageHeaderData = useMemo(
+    () => ({
+      title: "Reservations",
+      button1: {
+        title: "Add New Reservation",
+        action: openCreateForm,
+      },
+    }),
+    [openCreateForm]
+  );
 
   // Handle form submission
-  const handleFormSubmit = useCallback(async (e: any, data: ReservationFormData) => {
-    try {
-      // Get or create user
-      const userId = await getOrCreateUser(data);
-      data.guestUserId = userId;
+  const handleFormSubmit = useCallback(
+    async (values: ReservationFormData) => {
+      try {
+        console.log("Form values received:", values);
+        
+        if (!values) {
+          toast.error("Form data is missing. Please try again.");
+          return;
+        }
 
-      // Create or update reservation
-      if (reservationId) {
-        await updateReservation(reservationId, data);
-      } else {
-        await createReservation(data);
+        // Get or create user
+        const userId = await getOrCreateUser(values);
+        
+        if (!userId) {
+          toast.error("Failed to create or get user. Please try again.");
+          return;
+        }
+
+        // Add user ID to the form data
+        const formDataWithUserId = {
+          ...values,
+          guestUserId: userId,
+        };
+
+        console.log("Form data with user ID:", formDataWithUserId);
+
+        // Create or update reservation
+        if (reservationId) {
+          await updateReservation(reservationId, formDataWithUserId);
+          toast.success("Reservation updated successfully!");
+        } else {
+          await createReservation(formDataWithUserId);
+          toast.success("Reservation created successfully!");
+        }
+
+        closeForms();
+
+        // Redirect if editing
+        if (reservationId) {
+          router.push(ROUTE_RESERVATIONS);
+        }
+      } catch (error) {
+        console.error("Form submission error:", error);
+        toast.error("Something went wrong while saving the reservation. Please try again.");
+        handleError(
+          "An error occurred while submitting the reservation form:",
+          error
+        );
       }
-      
-      closeForms();
-      
-      // Redirect if editing
-      if (reservationId) {
-        router.push(ROUTE_RESERVATIONS);
-      }
-    } catch (error) {
-      handleError(
-        "An error occurred while submitting the reservation form:",
-        error
-      );
-    }
-  }, [reservationId, getOrCreateUser, closeForms, router]);
+    },
+    [reservationId, getOrCreateUser, closeForms, router]
+  );
 
   // Handle form close
   const handleCloseForm = useCallback(() => {
@@ -462,14 +488,14 @@ const ReservationHeader = () => {
       <FormSlider isOpen={createForm}>
         <FormComponent
           title={reservationId ? "Edit Reservation" : "Make a Reservation"}
-          fields={formFields}
+          fields={tableReservationFormField}
           initialValues={initialValues}
           validationSchema={tableReservationFormSchema}
           handleSubmit={handleFormSubmit}
           closeForm={handleCloseForm}
         />
       </FormSlider>
-      
+
       <FormSlider isOpen={viewForm} className="!min-w-[800px]">
         <ReservationDetailsView
           reservation={reservation}
@@ -481,6 +507,6 @@ const ReservationHeader = () => {
   );
 };
 
-ReservationHeader.displayName = 'ReservationHeader';
+ReservationHeader.displayName = "ReservationHeader";
 
 export default ReservationHeader;

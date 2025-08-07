@@ -40,7 +40,7 @@ const FilePicker: FC<FilePickerProps> = ({
   useEffect(() => {
     return () => {
       uploadedFiles.forEach((file) => {
-        if (file.preview) {
+        if (file?.preview) {
           URL.revokeObjectURL(file.preview);
         }
       });
@@ -81,7 +81,7 @@ const FilePicker: FC<FilePickerProps> = ({
 
   const filePreviews = uploadedFiles?.length ? (
     uploadedFiles?.map((uploadedFile, fileIndex) => {
-      const imageUrl = uploadedFile.photo || uploadedFile.preview;
+      const imageUrl = uploadedFile?.photo || uploadedFile?.preview;
       const hasError = imageErrors.has(imageUrl);
       
       return (

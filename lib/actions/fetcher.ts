@@ -9,7 +9,7 @@ export interface FetcherOptions extends RequestInit {
 export async function fetcher<T>(
   url: string,
   options: FetcherOptions = {}
-): Promise<T> {
+): Promise<T | null> {
   try {
     const { method = 'GET', body, ...restOptions } = options;
 
@@ -27,14 +27,15 @@ export async function fetcher<T>(
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`🚨 Response Error: ${response.status} ${errorText}`);
+      console.error(`🚨 Response Error: ${response.status} ${errorText}`);
+      return null;
     }
 
     const { result } = await response.json();
     return await result;
   } catch (error) {
     console.error('🚨 Fetch error:', error);
-    throw error;
+    return null;
   }
 }
 

@@ -77,49 +77,119 @@ export const tableReservationFormField = [
     label: 'Promo Code',
     type: 'text',
   },
+  {
+    id: 'reason',
+    name: 'reason',
+    label: 'Reason for rejection',
+    type: 'text',
+    ifRender: ['status', 'Rejected'], // Only show when status is "Rejected"
+  },
 ];
 
 export const tableReservationFormSchema = Yup.object().shape({
-  date: Yup.string().required('This field cannot be empty'),
-  time: Yup.string().required('This field cannot be empty'),
+  // Date - Required
+  date: Yup.string()
+    .required('Date is required'),
+
+  // Time - Required
+  time: Yup.string()
+    .required('Time is required'),
+
+  // First Name - Required, 3-50 characters, no leading spaces
   firstname: Yup.string()
-    .matches(/^\S.*$/, 'Cannot start with a space')
-    .min(3, 'Min characters 3 only allowed')
-    .max(50, 'Max characters 10 only allowed')
-    .required('This field cannot be empty'),
+    .trim()
+    .min(3, 'First name must be at least 3 characters')
+    .max(50, 'First name cannot exceed 50 characters')
+    .matches(/^\S/, 'First name cannot start with a space')
+    .required('First name is required'),
+
+  // Last Name - Required, 3-50 characters, no leading spaces
   lastname: Yup.string()
-    .matches(/^\S.*$/, 'Cannot start with a space')
-    .min(3, 'Min characters 3 only allowed')
-    .max(50, 'Max characters 10 only allowed')
-    .required('This field cannot be empty'),
+    .trim()
+    .min(3, 'Last name must be at least 3 characters')
+    .max(50, 'Last name cannot exceed 50 characters')
+    .matches(/^\S/, 'Last name cannot start with a space')
+    .required('Last name is required'),
+
+  // Contact Number - Required, max 255 characters
   contactNumber: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
+    .trim()
+    .max(255, 'Contact number cannot exceed 255 characters')
+    .required('Contact number is required'),
+
+  // Email - Required, valid email format, max 255 characters
   email: Yup.string()
-    .email('Invalid email format')
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
-  restaurant: Yup.string().required('This field cannot be empty'),
-  dining: Yup.string().required('This field cannot be empty'),
+    .trim()
+    .email('Please enter a valid email address')
+    .max(255, 'Email address cannot exceed 255 characters')
+    .required('Email address is required'),
+
+  // Restaurant - Required
+  restaurant: Yup.string()
+    .required('Restaurant is required'),
+
+  // Dining - Required
+  dining: Yup.string()
+    .required('Dining is required'),
+
+  // Guest Size - Required, positive integer
   guestSize: Yup.number()
-    .integer('Guest size must be an integer')
+    .typeError('Guest size must be a number')
+    .integer('Guest size must be a whole number')
     .positive('Guest size must be a positive number')
-    .required('This field cannot be empty'),
-  diningArea: Yup.string().required('This field cannot be empty'),
+    .min(1, 'Guest size must be at least 1')
+    .max(100, 'Guest size cannot exceed 100')
+    .required('Guest size is required'),
+
+  // Dining Area - Required
+  diningArea: Yup.string()
+    .required('Dining area is required'),
+
+  // Occasion - Required, 3-50 characters, no leading spaces
   occasion: Yup.string()
-    .matches(/^\S.*$/, 'Cannot start with a space')
-    .min(3, 'Min characters 3 only allowed')
-    .max(10, 'Max characters 10 only allowed')
-    .required('This field cannot be empty'),
-    specialRequest: Yup.string()
-    .matches(/^\S.*$/, 'Cannot start with a space')
-    .min(3, 'Min characters 3 only allowed')
-    .max(255, 'Max characters 10 only allowed'),
+    .trim()
+    .min(3, 'Occasion must be at least 3 characters')
+    .max(50, 'Occasion cannot exceed 50 characters')
+    .matches(/^\S/, 'Occasion cannot start with a space')
+    .required('Occasion is required'),
+
+  // Special Request - Optional, 3-255 characters, no leading spaces
+  specialRequest: Yup.string()
+    .trim()
+    .min(3, 'Special request must be at least 3 characters')
+    .max(255, 'Special request cannot exceed 255 characters')
+    .matches(/^\S/, 'Special request cannot start with a space')
+    .optional(),
+
+  // Table Number - Required, 3-20 characters, no leading spaces
   tableNo: Yup.string()
-    .matches(/^\S.*$/, 'Cannot start with a space')
-    .min(3, 'Min characters 3 only allowed')
-    .max(10, 'Max characters 10 only allowed')
-    .required('This field cannot be empty'),
-  status: Yup.string().required('This field cannot be empty'),
-  promocode: Yup.string().min(3, 'Min characters 3 only allowed').max(6, 'Max characters 10 only allowed').nullable(),
+    .trim()
+    .min(3, 'Table number must be at least 3 characters')
+    .max(20, 'Table number cannot exceed 20 characters')
+    .matches(/^\S/, 'Table number cannot start with a space')
+    .required('Table number is required'),
+
+  // Status - Required
+  status: Yup.string()
+    .required('Status is required'),
+
+  // Promo Code - Optional, 3-20 characters
+  promocode: Yup.string()
+    .trim()
+    .min(3, 'Promo code must be at least 3 characters')
+    .max(20, 'Promo code cannot exceed 20 characters')
+    .optional()
+    .nullable(),
+
+  // Reason - Conditional validation based on status
+  reason: Yup.string().when('status', {
+    is: 'Rejected',
+    then: (schema) => schema
+      .trim()
+      .min(3, 'Reason must be at least 3 characters')
+      .max(255, 'Reason cannot exceed 255 characters')
+      .matches(/^\S/, 'Reason cannot start with a space')
+      .required('Reason is required when status is Rejected'),
+    otherwise: (schema) => schema.optional(),
+  }),
 });

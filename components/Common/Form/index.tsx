@@ -24,6 +24,7 @@ interface FormField {
   ifRender?: any;
   hasTime?: boolean;
   maxFiles: number;
+  placeholder?: string;
 }
 
 const FormComponent = ({
@@ -291,6 +292,27 @@ const RenderField: React.FC<RenderFieldProps> = ({
         />
       );
     default:
+      // Check if field should be conditionally rendered
+      if (field.ifRender) {
+        if (values[field.ifRender[0]] === field.ifRender[1]) {
+          return (
+            <div key={field.id} className={`${errors[field.name] && "has-error"}`}>
+              <label htmlFor={field.name}>{field.label}</label>
+              <Field
+                id={field.name}
+                name={field.name}
+                type={field.type}
+                placeholder={field.placeholder}
+                className="form-input"
+              />
+              <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
+            </div>
+          );
+        }
+        return <></>; // Don't render the field if condition is not met
+      }
+
+      // Default rendering for fields without conditional logic
       return (
         <div key={field.id} className={`${errors[field.name] && "has-error"}`}>
           <label htmlFor={field.name}>{field.label}</label>
@@ -298,7 +320,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
             id={field.name}
             name={field.name}
             type={field.type}
-            placeholder={`Enter ${field.label}`}
+            placeholder={field.placeholder}
             className="form-input"
           />
           <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>

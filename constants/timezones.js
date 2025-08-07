@@ -1,562 +1,705 @@
 export const timezones = [
   {
-    "zone": "Pacific/Midway",
-    "gmt": "(GMT-11:00)",
-    "name": "Midway Island"
+    zone: "Asia/Kolkata",
+    gmt: "(GMT+05:30)",
+    name: "India",
   },
   {
-    "zone": "US/Samoa",
-    "gmt": "(GMT-11:00)",
-    "name": "Samoa"
+    zone: "Asia/Colombo",
+    gmt: "(GMT+05:30)",
+    name: "Sri Lanka",
   },
   {
-    "zone": "US/Hawaii",
-    "gmt": "(GMT-10:00)",
-    "name": "Hawaii"
+    zone: "Asia/Dhaka",
+    gmt: "(GMT+06:00)",
+    name: "Bangladesh",
   },
   {
-    "zone": "US/Alaska",
-    "gmt": "(GMT-09:00)",
-    "name": "Alaska"
+    zone: "Asia/Karachi",
+    gmt: "(GMT+05:00)",
+    name: "Pakistan",
   },
   {
-    "zone": "US/Pacific",
-    "gmt": "(GMT-08:00)",
-    "name": "Pacific Time (US &amp; Canada)"
+    zone: "Asia/Kathmandu",
+    gmt: "(GMT+05:45)",
+    name: "Nepal",
   },
   {
-    "zone": "America/Tijuana",
-    "gmt": "(GMT-08:00)",
-    "name": "Tijuana"
+    zone: "Asia/Thimphu",
+    gmt: "(GMT+06:00)",
+    name: "Bhutan",
   },
   {
-    "zone": "US/Arizona",
-    "gmt": "(GMT-07:00)",
-    "name": "Arizona"
+    zone: "Asia/Yangon",
+    gmt: "(GMT+06:30)",
+    name: "Myanmar",
   },
   {
-    "zone": "US/Mountain",
-    "gmt": "(GMT-07:00)",
-    "name": "Mountain Time (US &amp; Canada)"
+    zone: "Asia/Bangkok",
+    gmt: "(GMT+07:00)",
+    name: "Thailand",
   },
   {
-    "zone": "America/Chihuahua",
-    "gmt": "(GMT-07:00)",
-    "name": "Chihuahua"
+    zone: "Asia/Ho_Chi_Minh",
+    gmt: "(GMT+07:00)",
+    name: "Vietnam",
   },
   {
-    "zone": "America/Mazatlan",
-    "gmt": "(GMT-07:00)",
-    "name": "Mazatlan"
+    zone: "Asia/Phnom_Penh",
+    gmt: "(GMT+07:00)",
+    name: "Cambodia",
   },
   {
-    "zone": "America/Mexico_City",
-    "gmt": "(GMT-06:00)",
-    "name": "Mexico City"
+    zone: "Asia/Vientiane",
+    gmt: "(GMT+07:00)",
+    name: "Laos",
   },
   {
-    "zone": "America/Monterrey",
-    "gmt": "(GMT-06:00)",
-    "name": "Monterrey"
+    zone: "Asia/Jakarta",
+    gmt: "(GMT+07:00)",
+    name: "Indonesia (Jakarta)",
   },
   {
-    "zone": "Canada/Saskatchewan",
-    "gmt": "(GMT-06:00)",
-    "name": "Saskatchewan"
+    zone: "Asia/Makassar",
+    gmt: "(GMT+08:00)",
+    name: "Indonesia (Makassar)",
   },
   {
-    "zone": "US/Central",
-    "gmt": "(GMT-06:00)",
-    "name": "Central Time (US &amp; Canada)"
+    zone: "Asia/Jayapura",
+    gmt: "(GMT+09:00)",
+    name: "Indonesia (Jayapura)",
   },
   {
-    "zone": "US/Eastern",
-    "gmt": "(GMT-05:00)",
-    "name": "Eastern Time (US &amp; Canada)"
+    zone: "Asia/Singapore",
+    gmt: "(GMT+08:00)",
+    name: "Singapore",
   },
   {
-    "zone": "US/East-Indiana",
-    "gmt": "(GMT-05:00)",
-    "name": "Indiana (East)"
+    zone: "Asia/Kuala_Lumpur",
+    gmt: "(GMT+08:00)",
+    name: "Malaysia",
   },
   {
-    "zone": "America/Bogota",
-    "gmt": "(GMT-05:00)",
-    "name": "Bogota"
+    zone: "Asia/Manila",
+    gmt: "(GMT+08:00)",
+    name: "Philippines",
   },
   {
-    "zone": "America/Lima",
-    "gmt": "(GMT-05:00)",
-    "name": "Lima"
+    zone: "Asia/Hong_Kong",
+    gmt: "(GMT+08:00)",
+    name: "Hong Kong",
   },
   {
-    "zone": "America/Caracas",
-    "gmt": "(GMT-04:30)",
-    "name": "Caracas"
+    zone: "Asia/Shanghai",
+    gmt: "(GMT+08:00)",
+    name: "China",
   },
   {
-    "zone": "Canada/Atlantic",
-    "gmt": "(GMT-04:00)",
-    "name": "Atlantic Time (Canada)"
+    zone: "Asia/Taipei",
+    gmt: "(GMT+08:00)",
+    name: "Taiwan",
   },
   {
-    "zone": "America/La_Paz",
-    "gmt": "(GMT-04:00)",
-    "name": "La_Paz"
+    zone: "Asia/Tokyo",
+    gmt: "(GMT+09:00)",
+    name: "Japan",
   },
   {
-    "zone": "America/Santiago",
-    "gmt": "(GMT-04:00)",
-    "name": "Santiago"
+    zone: "Asia/Seoul",
+    gmt: "(GMT+09:00)",
+    name: "South Korea",
   },
   {
-    "zone": "Canada/Newfoundland",
-    "gmt": "(GMT-03:30)",
-    "name": "Newfoundland"
+    zone: "Asia/Pyongyang",
+    gmt: "(GMT+09:00)",
+    name: "North Korea",
   },
   {
-    "zone": "America/Buenos_Aires",
-    "gmt": "(GMT-03:00)",
-    "name": "Buenos Aires"
+    zone: "Asia/Ulaanbaatar",
+    gmt: "(GMT+08:00)",
+    name: "Mongolia",
   },
+
   {
-    "zone": "Greenland",
-    "gmt": "(GMT-03:00)",
-    "name": "Greenland"
+    zone: "Europe/London",
+    gmt: "(GMT+00:00)",
+    name: "United Kingdom",
   },
   {
-    "zone": "Atlantic/Stanley",
-    "gmt": "(GMT-02:00)",
-    "name": "Stanley"
+    zone: "Europe/Paris",
+    gmt: "(GMT+01:00)",
+    name: "France",
   },
   {
-    "zone": "Atlantic/Azores",
-    "gmt": "(GMT-01:00)",
-    "name": "Azores"
+    zone: "Europe/Berlin",
+    gmt: "(GMT+01:00)",
+    name: "Germany",
   },
   {
-    "zone": "Atlantic/Cape_Verde",
-    "gmt": "(GMT-01:00)",
-    "name": "Cape Verde Is."
+    zone: "Europe/Rome",
+    gmt: "(GMT+01:00)",
+    name: "Italy",
   },
   {
-    "zone": "Africa/Casablanca",
-    "gmt": "(GMT)",
-    "name": "Casablanca"
+    zone: "Europe/Madrid",
+    gmt: "(GMT+01:00)",
+    name: "Spain",
   },
   {
-    "zone": "Europe/Dublin",
-    "gmt": "(GMT)",
-    "name": "Dublin"
+    zone: "Europe/Amsterdam",
+    gmt: "(GMT+01:00)",
+    name: "Netherlands",
   },
   {
-    "zone": "Europe/Lisbon",
-    "gmt": "(GMT)",
-    "name": "Libson"
+    zone: "Europe/Brussels",
+    gmt: "(GMT+01:00)",
+    name: "Belgium",
   },
   {
-    "zone": "Europe/London",
-    "gmt": "(GMT)",
-    "name": "London"
+    zone: "Europe/Vienna",
+    gmt: "(GMT+01:00)",
+    name: "Austria",
   },
   {
-    "zone": "Africa/Monrovia",
-    "gmt": "(GMT)",
-    "name": "Monrovia"
+    zone: "Europe/Zurich",
+    gmt: "(GMT+01:00)",
+    name: "Switzerland",
   },
   {
-    "zone": "Europe/Amsterdam",
-    "gmt": "(GMT+01:00)",
-    "name": "Amsterdam"
+    zone: "Europe/Stockholm",
+    gmt: "(GMT+01:00)",
+    name: "Sweden",
   },
   {
-    "zone": "Europe/Belgrade",
-    "gmt": "(GMT+01:00)",
-    "name": "Belgrade"
+    zone: "Europe/Oslo",
+    gmt: "(GMT+01:00)",
+    name: "Norway",
   },
   {
-    "zone": "Europe/Berlin",
-    "gmt": "(GMT+01:00)",
-    "name": "Berlin"
+    zone: "Europe/Copenhagen",
+    gmt: "(GMT+01:00)",
+    name: "Denmark",
   },
   {
-    "zone": "Europe/Bratislava",
-    "gmt": "(GMT+01:00)",
-    "name": "Bratislava"
+    zone: "Europe/Helsinki",
+    gmt: "(GMT+02:00)",
+    name: "Finland",
   },
   {
-    "zone": "Europe/Brussels",
-    "gmt": "(GMT+01:00)",
-    "name": "Brussels"
+    zone: "Europe/Warsaw",
+    gmt: "(GMT+01:00)",
+    name: "Poland",
   },
   {
-    "zone": "Europe/Budapest",
-    "gmt": "(GMT+01:00)",
-    "name": "Budapest"
+    zone: "Europe/Prague",
+    gmt: "(GMT+01:00)",
+    name: "Czech Republic",
   },
   {
-    "zone": "Europe/Copenhagen",
-    "gmt": "(GMT+01:00)",
-    "name": "Copenhagen"
+    zone: "Europe/Budapest",
+    gmt: "(GMT+01:00)",
+    name: "Hungary",
   },
   {
-    "zone": "Europe/Ljubljana",
-    "gmt": "(GMT+01:00)",
-    "name": "Ljubljana"
+    zone: "Europe/Bucharest",
+    gmt: "(GMT+02:00)",
+    name: "Romania",
   },
   {
-    "zone": "Europe/Madrid",
-    "gmt": "(GMT+01:00)",
-    "name": "Madrid"
+    zone: "Europe/Sofia",
+    gmt: "(GMT+02:00)",
+    name: "Bulgaria",
   },
   {
-    "zone": "Europe/Paris",
-    "gmt": "(GMT+01:00)",
-    "name": "Paris"
+    zone: "Europe/Athens",
+    gmt: "(GMT+02:00)",
+    name: "Greece",
   },
   {
-    "zone": "Europe/Prague",
-    "gmt": "(GMT+01:00)",
-    "name": "Prague"
+    zone: "Europe/Istanbul",
+    gmt: "(GMT+03:00)",
+    name: "Turkey",
   },
   {
-    "zone": "Europe/Rome",
-    "gmt": "(GMT+01:00)",
-    "name": "Rome"
+    zone: "Europe/Moscow",
+    gmt: "(GMT+03:00)",
+    name: "Russia (Moscow)",
   },
   {
-    "zone": "Europe/Sarajevo",
-    "gmt": "(GMT+01:00)",
-    "name": "Sarajevo"
+    zone: "Europe/Kiev",
+    gmt: "(GMT+02:00)",
+    name: "Ukraine",
   },
   {
-    "zone": "Europe/Skopje",
-    "gmt": "(GMT+01:00)",
-    "name": "Skopje"
+    zone: "Europe/Minsk",
+    gmt: "(GMT+03:00)",
+    name: "Belarus",
   },
   {
-    "zone": "Europe/Stockholm",
-    "gmt": "(GMT+01:00)",
-    "name": "Stockholm"
+    zone: "Europe/Riga",
+    gmt: "(GMT+02:00)",
+    name: "Latvia",
   },
   {
-    "zone": "Europe/Vienna",
-    "gmt": "(GMT+01:00)",
-    "name": "Vienna"
+    zone: "Europe/Tallinn",
+    gmt: "(GMT+02:00)",
+    name: "Estonia",
   },
   {
-    "zone": "Europe/Warsaw",
-    "gmt": "(GMT+01:00)",
-    "name": "Warsaw"
+    zone: "Europe/Vilnius",
+    gmt: "(GMT+02:00)",
+    name: "Lithuania",
   },
+
   {
-    "zone": "Europe/Zagreb",
-    "gmt": "(GMT+01:00)",
-    "name": "Zagreb"
+    zone: "US/New_York",
+    gmt: "(GMT-05:00)",
+    name: "United States (Eastern)",
   },
   {
-    "zone": "Europe/Athens",
-    "gmt": "(GMT+02:00)",
-    "name": "Athens"
+    zone: "US/Chicago",
+    gmt: "(GMT-06:00)",
+    name: "United States (Central)",
   },
   {
-    "zone": "Europe/Bucharest",
-    "gmt": "(GMT+02:00)",
-    "name": "Bucharest"
+    zone: "US/Denver",
+    gmt: "(GMT-07:00)",
+    name: "United States (Mountain)",
   },
   {
-    "zone": "Africa/Cairo",
-    "gmt": "(GMT+02:00)",
-    "name": "Cairo"
+    zone: "US/Los_Angeles",
+    gmt: "(GMT-08:00)",
+    name: "United States (Pacific)",
   },
   {
-    "zone": "Africa/Harare",
-    "gmt": "(GMT+02:00)",
-    "name": "Harere"
+    zone: "US/Alaska",
+    gmt: "(GMT-09:00)",
+    name: "United States (Alaska)",
   },
   {
-    "zone": "Europe/Helsinki",
-    "gmt": "(GMT+02:00)",
-    "name": "Helsinki"
+    zone: "US/Hawaii",
+    gmt: "(GMT-10:00)",
+    name: "United States (Hawaii)",
   },
   {
-    "zone": "Europe/Istanbul",
-    "gmt": "(GMT+02:00)",
-    "name": "Istanbul"
+    zone: "Canada/Toronto",
+    gmt: "(GMT-05:00)",
+    name: "Canada (Eastern)",
   },
   {
-    "zone": "Asia/Jerusalem",
-    "gmt": "(GMT+02:00)",
-    "name": "Jerusalem"
+    zone: "Canada/Winnipeg",
+    gmt: "(GMT-06:00)",
+    name: "Canada (Central)",
   },
   {
-    "zone": "Europe/Kiev",
-    "gmt": "(GMT+02:00)",
-    "name": "Kiev"
+    zone: "Canada/Edmonton",
+    gmt: "(GMT-07:00)",
+    name: "Canada (Mountain)",
   },
   {
-    "zone": "Europe/Minsk",
-    "gmt": "(GMT+02:00)",
-    "name": "Minsk"
+    zone: "Canada/Vancouver",
+    gmt: "(GMT-08:00)",
+    name: "Canada (Pacific)",
   },
   {
-    "zone": "Europe/Riga",
-    "gmt": "(GMT+02:00)",
-    "name": "Riga"
+    zone: "America/Mexico_City",
+    gmt: "(GMT-06:00)",
+    name: "Mexico",
   },
   {
-    "zone": "Europe/Sofia",
-    "gmt": "(GMT+02:00)",
-    "name": "Sofia"
+    zone: "America/Tijuana",
+    gmt: "(GMT-08:00)",
+    name: "Mexico (Baja California)",
   },
   {
-    "zone": "Europe/Tallinn",
-    "gmt": "(GMT+02:00)",
-    "name": "Tallinn"
+    zone: "America/Havana",
+    gmt: "(GMT-05:00)",
+    name: "Cuba",
   },
   {
-    "zone": "Europe/Vilnius",
-    "gmt": "(GMT+02:00)",
-    "name": "Vilnius"
+    zone: "America/Jamaica",
+    gmt: "(GMT-05:00)",
+    name: "Jamaica",
   },
   {
-    "zone": "Asia/Baghdad",
-    "gmt": "(GMT+03:00)",
-    "name": "Baghdad"
+    zone: "America/Panama",
+    gmt: "(GMT-05:00)",
+    name: "Panama",
   },
   {
-    "zone": "Asia/Kuwait",
-    "gmt": "(GMT+03:00)",
-    "name": "Kuwait"
+    zone: "America/Costa_Rica",
+    gmt: "(GMT-06:00)",
+    name: "Costa Rica",
   },
   {
-    "zone": "Africa/Nairobi",
-    "gmt": "(GMT+03:00)",
-    "name": "Nairobi"
+    zone: "America/Guatemala",
+    gmt: "(GMT-06:00)",
+    name: "Guatemala",
   },
   {
-    "zone": "Asia/Riyadh",
-    "gmt": "(GMT+03:00)",
-    "name": "Riyadh"
+    zone: "America/El_Salvador",
+    gmt: "(GMT-06:00)",
+    name: "El Salvador",
   },
   {
-    "zone": "Asia/Tehran",
-    "gmt": "(GMT+03:30)",
-    "name": "Tehran"
+    zone: "America/Tegucigalpa",
+    gmt: "(GMT-06:00)",
+    name: "Honduras",
   },
   {
-    "zone": "Europe/Moscow",
-    "gmt": "(GMT+04:00)",
-    "name": "Moscow"
+    zone: "America/Managua",
+    gmt: "(GMT-06:00)",
+    name: "Nicaragua",
   },
+
   {
-    "zone": "Asia/Baku",
-    "gmt": "(GMT+04:00)",
-    "name": "Baku"
+    zone: "America/Sao_Paulo",
+    gmt: "(GMT-03:00)",
+    name: "Brazil (Sao Paulo)",
   },
   {
-    "zone": "Europe/Volgograd",
-    "gmt": "(GMT+04:00)",
-    "name": "Volgograd"
+    zone: "America/Manaus",
+    gmt: "(GMT-04:00)",
+    name: "Brazil (Manaus)",
   },
   {
-    "zone": "Asia/Muscat",
-    "gmt": "(GMT+04:00)",
-    "name": "Muscat"
+    zone: "America/Belem",
+    gmt: "(GMT-03:00)",
+    name: "Brazil (Belem)",
   },
   {
-    "zone": "Asia/Tbilisi",
-    "gmt": "(GMT+04:00)",
-    "name": "Tbilisi"
+    zone: "America/Argentina/Buenos_Aires",
+    gmt: "(GMT-03:00)",
+    name: "Argentina",
   },
   {
-    "zone": "Asia/Yerevan",
-    "gmt": "(GMT+04:00)",
-    "name": "Yerevan"
+    zone: "America/Santiago",
+    gmt: "(GMT-03:00)",
+    name: "Chile",
   },
   {
-    "zone": "Asia/Kabul",
-    "gmt": "(GMT+04:30)",
-    "name": "Kabul"
+    zone: "America/Lima",
+    gmt: "(GMT-05:00)",
+    name: "Peru",
   },
   {
-    "zone": "Asia/Karachi",
-    "gmt": "(GMT+05:00)",
-    "name": "Karachi"
+    zone: "America/Bogota",
+    gmt: "(GMT-05:00)",
+    name: "Colombia",
   },
   {
-    "zone": "Asia/Tashkent",
-    "gmt": "(GMT+05:00)",
-    "name": "Tashkent"
+    zone: "America/Caracas",
+    gmt: "(GMT-04:00)",
+    name: "Venezuela",
   },
   {
-    "zone": "Asia/Kolkata",
-    "gmt": "(GMT+05:30)",
-    "name": "Kolkata"
+    zone: "America/La_Paz",
+    gmt: "(GMT-04:00)",
+    name: "Bolivia",
   },
   {
-    "zone": "Asia/Kathmandu",
-    "gmt": "(GMT+05:45)",
-    "name": "Kathmandu"
+    zone: "America/Asuncion",
+    gmt: "(GMT-03:00)",
+    name: "Paraguay",
   },
   {
-    "zone": "Asia/Yekaterinburg",
-    "gmt": "(GMT+06:00)",
-    "name": "Yekaterinburg"
+    zone: "America/Montevideo",
+    gmt: "(GMT-03:00)",
+    name: "Uruguay",
   },
   {
-    "zone": "Asia/Almaty",
-    "gmt": "(GMT+06:00)",
-    "name": "Almaty"
+    zone: "America/Guyana",
+    gmt: "(GMT-04:00)",
+    name: "Guyana",
   },
   {
-    "zone": "Asia/Dhaka",
-    "gmt": "(GMT+06:00)",
-    "name": "Dhaka"
+    zone: "America/Suriname",
+    gmt: "(GMT-03:00)",
+    name: "Suriname",
   },
   {
-    "zone": "Asia/Novosibirsk",
-    "gmt": "(GMT+07:00)",
-    "name": "Novosibirsk"
+    zone: "America/Fortaleza",
+    gmt: "(GMT-03:00)",
+    name: "Brazil (Fortaleza)",
   },
+
   {
-    "zone": "Asia/Bangkok",
-    "gmt": "(GMT+07:00)",
-    "name": "Bangkok"
+    zone: "Africa/Cairo",
+    gmt: "(GMT+02:00)",
+    name: "Egypt",
   },
   {
-    "zone": "Asia/Jakarta",
-    "gmt": "(GMT+07:00)",
-    "name": "Jakarta"
+    zone: "Africa/Lagos",
+    gmt: "(GMT+01:00)",
+    name: "Nigeria",
   },
   {
-    "zone": "Asia/Krasnoyarsk",
-    "gmt": "(GMT+08:00)",
-    "name": "Krasnoyarsk"
+    zone: "Africa/Johannesburg",
+    gmt: "(GMT+02:00)",
+    name: "South Africa",
   },
   {
-    "zone": "Asia/Chongqing",
-    "gmt": "(GMT+08:00)",
-    "name": "Chongqing"
+    zone: "Africa/Nairobi",
+    gmt: "(GMT+03:00)",
+    name: "Kenya",
   },
   {
-    "zone": "Asia/Hong_Kong",
-    "gmt": "(GMT+08:00)",
-    "name": "Hong Kong"
+    zone: "Africa/Addis_Ababa",
+    gmt: "(GMT+03:00)",
+    name: "Ethiopia",
   },
   {
-    "zone": "Asia/Kuala_Lumpur",
-    "gmt": "(GMT+08:00)",
-    "name": "Kuala Lumpur"
+    zone: "Africa/Dar_es_Salaam",
+    gmt: "(GMT+03:00)",
+    name: "Tanzania",
   },
   {
-    "zone": "Australia/Perth",
-    "gmt": "(GMT+08:00)",
-    "name": "Perth"
+    zone: "Africa/Kampala",
+    gmt: "(GMT+03:00)",
+    name: "Uganda",
   },
   {
-    "zone": "Asia/Singapore",
-    "gmt": "(GMT+08:00)",
-    "name": "Singapore"
+    zone: "Africa/Khartoum",
+    gmt: "(GMT+02:00)",
+    name: "Sudan",
   },
   {
-    "zone": "Asia/Taipei",
-    "gmt": "(GMT+08:00)",
-    "name": "Taipei"
+    zone: "Africa/Algiers",
+    gmt: "(GMT+01:00)",
+    name: "Algeria",
   },
   {
-    "zone": "Asia/Ulaanbaatar",
-    "gmt": "(GMT+08:00)",
-    "name": "Ulaan Bataar"
+    zone: "Africa/Casablanca",
+    gmt: "(GMT+00:00)",
+    name: "Morocco",
   },
   {
-    "zone": "Asia/Urumqi",
-    "gmt": "(GMT+08:00)",
-    "name": "Urumqi"
+    zone: "Africa/Tunis",
+    gmt: "(GMT+01:00)",
+    name: "Tunisia",
   },
   {
-    "zone": "Asia/Irkutsk",
-    "gmt": "(GMT+09:00)",
-    "name": "Irkutsk"
+    zone: "Africa/Tripoli",
+    gmt: "(GMT+02:00)",
+    name: "Libya",
   },
   {
-    "zone": "Asia/Seoul",
-    "gmt": "(GMT+09:00)",
-    "name": "Seoul"
+    zone: "Africa/Accra",
+    gmt: "(GMT+00:00)",
+    name: "Ghana",
   },
   {
-    "zone": "Asia/Tokyo",
-    "gmt": "(GMT+09:00)",
-    "name": "Tokyo"
+    zone: "Africa/Dakar",
+    gmt: "(GMT+00:00)",
+    name: "Senegal",
   },
   {
-    "zone": "Australia/Adelaide",
-    "gmt": "(GMT+09:30)",
-    "name": "Adelaide"
+    zone: "Africa/Abidjan",
+    gmt: "(GMT+00:00)",
+    name: "Ivory Coast",
   },
   {
-    "zone": "Australia/Darwin",
-    "gmt": "(GMT+09:30)",
-    "name": "Darwin"
+    zone: "Africa/Luanda",
+    gmt: "(GMT+01:00)",
+    name: "Angola",
   },
   {
-    "zone": "Asia/Yakutsk",
-    "gmt": "(GMT+10:00)",
-    "name": "Yakutsk"
+    zone: "Africa/Lusaka",
+    gmt: "(GMT+02:00)",
+    name: "Zambia",
   },
   {
-    "zone": "Australia/Brisbane",
-    "gmt": "(GMT+10:00)",
-    "name": "Brisbane"
+    zone: "Africa/Harare",
+    gmt: "(GMT+02:00)",
+    name: "Zimbabwe",
   },
   {
-    "zone": "Australia/Canberra",
-    "gmt": "(GMT+10:00)",
-    "name": "Canberra"
+    zone: "Africa/Gaborone",
+    gmt: "(GMT+02:00)",
+    name: "Botswana",
   },
   {
-    "zone": "Pacific/Guam",
-    "gmt": "(GMT+10:00)",
-    "name": "Guam"
+    zone: "Africa/Windhoek",
+    gmt: "(GMT+02:00)",
+    name: "Namibia",
   },
+
   {
-    "zone": "Australia/Hobart",
-    "gmt": "(GMT+10:00)",
-    "name": "Hobart"
+    zone: "Australia/Sydney",
+    gmt: "(GMT+10:00)",
+    name: "Australia (Sydney)",
   },
   {
-    "zone": "Australia/Melbourne",
-    "gmt": "(GMT+10:00)",
-    "name": "Melbourne"
+    zone: "Australia/Melbourne",
+    gmt: "(GMT+10:00)",
+    name: "Australia (Melbourne)",
   },
   {
-    "zone": "Pacific/Port_Moresby",
-    "gmt": "(GMT+10:00)",
-    "name": "Port Moresby"
+    zone: "Australia/Brisbane",
+    gmt: "(GMT+10:00)",
+    name: "Australia (Brisbane)",
   },
   {
-    "zone": "Australia/Sydney",
-    "gmt": "(GMT+10:00)",
-    "name": "Sydney"
+    zone: "Australia/Perth",
+    gmt: "(GMT+08:00)",
+    name: "Australia (Perth)",
   },
   {
-    "zone": "Asia/Vladivostok",
-    "gmt": "(GMT+11:00)",
-    "name": "Vladivostok"
+    zone: "Australia/Adelaide",
+    gmt: "(GMT+09:30)",
+    name: "Australia (Adelaide)",
   },
   {
-    "zone": "Asia/Magadan",
-    "gmt": "(GMT+12:00)",
-    "name": "Magadan"
+    zone: "Australia/Darwin",
+    gmt: "(GMT+09:30)",
+    name: "Australia (Darwin)",
   },
   {
-    "zone": "Pacific/Auckland",
-    "gmt": "(GMT+12:00)",
-    "name": "Auckland"
+    zone: "Australia/Hobart",
+    gmt: "(GMT+10:00)",
+    name: "Australia (Hobart)",
   },
   {
-    "zone": "Pacific/Fiji",
-    "gmt": "(GMT+12:00)",
-    "name": "Fiji"
-  }
-]
+    zone: "Pacific/Auckland",
+    gmt: "(GMT+12:00)",
+    name: "New Zealand",
+  },
+  {
+    zone: "Pacific/Fiji",
+    gmt: "(GMT+12:00)",
+    name: "Fiji",
+  },
+  {
+    zone: "Pacific/Guam",
+    gmt: "(GMT+10:00)",
+    name: "Guam",
+  },
+  {
+    zone: "Pacific/Port_Moresby",
+    gmt: "(GMT+10:00)",
+    name: "Papua New Guinea",
+  },
+  {
+    zone: "Pacific/Noumea",
+    gmt: "(GMT+11:00)",
+    name: "New Caledonia",
+  },
+  {
+    zone: "Pacific/Tahiti",
+    gmt: "(GMT-10:00)",
+    name: "French Polynesia",
+  },
+  {
+    zone: "Pacific/Honolulu",
+    gmt: "(GMT-10:00)",
+    name: "Hawaii",
+  },
+  {
+    zone: "Asia/Dubai",
+    gmt: "(GMT+04:00)",
+    name: "United Arab Emirates",
+  },
+  {
+    zone: "Asia/Riyadh",
+    gmt: "(GMT+03:00)",
+    name: "Saudi Arabia",
+  },
+  {
+    zone: "Asia/Kuwait",
+    gmt: "(GMT+03:00)",
+    name: "Kuwait",
+  },
+  {
+    zone: "Asia/Baghdad",
+    gmt: "(GMT+03:00)",
+    name: "Iraq",
+  },
+  {
+    zone: "Asia/Tehran",
+    gmt: "(GMT+03:30)",
+    name: "Iran",
+  },
+  {
+    zone: "Asia/Jerusalem",
+    gmt: "(GMT+02:00)",
+    name: "Israel",
+  },
+  {
+    zone: "Asia/Amman",
+    gmt: "(GMT+03:00)",
+    name: "Jordan",
+  },
+  {
+    zone: "Asia/Beirut",
+    gmt: "(GMT+02:00)",
+    name: "Lebanon",
+  },
+  {
+    zone: "Asia/Damascus",
+    gmt: "(GMT+02:00)",
+    name: "Syria",
+  },
+  {
+    zone: "Asia/Qatar",
+    gmt: "(GMT+03:00)",
+    name: "Qatar",
+  },
+  {
+    zone: "Asia/Bahrain",
+    gmt: "(GMT+03:00)",
+    name: "Bahrain",
+  },
+  {
+    zone: "Asia/Muscat",
+    gmt: "(GMT+04:00)",
+    name: "Oman",
+  },
+  {
+    zone: "Asia/Yemen",
+    gmt: "(GMT+03:00)",
+    name: "Yemen",
+  },
+];
+
+// Helper function to get all timezones as a flat array
+export const getAllTimezones = () => {
+  return Object.values(timezones).flat();
+};
+
+// Helper function to get timezones by region
+export const getTimezonesByRegion = (region) => {
+  return timezones[region] || [];
+};
+
+// Helper function to get timezone by name
+export const getTimezoneByName = (name) => {
+  const allTimezones = getAllTimezones();
+  return allTimezones.find((tz) => tz.name === name);
+};
+
+// Helper function to get timezone by zone identifier
+export const getTimezoneByZone = (zone) => {
+  const allTimezones = getAllTimezones();
+  return allTimezones.find((tz) => tz.zone === zone);
+};
+
+// Helper function to get all regions
+export const getRegions = () => {
+  return Object.keys(timezones);
+};
+
+// Helper function to get timezones sorted by GMT offset
+export const getTimezonesSortedByOffset = () => {
+  const allTimezones = getAllTimezones();
+  return allTimezones.sort((a, b) => {
+    const offsetA = parseInt(
+      a.gmt.match(/GMT([+-]\d{2}):(\d{2})/)[1] +
+        a.gmt.match(/GMT([+-]\d{2}):(\d{2})/)[2]
+    );
+    const offsetB = parseInt(
+      b.gmt.match(/GMT([+-]\d{2}):(\d{2})/)[1] +
+        b.gmt.match(/GMT([+-]\d{2}):(\d{2})/)[2]
+    );
+    return offsetA - offsetB;
+  });
+};

@@ -751,3 +751,6 @@ pre.hljs {
     @apply bg-success;
 }
 
+[data-vc=controls]{
+    z-index: 0 !important;
+}

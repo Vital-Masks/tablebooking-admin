@@ -119,6 +119,7 @@ export default function GeneralDetailForm({
   useEffect(() => {
     if (generalDetails) {
       const data = returnCommonObject(initialValues, generalDetails);
+      console.log(">>", generalDetails);
       const openingDays = generalDetails?.openingTimes?.map((day: any) => {
         return day.day;
       });
@@ -148,8 +149,8 @@ export default function GeneralDetailForm({
     );
 
     const timezoneOptions = timezones.map((timezone: any) => ({
-      label: timezone.zone,
-      value: timezone.gmt,
+      label: timezone.zone + " " + timezone.gmt,
+      value: timezone.zone + " " + timezone.gmt,
     }));
 
     const dinningStyleOptions = Object.entries(utilities?.[0].dinningStyle).map(

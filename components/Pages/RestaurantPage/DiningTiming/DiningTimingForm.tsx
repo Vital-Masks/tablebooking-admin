@@ -12,7 +12,6 @@ import {
 } from "@/lib/actions/restaurant.actions";
 
 import {
-  convertImageToBase64,
   findField,
   handleError,
   returnCommonObject,
@@ -23,6 +22,7 @@ import {
 } from "@/constants/FormsDataJs/DiningTimingForm";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
+import { uploadFileToS3 } from "@/lib/aws-s3";
 
 const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
   const searchParams = useSearchParams();
@@ -30,31 +30,28 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
   const pathname = usePathname();
   const diningId = searchParams.get("edit");
 
-  const defaultInitialValues = useMemo(
-    () => ({
-      diningType: "",
-      diningName: "",
-      description: "",
-      dateType: "Custom Date",
-      days: [],
-      dateFrom: "",
-      dateTo: "",
-      timeFrom: "",
-      timeTo: "",
-      availabilityStatus: "",
-      pricePerPerson: "",
-      diningAreas: "",
-    }),
-    []
-  );
+  const defaultInitialValues = {
+    diningType: "",
+    diningName: "",
+    description: "",
+    dateType: "Custom Date",
+    days: [],
+    dateFrom: "",
+    dateTo: "",
+    timeFrom: "",
+    timeTo: "",
+    availabilityStatus: "",
+    pricePerPerson: "",
+    diningAreas: "",
+  };
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [initialValues, setInitialValues] = useState(defaultInitialValues);
 
   const closeForm = () => {
     setIsFormOpen(false);
-    router.replace(pathname, { scroll: false });
     setInitialValues(defaultInitialValues);
+    router.replace(pathname, { scroll: false });
   };
 
   const fetchDining = async () => {
@@ -86,46 +83,91 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
           <ToastBanner
             t={t}
             type="ERROR"
-            message="Resaurant don't exist!"
-            detail="please fill the general details first."
+            message="Restaurant don't exist!"
+            detail="Please fill the general details first."
           />
         ));
         return;
       }
-      data.restaurantId = params.restaurantId;
 
+      // Handle file uploads
       const images = await Promise.all(
-        data.coverImage.map(async (img: Blob) => {
-          if (img instanceof Blob) {
-            const base64 = await convertImageToBase64(img);
-            return { photo: base64 };
+        data.coverImage.map(async (img: any) => {
+          if (img.preview) {
+            const url = await uploadFileToS3(
+              img.preview,
+              "dining-timing-images"
+            );
+            return { photo: url };
           }
           return img;
         })
       );
 
-      data.coverImage = images[0];
-
-      if (diningId) {
-        await updateDiningTiming(diningId, data);
+      // Filter out failed uploads
+      const validImages = images.filter(img => img.photo !== null);
+      
+      if (validImages.length === 0) {
         toast.custom((t) => (
-          <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
+          <ToastBanner 
+            t={t} 
+            type="ERROR" 
+            message="File upload failed!" 
+            detail="Please try uploading the image again."
+          />
         ));
-      } else {
-        await createDiningTiming(data);
-        toast.custom((t) => (
-          <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
-        ));
+        return;
       }
-      closeForm();
+
+      data.coverImage = validImages;
+      data.restaurantId = params.restaurantId;
+
+      let result;
+      if (diningId) {
+        result = await updateDiningTiming(diningId, data);
+        if (result) {
+          toast.custom((t) => (
+            <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
+          ));
+          closeForm();
+        } else {
+          toast.custom((t) => (
+            <ToastBanner 
+              t={t} 
+              type="ERROR" 
+              message="Update failed!" 
+              detail="Please check your data and try again."
+            />
+          ));
+        }
+      } else {
+        result = await createDiningTiming(data);
+        if (result) {
+          toast.custom((t) => (
+            <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
+          ));
+          closeForm();
+        } else {
+          toast.custom((t) => (
+            <ToastBanner 
+              t={t} 
+              type="ERROR" 
+              message="Creation failed!" 
+              detail="Please check your data and try again."
+            />
+          ));
+        }
+      }
     } catch (error) {
+      console.error('Error in form submission:', error);
       toast.custom((t) => (
-        <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
+        <ToastBanner 
+          t={t} 
+          type="ERROR" 
+          message="Something went wrong!" 
+          detail="Please try again later."
+        />
       ));
-      handleError(
-        "An error occurred while submitting the dining timing form:",
-        error
-      );
     }
   };
 

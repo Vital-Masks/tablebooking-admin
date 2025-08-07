@@ -17,7 +17,7 @@ const s3 = new S3Client({
   },
 });
 
-export async function uploadFileToS3(file: File, imageCategory: string): Promise<string> {
+export async function uploadFileToS3(file: File, imageCategory: string): Promise<string | null> {
   try {
     // Ask backend for a pre-signed URL
     const res = await fetch("http://localhost:3000/api/aws/s3-presign", {
@@ -29,6 +29,11 @@ export async function uploadFileToS3(file: File, imageCategory: string): Promise
         fileName: file.name // Optional: you can send the file name if needed
       }),
     });
+
+    if (!res.ok) {
+      console.error("Failed to get pre-signed URL:", res.status, res.statusText);
+      return null;
+    }
 
     const { signedUrl, publicUrl, key } = await res.json();
     console.log("Received signed URL:", signedUrl);
@@ -43,7 +48,8 @@ export async function uploadFileToS3(file: File, imageCategory: string): Promise
     });
 
     if (!upload.ok) {
-      throw new Error(`Failed to upload file: ${upload.statusText}`);
+      console.error("Failed to upload file to S3:", upload.status, upload.statusText);
+      return null;
     }
 
     console.log("Upload response:", upload);
@@ -51,16 +57,19 @@ export async function uploadFileToS3(file: File, imageCategory: string): Promise
     return key; // Return the key of the uploaded file
   } catch (error) {
     console.error("Error uploading file to S3:", error);
-    throw new Error("Failed to upload file to S3");
+    return null;
   }
 }
 
 export async function uploadMultipleFilesToS3(files: File[], imageCategory: string): Promise<string[]> {
   const uploadPromises = files.map(file => uploadFileToS3(file, imageCategory));
-  return Promise.all(uploadPromises);
+  const results = await Promise.all(uploadPromises);
+  console.log(">>", results);
+  // Filter out null results (failed uploads)
+  return results.filter((key): key is string => key !== null);
 }
 
-export async function deleteFileFromS3(key:string): Promise<void> {
+export async function deleteFileFromS3(key:string): Promise<boolean> {
   const command = new DeleteObjectCommand({
     Bucket: process.env.AWS_IMAGE_BUCKET!,
     Key: key,
@@ -69,9 +78,10 @@ export async function deleteFileFromS3(key:string): Promise<void> {
   try {
     await s3.send(command);
     console.log(`Deleted: ${key}`);
+    return true;
   } catch (err) {
     console.error('S3 Delete Error:', err);
-    throw err;
+    return false;
   }
 }
 

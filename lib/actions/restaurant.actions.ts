@@ -151,19 +151,35 @@ export const getRestaurantDiningTimingById = async (
 export const createDiningTiming = async (
   general: CreateDiningTimingParams
 ): Promise<DiningTiming | null> => {
-  const newRestaurant = await fetcher<DiningTiming>(
-    `/restaurant/${general?.restaurantId}/diningTiming`,
-    {
-      method: 'POST',
-      body: general,
-    }
-  );
+  try {
+    // Format data for backend - convert arrays to strings if needed
+    const formattedData = {
+      ...general,
+      diningAreas: Array.isArray(general.diningAreas) 
+        ? general.diningAreas.join(', ') 
+        : general.diningAreas,
+      coverImage: Array.isArray(general.coverImage) 
+        ? general.coverImage.map((img: any) => img.photo || img).join(', ')
+        : general.coverImage
+    };
 
-  if (newRestaurant) {
-    revalidate(ROUTE_RESTAURANTS);
-    return parseStringify(newRestaurant);
+    const newRestaurant = await fetcher<DiningTiming>(
+      `/restaurant/${general?.restaurantId}/diningTiming`,
+      {
+        method: 'POST',
+        body: formattedData,
+      }
+    );
+
+    if (newRestaurant) {
+      revalidate(ROUTE_RESTAURANTS);
+      return parseStringify(newRestaurant);
+    }
+    return null;
+  } catch (error) {
+    console.error('Error creating dining timing:', error);
+    return null;
   }
-  return null;
 };
 
 //  UPDATE RESTAURANT CUISINE MENU
@@ -171,19 +187,35 @@ export const updateDiningTiming = async (
   id: string,
   general: CreateDiningTimingParams
 ): Promise<DiningTiming | null> => {
-  const newRestaurant = await fetcher<DiningTiming>(
-    `/restaurant/${general?.restaurantId}/diningTiming/${id}`,
-    {
-      method: 'PUT',
-      body: general,
-    }
-  );
+  try {
+    // Format data for backend - convert arrays to strings if needed
+    const formattedData = {
+      ...general,
+      diningAreas: Array.isArray(general.diningAreas) 
+        ? general.diningAreas.join(', ') 
+        : general.diningAreas,
+      coverImage: Array.isArray(general.coverImage) 
+        ? general.coverImage.map((img: any) => img.photo || img).join(', ')
+        : general.coverImage
+    };
 
-  if (newRestaurant) {
-    revalidate(ROUTE_RESTAURANTS);
-    return parseStringify(newRestaurant);
+    const newRestaurant = await fetcher<DiningTiming>(
+      `/restaurant/${general?.restaurantId}/diningTiming/${id}`,
+      {
+        method: 'PUT',
+        body: formattedData,
+      }
+    );
+
+    if (newRestaurant) {
+      revalidate(ROUTE_RESTAURANTS);
+      return parseStringify(newRestaurant);
+    }
+    return null;
+  } catch (error) {
+    console.error('Error updating dining timing:', error);
+    return null;
   }
-  return null;
 };
 
 // ********************* //
