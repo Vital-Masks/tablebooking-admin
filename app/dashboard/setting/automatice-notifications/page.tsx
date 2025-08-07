@@ -3,6 +3,8 @@ import AutoNotificationTable from '@/components/Pages/SettingsTabs/AutomaticNoti
 import { getRestaurantsList } from '@/lib/actions/restaurant.actions';
 import { getUtilities } from '@/lib/actions/utilities.actions';
 
+export const dynamic = 'force-dynamic';
+
 const AutomaticNotificationPage = async () => {
   const restaurants = await getRestaurantsList();
   const restaurantOptions = restaurants?.map((res: any) => ({

@@ -3,6 +3,8 @@ import DiningTimingTable from '@/components/Pages/RestaurantPage/DiningTiming/Di
 import { getRestaurantDiningAreas } from '@/lib/actions/restaurant.actions';
 import { getUtilities } from '@/lib/actions/utilities.actions';
 
+export const dynamic = 'force-dynamic';
+
 const DiningTimingPage = async ({ params }: any) => {
   const diningAreas: any[] = [];
   if (params.restaurantId !== 'c') {

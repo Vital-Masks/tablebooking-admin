@@ -71,7 +71,7 @@ const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
 
       setInitialValues({
         ...commonObj,
-        restaurantIds: response.restaurantIds?.map((res: any) => res._id),
+        restaurantIds: response?.restaurantIds?.map((res: any) => res._id),
       });
     } catch (error) {
       handleError(

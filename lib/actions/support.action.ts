@@ -27,7 +27,7 @@ export const getInquiry = async (id: string) => {
     method: "GET",
   });
 
-  return result[0];
+  return result?.[0];
 };
 
 export const createInquiry = async (
@@ -81,5 +81,5 @@ export const getRestaurantInquiry = async (id: string) => {
     }
   );
 
-  return result[0];
+  return result?.[0];
 };

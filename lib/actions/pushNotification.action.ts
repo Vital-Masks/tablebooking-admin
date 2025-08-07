@@ -58,7 +58,7 @@ export const getNotification = async (id: string) => {
     }
   );
 
-  return result[0];
+  return result?.[0];
 };
 
 // GET ALL AUTOMATIC NOTIFICATION LIST
@@ -111,7 +111,7 @@ export const getAutoNotification = async (id: string) => {
     }
   );
 
-  return result[0];
+  return result?.[0];
 };
 
 // GET ALL Notification List

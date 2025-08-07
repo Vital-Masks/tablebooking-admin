@@ -6,10 +6,8 @@ import Button from "@/components/Elements/Button";
 import Link from "next/link";
 import Table from "@/components/Common/Table";
 import FormComponent from "@/components/Common/Form";
-import {
-  inquiryFormField,
-  inquiryFormSchema,
-} from "@/constants/FormsDataJs/inquiry";
+import { inquiryFormField, inquiryFormSchema } from "@/constants/FormsDataJs/inquiryForm";
+
 
 const InquiryPage = () => {
   const [initialValues, setInitialValues] = useState({

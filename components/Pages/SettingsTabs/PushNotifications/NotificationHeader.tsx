@@ -81,8 +81,8 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
       setInitialValues({
         ...commonObj,
         customersOf: response?.restaurantIds?.map((res: any) => res._id),
-        date: moment(response.dateAndTime).format('YYYY-MM-DD'),
-        time: moment(response.dateAndTime).format('hh:mm A'),
+        date: moment(response?.dateAndTime).format('YYYY-MM-DD'),
+        time: moment(response?.dateAndTime).format('hh:mm A'),
       });
     } catch (error) {
       handleError(

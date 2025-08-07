@@ -2,6 +2,7 @@ import PromocodesHeader from "@/components/Pages/SettingsTabs/Promocodes/Promoco
 import PromocodesTable from "@/components/Pages/SettingsTabs/Promocodes/PromocodesTable";
 import { getRestaurantsList } from "@/lib/actions/restaurant.actions";
 
+export const dynamic = 'force-dynamic';
 
 const PromoPage = async () => {
     const restaurants = await getRestaurantsList();

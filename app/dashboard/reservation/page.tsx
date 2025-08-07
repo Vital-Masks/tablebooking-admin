@@ -1,6 +1,8 @@
 import ReservationHeader from "@/components/Pages/ReservationPage/ReservationHeader";
 import ReservationTable from "@/components/Pages/ReservationPage/ReservationTable";
 
+export const dynamic = 'force-dynamic';
+
 const ReservationPage = async () => {
   return (
     <main>

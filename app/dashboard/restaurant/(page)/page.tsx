@@ -2,6 +2,8 @@ import PageHeader from '@/components/Elements/PageHeader';
 import RestaurantTable from '@/components/Pages/RestaurantPage/RestaurantTable';
 import { ROUTE_RESTAURANTS } from '@/constants/routes';
 
+export const dynamic = 'force-dynamic';
+
 const RestaurantPage = async () => {
   const pageHeaderData = {
     title: 'Restaurants',
