@@ -58,7 +58,6 @@ export default function GeneralDetailForm({
         data.coverImage.map(async (img: any) => {
           if (img.preview) {
             const url = await uploadFileToS3(img.preview, "restaurant-images");
-            console.log(">>", url);
             return { photo: url };
           }
           return img;
@@ -119,7 +118,6 @@ export default function GeneralDetailForm({
   useEffect(() => {
     if (generalDetails) {
       const data = returnCommonObject(initialValues, generalDetails);
-      console.log(">>", generalDetails);
       const openingDays = generalDetails?.openingTimes?.map((day: any) => {
         return day.day;
       });

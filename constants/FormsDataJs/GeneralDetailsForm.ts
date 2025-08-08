@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { cityOptions } from "../cities";
 
 export const generalFormField = [
   {
@@ -95,13 +96,28 @@ export const generalFormField = [
     id: "grid5",
     name: "grid",
     fields: [
+      {
+        id: "city",
+        name: "city",
+        label: "City",
+        placeholder: "Select city",
+        type: "select",
+        options: cityOptions,
+      },
       { 
         id: "address", 
         name: "address", 
         label: "Address", 
         placeholder: "Enter restaurant address",
         type: "text" 
-      },
+      }
+    ],
+  },
+  {
+    id: "grid7",
+    name: "grid",
+    fields: [
+      
       {
         id: "addressEmbedURL",
         name: "addressEmbedURL",
@@ -109,19 +125,20 @@ export const generalFormField = [
         placeholder: "https://maps.google.com/embed?pb=...",
         type: "url",
       },
-    ],
-  },
-  {
-    id: "grid7",
-    name: "grid",
-    fields: [
       {
         id: "description",
         name: "description",
         label: "Description",
         placeholder: "Enter restaurant description",
         type: "textarea",
-      },
+      }
+    ],
+  },
+  {
+    id: "grid8",
+    name: "grid",
+    fields: [
+      
       {
         id: "currency",
         name: "currency",
@@ -129,26 +146,11 @@ export const generalFormField = [
         placeholder: "Select currency",
         type: "select",
       },
-    ],
-  },
-  {
-    id: "grid8",
-    name: "grid",
-    fields: [
       {
         id: "dinningStyle",
         name: "dinningStyle",
         label: "Dinning Style",
         placeholder: "Select dining styles",
-        type: "select",
-        options: [],
-        isMulti: true,
-      },
-      {
-        id: "dressCode",
-        name: "dressCode",
-        label: "Dress Code",
-        placeholder: "Select dress codes",
         type: "select",
         options: [],
         isMulti: true,
@@ -159,6 +161,16 @@ export const generalFormField = [
     id: "grid9",
     name: "grid",
     fields: [
+
+      {
+        id: "dressCode",
+        name: "dressCode",
+        label: "Dress Code",
+        placeholder: "Select dress codes",
+        type: "select",
+        options: [],
+        isMulti: true,
+      },
       {
         id: "paymentOptions",
         name: "paymentOptions",
@@ -180,7 +192,14 @@ export const generalFormField = [
           },
         ],
         isMulti: true,
-      },
+      }
+    ],
+  },
+  {
+    id: "grid10",
+    name: "grid",
+    fields: [
+      
       {
         id: "cousines",
         name: "cousines",
@@ -189,12 +208,6 @@ export const generalFormField = [
         type: "select",
         isMulti: true,
       },
-    ],
-  },
-  {
-    id: "grid10",
-    name: "grid",
-    fields: [
       {
         id: "timeZone",
         name: "timeZone",
@@ -202,7 +215,14 @@ export const generalFormField = [
         placeholder: "Select time zone",
         type: "select",
         options: [],
-      },
+      }
+    ],
+  },
+  {
+    id: "grid11",
+    name: "grid",
+    fields: [
+      
       {
         id: "availabilityStatus",
         name: "availabilityStatus",
@@ -220,12 +240,6 @@ export const generalFormField = [
           },
         ],
       },
-    ],
-  },
-  {
-    id: "grid11",
-    name: "grid",
-    fields: [
       {
         id: "openingDays",
         name: "openingDays",
@@ -423,6 +437,10 @@ export const generalFormSchema = Yup.object().shape({
     .min(5, "Exactly 5 cover images are required")
     .max(5, "Exactly 5 cover images are required")
     .required("Cover images are required"),
+
+  // City - Required
+  city: Yup.string()
+    .required("City is required"),
 });
 
 export const generalImageFormField = [
