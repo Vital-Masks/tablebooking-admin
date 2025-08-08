@@ -59,7 +59,7 @@ export default function GeneralDetailForm({
           if (img.preview) {
             const url = await uploadFileToS3(img.preview, "restaurant-images");
             console.log(">>", url);
-            return { photo: url };
+            return url;
           }
           return img;
         })
