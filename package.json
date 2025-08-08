@@ -46,7 +46,7 @@
     "react-popper": "^2.3.0",
     "react-redux": "^9.1.2",
     "react-select": "^5.9.0",
-    "vanilla-calendar-pro": "^3.0.3",
+    "vanilla-calendar-pro": "^3.0.5",
     "yarn": "^1.22.22",
     "yup": "^1.4.0",
     "zod": "^3.23.8"

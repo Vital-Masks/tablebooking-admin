@@ -49,8 +49,9 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
   const [initialValues, setInitialValues] = useState(defaultInitialValues);
 
   const closeForm = () => {
-    setIsFormOpen(false);
+    console.log(">>");
     setInitialValues(defaultInitialValues);
+    setIsFormOpen(false);
     router.replace(pathname, { scroll: false });
   };
 

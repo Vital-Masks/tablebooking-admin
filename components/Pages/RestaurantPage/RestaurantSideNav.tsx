@@ -52,7 +52,9 @@ const RestaurantSideNav = () => {
                   content="Submit general details to enable"
                   placement="right"
                 >
-                  {linkElement}
+                  <div>
+                    {linkElement}
+                  </div>
                 </Tippy>
               ) : (
                 linkElement

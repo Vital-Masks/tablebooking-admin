@@ -92,6 +92,7 @@ const CustomDatesCalendar: React.FC<Props> = ({
     new Date().getFullYear()
   );
   const [isUpdating, setIsUpdating] = useState(false);
+  const [resetCounter, setResetCounter] = useState(0);
 
   // ============================================================================
   // REFS
@@ -99,6 +100,12 @@ const CustomDatesCalendar: React.FC<Props> = ({
 
   const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastValuesRef = useRef<Record<string, any>>({});
+  const setFieldValueRef = useRef(setFieldValue);
+
+  // Update the ref when setFieldValue changes
+  useEffect(() => {
+    setFieldValueRef.current = setFieldValue;
+  }, [setFieldValue]);
 
   // ============================================================================
   // MEMOIZED VALUES
@@ -142,6 +149,21 @@ const CustomDatesCalendar: React.FC<Props> = ({
 
     if (!hasChanged) return;
 
+    // Update last values immediately to prevent duplicate processing
+    lastValuesRef.current = currentValues;
+
+    // Check if this is a form reset (all values are empty/undefined)
+    const isFormReset = (!currentDateFrom || currentDateFrom === '' || currentDateFrom === null || currentDateFrom === undefined) && 
+                       (!currentDateTo || currentDateTo === '' || currentDateTo === null || currentDateTo === undefined);
+    console.log(">> reset detection:", { currentDateFrom, currentDateTo, isFormReset });
+    if (isFormReset) {
+      console.log(">> form reset detected, incrementing counter");
+      setResetCounter(prev => prev + 1);
+      // Immediately clear selected dates when form is reset
+      setSelectedDates([]);
+      return; // Skip the rest of the update logic
+    }
+
     // Clear any pending updates
     if (updateTimeoutRef.current) {
       clearTimeout(updateTimeoutRef.current);
@@ -159,6 +181,10 @@ const CustomDatesCalendar: React.FC<Props> = ({
             const dateObj = new Date(currentDateFrom);
             setSelectedMonth(dateObj.getMonth());
             setSelectedYear(dateObj.getFullYear());
+          } else {
+            // Clear selections if no valid date
+            console.log(">> clearing selections for Custom Date");
+            setSelectedDates([]);
           }
         } else {
           // Custom Dates or Custom Days
@@ -177,10 +203,12 @@ const CustomDatesCalendar: React.FC<Props> = ({
             const dateObj = new Date(currentDateFrom);
             setSelectedMonth(dateObj.getMonth());
             setSelectedYear(dateObj.getFullYear());
+          } else {
+            // Clear selections if no valid date
+            console.log(">> clearing selections for Custom Dates/Days");
+            setSelectedDates([]);
           }
         }
-
-        lastValuesRef.current = currentValues;
       } catch (error) {
         console.error("Error updating calendar dates:", error);
       } finally {
@@ -194,6 +222,21 @@ const CustomDatesCalendar: React.FC<Props> = ({
       }
     };
   }, [isClient, isUpdating, currentDateType, currentDateFrom, currentDateTo]);
+
+  // Separate effect to handle form resets
+  useEffect(() => {
+    if (!isClient) return;
+    
+    // Check if form values are empty (form reset)
+    const isFormReset = (!currentDateFrom || currentDateFrom === '' || currentDateFrom === null || currentDateFrom === undefined) && 
+                       (!currentDateTo || currentDateTo === '' || currentDateTo === null || currentDateTo === undefined);
+    
+    if (isFormReset && selectedDates.length > 0) {
+      console.log(">> form reset detected in separate effect, clearing selectedDates");
+      setSelectedDates([]);
+      setResetCounter(prev => prev + 1);
+    }
+  }, [isClient, currentDateFrom, currentDateTo, selectedDates.length]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -222,7 +265,7 @@ const CustomDatesCalendar: React.FC<Props> = ({
         if (currentDateType === "Custom Date") {
           const newDate = selectedDates[0];
           if (newDate) {
-            setFieldValue("dateFrom", newDate);
+            setFieldValueRef.current("dateFrom", newDate);
           }
         } else {
           // Custom Dates or Custom Days
@@ -230,18 +273,18 @@ const CustomDatesCalendar: React.FC<Props> = ({
           const endDate = selectedDates[1];
 
           if (startDate) {
-            setFieldValue("dateFrom", startDate);
+            setFieldValueRef.current("dateFrom", startDate);
           }
 
           if (endDate) {
-            setFieldValue("dateTo", endDate);
+            setFieldValueRef.current("dateTo", endDate);
           }
         }
       } catch (error) {
         console.error("Error handling date click:", error);
       }
     },
-    [currentDateType, setFieldValue]
+    [currentDateType]
   );
 
   // ============================================================================
@@ -289,6 +332,8 @@ const CustomDatesCalendar: React.FC<Props> = ({
     selectedTheme: "light",
     dateMin:  new Date().toISOString().split('T')[0],
   } as any;
+
+  console.log(">> calendar config:", { selectedDates, resetCounter, currentDateFrom, currentDateTo });
 
   return (
     <div className="flex flex-col gap-5">
@@ -343,6 +388,7 @@ const CustomDatesCalendar: React.FC<Props> = ({
           className={`relative ${isUpdating ? "opacity-50 pointer-events-none" : ""}`}
         >
           <VanillaCalendar
+            key={`calendar-${resetCounter}`}
             config={calendarConfig}
             className={`w-full mx-auto border !min-w-full ${
               errors[field.name] ? "border-red-500" : "border-gray-300"

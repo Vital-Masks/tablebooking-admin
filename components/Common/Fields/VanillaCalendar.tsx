@@ -10,16 +10,34 @@ interface CalendarProps extends React.HTMLAttributes<HTMLDivElement> {
 function VanillaCalendar({ config, ...attributes }: CalendarProps) {
   const ref = useRef(null);
   const [calendar, setCalendar] = useState<Calendar | null>(null);
+  const configRef = useRef(config);
+
+  // Update config ref when config changes
+  useEffect(() => {
+    configRef.current = config;
+  }, [config]);
 
   useEffect(() => {
     if (!ref.current) return;
-    setCalendar(new Calendar(ref.current, config));
-  }, [ref, config])
+    
+    // Create calendar instance only once
+    const calendarInstance = new Calendar(ref.current, configRef.current);
+    setCalendar(calendarInstance);
+  }, [ref]); // Only recreate when ref changes, not when config changes
 
   useEffect(() => {
     if (!calendar) return;
-    calendar.init()
-  }, [calendar])
+    
+    // Initialize calendar
+    calendar.init();
+
+    return () => {
+      if (calendar && typeof calendar.destroy === 'function') {
+        console.log(">> destroying calendar");
+        calendar.destroy();
+      }
+    }
+  }, [calendar]);
 
   return (
     <div {...attributes} ref={ref}></div>
