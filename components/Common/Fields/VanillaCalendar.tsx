@@ -33,7 +33,6 @@ function VanillaCalendar({ config, ...attributes }: CalendarProps) {
 
     return () => {
       if (calendar && typeof calendar.destroy === 'function') {
-        console.log(">> destroying calendar");
         calendar.destroy();
       }
     }

@@ -52,7 +52,7 @@ const formatDateForCalendar = (date: Date | string): string => {
   try {
     const dateObj = typeof date === "string" ? new Date(date) : date;
     if (isNaN(dateObj.getTime())) return "";
-    return dateObj.toISOString().split("T")[0];
+    return `${dateObj.getFullYear()}-${(dateObj.getMonth() + 1).toString().padStart(2, '0')}-${dateObj.getDate().toString().padStart(2, '0')}`;
   } catch (error) {
     console.error("Error formatting date:", error);
     return "";
@@ -155,9 +155,8 @@ const CustomDatesCalendar: React.FC<Props> = ({
     // Check if this is a form reset (all values are empty/undefined)
     const isFormReset = (!currentDateFrom || currentDateFrom === '' || currentDateFrom === null || currentDateFrom === undefined) && 
                        (!currentDateTo || currentDateTo === '' || currentDateTo === null || currentDateTo === undefined);
-    console.log(">> reset detection:", { currentDateFrom, currentDateTo, isFormReset });
+
     if (isFormReset) {
-      console.log(">> form reset detected, incrementing counter");
       setResetCounter(prev => prev + 1);
       // Immediately clear selected dates when form is reset
       setSelectedDates([]);
@@ -173,9 +172,9 @@ const CustomDatesCalendar: React.FC<Props> = ({
     updateTimeoutRef.current = setTimeout(() => {
       try {
         setIsUpdating(true);
-
         if (currentDateType === "Custom Date") {
           const formattedDate = formatDateForCalendar(currentDateFrom);
+         
           if (formattedDate) {
             setSelectedDates([formattedDate]);
             const dateObj = new Date(currentDateFrom);
@@ -183,7 +182,6 @@ const CustomDatesCalendar: React.FC<Props> = ({
             setSelectedYear(dateObj.getFullYear());
           } else {
             // Clear selections if no valid date
-            console.log(">> clearing selections for Custom Date");
             setSelectedDates([]);
           }
         } else {
@@ -205,7 +203,6 @@ const CustomDatesCalendar: React.FC<Props> = ({
             setSelectedYear(dateObj.getFullYear());
           } else {
             // Clear selections if no valid date
-            console.log(">> clearing selections for Custom Dates/Days");
             setSelectedDates([]);
           }
         }
@@ -232,7 +229,6 @@ const CustomDatesCalendar: React.FC<Props> = ({
                        (!currentDateTo || currentDateTo === '' || currentDateTo === null || currentDateTo === undefined);
     
     if (isFormReset && selectedDates.length > 0) {
-      console.log(">> form reset detected in separate effect, clearing selectedDates");
       setSelectedDates([]);
       setResetCounter(prev => prev + 1);
     }
@@ -313,7 +309,7 @@ const CustomDatesCalendar: React.FC<Props> = ({
     type: currentDateType === "Custom Date" ? "default" : "multiple",
     selectionDatesMode:
       currentDateType === "Custom Date" ? "single" : "multiple-ranged",
-    selectedDates,
+    selectedDates: selectedDates,
     selectedMonth: selectedMonth as
       | 0
       | 1
@@ -332,8 +328,6 @@ const CustomDatesCalendar: React.FC<Props> = ({
     selectedTheme: "light",
     dateMin:  new Date().toISOString().split('T')[0],
   } as any;
-
-  console.log(">> calendar config:", { selectedDates, resetCounter, currentDateFrom, currentDateTo });
 
   return (
     <div className="flex flex-col gap-5">

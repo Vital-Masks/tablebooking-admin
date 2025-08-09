@@ -64,35 +64,33 @@ export default function GeneralDetailForm({
         })
       );
 
-      console.log(">>", images);
-      // data.images = images;
+      data.images = images;
 
-      // const openingTimes = data.openingDays.map((day: any) => ({
-      //   day: day,
-      //   openTime: data.openTime,
-      //   closeTime: data.closeTime,
-      // }));
+      const openingTimes = data.openingDays.map((day: any) => ({
+        day: day,
+        openTime: data.openTime,
+        closeTime: data.closeTime,
+      }));
 
-      // data.openingTimes = openingTimes;
+      data.openingTimes = openingTimes;
+      if (restaurantId !== "c") {
+        await updateRestaurantGeneral(restaurantId, data);
+        toast.custom((t) => (
+          <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
+        ));
+        return;
+      }
 
-      // if (restaurantId !== "c") {
-      //   await updateRestaurantGeneral(restaurantId, data);
-      //   toast.custom((t) => (
-      //     <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
-      //   ));
-      //   return;
-      // }
-
-      // // Create new restaurant and handle response
-      // const response = await createRestaurantGeneral(data);
-      // toast.custom((t) => (
-      //   <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
-      // ));
-      // // Navigate and fetch details if response contains IDs
-      // if (response?._id) {
-      //   const { _id: restaurantId } = response;
-      //   router.push(`/dashboard/restaurant/${restaurantId}/general-detail`);
-      // }
+      // Create new restaurant and handle response
+      const response = await createRestaurantGeneral(data);
+      toast.custom((t) => (
+        <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
+      ));
+      // Navigate and fetch details if response contains IDs
+      if (response?._id) {
+        const { _id: restaurantId } = response;
+        router.push(`/dashboard/restaurant/${restaurantId}/general-detail`);
+      }
     } catch (error) {
       // General error handling
       toast.custom((t) => (
