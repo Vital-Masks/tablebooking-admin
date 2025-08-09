@@ -79,6 +79,8 @@ const FilePicker: FC<FilePickerProps> = ({
     setImageErrors(prev => new Set(prev).add(imageUrl));
   };
 
+
+
   const filePreviews = uploadedFiles?.length ? (
     uploadedFiles?.map((uploadedFile, fileIndex) => {
       const imageUrl = uploadedFile?.photo || uploadedFile?.preview;

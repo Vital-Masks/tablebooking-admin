@@ -56,6 +56,7 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
   };
 
   const fetchDining = async () => {
+   
     if (!diningId || params.restaurantId === "c") return;
 
     try {
@@ -63,9 +64,10 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
         params.restaurantId,
         diningId
       );
+      
       if (response) {
         let data = returnCommonObject(initialValues, response);
-        data["coverImage"] = [response.coverImage];
+        data["coverImage"] = [{photo: response.coverImage}];
         setInitialValues(data);
         setIsFormOpen(true);
       }

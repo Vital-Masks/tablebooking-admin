@@ -1,10 +1,21 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default auth((req) => {
-    const { nextUrl } = req;
-    //   const isLoggedIn = !!req.auth;
-    const isLoggedIn = true;
+export function middleware(request: NextRequest) {
+    const { nextUrl } = request;
+    
+    // Check for authentication cookies using a more compatible approach
+    let isLoggedIn = false;
+    
+    try {
+        const authCookie = request.cookies.get('auth-token');
+        const isLoggedInCookie = request.cookies.get('isLoggedIn');
+        
+        // Determine if user is logged in based on cookies
+        isLoggedIn = !!(authCookie?.value && isLoggedInCookie?.value === 'true');
+    } catch (error) {
+        // If there's an error accessing cookies, assume user is not logged in
+        isLoggedIn = false;
+    }
 
     // Define public routes that don't require authentication
     const publicRoutes = ['/login', '/OTP', '/changePassword'];
@@ -28,7 +39,7 @@ export default auth((req) => {
     }
 
     return NextResponse.next();
-});
+}
 
 // Configure which routes to run middleware on
 export const config = {
