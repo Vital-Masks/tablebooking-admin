@@ -17,29 +17,26 @@ declare type Restaurant = {
 };
 
 declare type CreateRestaurantGeneralParams = {
-  closeTime: any;
-  openTime: any;
-  openingDays: any;
-  restaurantName: string;
-  restaurantType: string;
-  contactNumber: string;
-  whatsappNumber: string;
-  email: string;
-  website: string;
-  address: string;
-  addressEmbedURL: string;
-  description: string;
-  diningStyle: string;
-  dressCode: string;
-  paymentOptions: string;
-  timeZone: string;
-  availabilityStatus: Status;
-  promoted: string;
-  coverUpload: string;
+  restaurantName?: string;
+  restaurantType?: string;
+  contactNumber?: string;
+  whatsappNumber?: string;
+  email?: string;
+  website?: string;
+  address?: string;
+  addressEmbedURL?: string;
+  description?: string;
+  diningStyle?: string;
+  dressCode?: string;
+  paymentOptions?: string;
+  timeZone?: string;
+  availabilityStatus?: Status;
+  promoted?: string;
+  coverUpload?: string;
   hospitalityChainId?: string;
-  images: any;
-  coverImage: any;
-  openingTimes: any;
+  images?: any;
+  coverImage?: any;
+  openingTimes?: any;
 };
 
 declare type HospitalChain = {

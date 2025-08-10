@@ -44,9 +44,6 @@ export default function GeneralDetailForm({
     cousines: [],
     timeZone: "",
     availabilityStatus: "",
-    openingDays: [],
-    openTime: "",
-    closeTime: "",
     isPromoted: false,
     coverImage: [],
     currency: "",
@@ -65,14 +62,7 @@ export default function GeneralDetailForm({
       );
 
       data.images = images;
-
-      const openingTimes = data.openingDays.map((day: any) => ({
-        day: day,
-        openTime: data.openTime,
-        closeTime: data.closeTime,
-      }));
-
-      data.openingTimes = openingTimes;
+      
       if (restaurantId !== "c") {
         await updateRestaurantGeneral(restaurantId, data);
         toast.custom((t) => (

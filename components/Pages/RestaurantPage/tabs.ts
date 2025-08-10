@@ -4,6 +4,7 @@ export const restaurantTabs = {
   diningAreas: 'dining-areas',
   diningTimings: 'dining-timings',
   userRoles: 'user-roles',
+  openHours: 'open-hours',
   subscriptions: 'subscriptions',
 };
 
@@ -32,6 +33,11 @@ export const tabs = [
     id: restaurantTabs.userRoles,
     name: 'User Roles',
     description: 'Update your User details here',
+  },
+  {
+    id: restaurantTabs.openHours,
+    name: 'Open Hours',
+    description: 'Update your Open Hours details here',
   },
   {
     id: restaurantTabs.subscriptions,

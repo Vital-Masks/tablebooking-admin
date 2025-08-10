@@ -240,58 +240,6 @@ export const generalFormField = [
           },
         ],
       },
-      {
-        id: "openingDays",
-        name: "openingDays",
-        label: "Opening Days",
-        placeholder: "Select opening days",
-        type: "select",
-        options: [
-          {
-            label: "Monday",
-            value: "Monday",
-          },
-          {
-            label: "Tuesday",
-            value: "Tuesday",
-          },
-          {
-            label: "Wednesday",
-            value: "Wednesday",
-          },
-          {
-            label: "Thursday",
-            value: "Thursday",
-          },
-          {
-            label: "Friday",
-            value: "Friday",
-          },
-          {
-            label: "Saturday",
-            value: "Saturday",
-          },
-          {
-            label: "Sunday",
-            value: "Sunday",
-          },
-        ],
-        isMulti: true,
-      },
-      { 
-        id: "openTime", 
-        name: "openTime", 
-        label: "Open time", 
-        placeholder: "Select opening time",
-        type: "time" 
-      },
-      {
-        id: "closeTime",
-        name: "closeTime",
-        label: "Close time",
-        placeholder: "Select closing time",
-        type: "time",
-      },
     ],
   },
   {
@@ -412,20 +360,6 @@ export const generalFormSchema = Yup.object().shape({
   // Availability Status - Required
   availabilityStatus: Yup.string()
     .required("Availability status is required"),
-
-  // Opening Days - Required array with at least one selection
-  openingDays: Yup.array()
-    .of(Yup.string())
-    .min(1, "At least one opening day must be selected")
-    .required("Opening days are required"),
-
-  // Open Time - Required
-  openTime: Yup.string()
-    .required("Opening time is required"),
-
-  // Close Time - Required
-  closeTime: Yup.string()
-    .required("Closing time is required"),
 
   // Is Promoted - Optional boolean
   isPromoted: Yup.boolean()
