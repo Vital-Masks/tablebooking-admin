@@ -170,16 +170,15 @@ const useUserManagement = () => {
       email: string;
     }) => {
       try {
-        const newUser = await createUser({
+        const newUser: any = await createUser({
           ...userData,
           password: "123456", // Consider making this configurable
         });
 
-        if (newUser.error) {
-          throw new Error(newUser.error);
+        if(newUser._id){
+          return newUser._id;
         }
 
-        return newUser._id;
       } catch (error) {
         console.error("Error creating user:", error);
         throw error;
@@ -191,7 +190,6 @@ const useUserManagement = () => {
   const getOrCreateUser = useCallback(
     async (formData: ReservationFormData) => {
       try {
-        console.log("formData >>>", formData);
         const userEmail = formData.email;
         const existingUser = await getUserByEmail(userEmail);
 

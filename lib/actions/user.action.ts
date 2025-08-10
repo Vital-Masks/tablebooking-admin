@@ -41,7 +41,9 @@ export const createUser = async (data: any) => {
   const result = await res.json();
 
   if (result.status?.includes('Successfully')) {
-    return result.result;
+    return {
+      success: true,
+    };
   }
 
   return { error: result.status };
