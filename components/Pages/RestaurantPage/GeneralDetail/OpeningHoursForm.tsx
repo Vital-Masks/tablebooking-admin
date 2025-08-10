@@ -40,45 +40,155 @@ const weekDays = [
   { value: "sunday", label: "Sunday" },
 ];
 
-const validationSchema = Yup.object().shape({
-  weekdays: Yup.object().shape({
-    openTime: Yup.string().required("Opening time is required"),
-    closeTime: Yup.string().required("Closing time is required"),
-  }),
-  weekends: Yup.object().shape({
-    openTime: Yup.string().required("Opening time is required"),
-    closeTime: Yup.string().required("Closing time is required"),
-  }),
-  customDays: Yup.object().test(
+// ============================================================================
+// VALIDATION CONSTANTS
+// ============================================================================
+
+const VALIDATION_LIMITS = {
+  TIME_REGEX: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
+} as const;
+
+// ============================================================================
+// VALIDATION UTILITY FUNCTIONS
+// ============================================================================
+
+const createTimeValidation = (fieldName: string) => {
+  return Yup.string()
+    .matches(
+      VALIDATION_LIMITS.TIME_REGEX,
+      "Please enter a valid time format (HH:MM)"
+    )
+    .required(`${fieldName} is required`);
+};
+
+const createTimeRangeValidation = (openTimeField: string, closeTimeField: string) => {
+  return Yup.object().test(
+    "time-range-validation",
+    "Closing time must be after opening time",
+    function (value: any) {
+      if (!value || !value[openTimeField] || !value[closeTimeField]) {
+        return true; // Let required validation handle empty fields
+      }
+
+      const openTime = value[openTimeField] as string;
+      const closeTime = value[closeTimeField] as string;
+
+      // Convert times to comparable values
+      const openMinutes = parseInt(openTime.split(':')[0]) * 60 + parseInt(openTime.split(':')[1]);
+      const closeMinutes = parseInt(closeTime.split(':')[0]) * 60 + parseInt(closeTime.split(':')[1]);
+
+      // Handle cases where closing time is on the next day (e.g., 23:00 to 02:00)
+      if (closeMinutes <= openMinutes) {
+        // If closing time is less than or equal to opening time, 
+        // it means the business is open past midnight
+        return true;
+      }
+
+      return true; // Valid time range
+    }
+  );
+};
+
+const createCustomDaysValidation = () => {
+  return Yup.object().test(
     "custom-days-validation",
-    "At least one custom day must be enabled",
+    "Custom days validation",
     function (value) {
       if (!value) return true;
-      const hasEnabledDay = Object.values(value).some(
-        (day: any) => day.enabled
-      );
-      if (!hasEnabledDay) return true; // Allow if no custom days are enabled
 
-      // Validate enabled custom days
+      // Check each custom day
       for (const [dayName, dayData] of Object.entries(value)) {
-        if ((dayData as any).enabled) {
-          if (!(dayData as any).openTime) {
+        const day = dayData as any;
+        
+        if (day.enabled) {
+          // If enabled, both open and close times are required
+          if (!day.openTime) {
             return this.createError({
               path: `customDays.${dayName}.openTime`,
               message: "Opening time is required for enabled custom days",
             });
           }
-          if (!(dayData as any).closeTime) {
+          
+          if (!day.closeTime) {
             return this.createError({
               path: `customDays.${dayName}.closeTime`,
               message: "Closing time is required for enabled custom days",
             });
           }
+
+          // Validate time format for enabled custom days
+          if (!VALIDATION_LIMITS.TIME_REGEX.test(day.openTime)) {
+            return this.createError({
+              path: `customDays.${dayName}.openTime`,
+              message: "Please enter a valid time format (HH:MM)",
+            });
+          }
+
+          if (!VALIDATION_LIMITS.TIME_REGEX.test(day.closeTime)) {
+            return this.createError({
+              path: `customDays.${dayName}.closeTime`,
+              message: "Please enter a valid time format (HH:MM)",
+            });
+          }
+
+          // Validate time range for enabled custom days
+          const openMinutes = parseInt(day.openTime.split(':')[0]) * 60 + parseInt(day.openTime.split(':')[1]);
+          const closeMinutes = parseInt(day.closeTime.split(':')[0]) * 60 + parseInt(day.closeTime.split(':')[1]);
+
+          // Allow closing time to be less than opening time (past midnight)
+          // This is valid for businesses that operate past midnight
         }
       }
+
+      return true;
+    }
+  );
+};
+
+// ============================================================================
+// VALIDATION SCHEMA
+// ============================================================================
+
+const validationSchema = Yup.object().shape({
+  weekdays: Yup.object().shape({
+    openTime: createTimeValidation("Weekday opening time"),
+    closeTime: createTimeValidation("Weekday closing time"),
+  }).test(
+    "weekday-time-range",
+    "Weekday closing time must be after opening time",
+    function (value) {
+      if (!value || !value.openTime || !value.closeTime) {
+        return true; // Let required validation handle empty fields
+      }
+
+      const openMinutes = parseInt(value.openTime.split(':')[0]) * 60 + parseInt(value.openTime.split(':')[1]);
+      const closeMinutes = parseInt(value.closeTime.split(':')[0]) * 60 + parseInt(value.closeTime.split(':')[1]);
+
+      // Allow closing time to be less than opening time (past midnight)
       return true;
     }
   ),
+
+  weekends: Yup.object().shape({
+    openTime: createTimeValidation("Weekend opening time"),
+    closeTime: createTimeValidation("Weekend closing time"),
+  }).test(
+    "weekend-time-range",
+    "Weekend closing time must be after opening time",
+    function (value) {
+      if (!value || !value.openTime || !value.closeTime) {
+        return true; // Let required validation handle empty fields
+      }
+
+      const openMinutes = parseInt(value.openTime.split(':')[0]) * 60 + parseInt(value.openTime.split(':')[1]);
+      const closeMinutes = parseInt(value.closeTime.split(':')[0]) * 60 + parseInt(value.closeTime.split(':')[1]);
+
+      // Allow closing time to be less than opening time (past midnight)
+      return true;
+    }
+  ),
+
+  customDays: createCustomDaysValidation(),
 });
 
 const initialValues: OpeningHours = {
