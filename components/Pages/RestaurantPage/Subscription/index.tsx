@@ -33,15 +33,6 @@ const Subscriptions = () => {
       features: ['Single Domain', '50 GB SSD', '1 TB Premium Bandwidth'],
       isPopular: true,
     },
-    {
-      id: 3,
-      title: 'Pro',
-      description:
-        'cPanel/WHM included. Intel Xeon E3 with guaranteed 2GB RAM.',
-      price: '20000',
-      features: ['Single Domain', '50 GB SSD', '1 TB Premium Bandwidth'],
-      isPopular: false,
-    },
   ];
 
   return (
@@ -78,7 +69,7 @@ const Subscriptions = () => {
             </span>
           </span>
         </div>
-        <div className="mt-5 space-y-4 text-white-dark md:mt-16 md:flex md:space-y-0">
+        <div className="mt-5 space-y-4 text-white-dark md:mt-16 md:flex md:space-y-0 p-5">
           {plans?.map((plan) => (
             <div
               key={plan.id}

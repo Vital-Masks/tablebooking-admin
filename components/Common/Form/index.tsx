@@ -199,8 +199,8 @@ const RenderField: React.FC<RenderFieldProps> = ({
             >
               <label htmlFor={field.name}>{field.label}</label>
 
-              <Field name={field.name} as="select" className="form-input">
-                <option key="0">Select 2</option>
+              {/* <Field name={field.name} as="select" className="form-input">
+                <option key="0">Select</option>
                 {field.options
                   ? field.options?.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -212,7 +212,14 @@ const RenderField: React.FC<RenderFieldProps> = ({
                         {option.label}
                       </option>
                     ))}
-              </Field>
+              </Field> */}
+              <Field
+              name={field.name}
+              component={SelectField}
+              options={field.options}
+              isMulti={field.isMulti}
+              hasError={errors[field.name]}
+            />
 
               <div className="text-danger mt-1 text-xs">
                 {errors[field.name]}
