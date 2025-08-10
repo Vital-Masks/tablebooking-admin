@@ -1,53 +1,111 @@
-'use client';
+"use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IconLogout } from "../Icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+  contactNo?: string;
+  birthDate?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
+  anniversaryDate?: string;
+}
+
 const Profile = () => {
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleLogout = () => {
-    // Clear localStorage
-    localStorage.removeItem('user');
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('loginTimestamp');
-    
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch('/api/auth/user');
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+        } else {
+          // If not authenticated, redirect to login
+          router.push('/login');
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        router.push('/login');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [router]);
+
+  const handleLogout = async () => {
+    try {
+      // Call logout API to clear server-side session
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+
+    // Clear client-side storage
+    localStorage.removeItem("user");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("loginTimestamp");
+
     // Clear cookies
-    document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
-    document.cookie = 'isLoggedIn=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
-    
+    document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
+    document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
+    document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
+
     // Redirect to login page
-    router.push('/login');
+    router.push("/login");
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <span className="flex justify-center items-center w-10 h-10 text-center rounded-lg object-cover bg-indigo-500 text-lg text-white">
+            VR
+          </span>
+          <div className="truncate">
+            <h4 className="text-base">Loading...</h4>
+            <p className="text-black/60">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const displayName = user ? `${user.firstName}` : 'VReserve';
+  const displayEmail = user?.email || 'vreserve@gmail.com';
+  const initials = user ? `${user.firstName?.charAt(0)}${user.lastName?.charAt(0)}` : 'VR';
 
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex items-center gap-3">
-        {/* <img
-          className="h-10 w-10 rounded-md object-cover"
-          src="/images/user-profile.jpeg"
-          alt="userProfile"
-        /> */}
         <span className="flex justify-center items-center w-10 h-10 text-center rounded-lg object-cover bg-indigo-500 text-lg text-white">
-          VR
+          {initials}
         </span>
 
         <div className="truncate">
           <h4 className="text-base">
-            VReserve
+            {displayName}
             <span className="rounded bg-success-light px-1 text-xs text-success ml-2">
               Pro
             </span>
           </h4>
-          <button type="button" className="text-black/60 hover:text-primary">
-            vreserve@gmail.com
-          </button>
+          <p className="text-black/60 hover:text-primary w-32 truncate">{displayEmail}</p>
         </div>
       </div>
 
-      <button 
+      <button
         onClick={handleLogout}
         className="!py-3 text-danger cursor-pointer"
       >

@@ -3,15 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
     const { nextUrl } = request;
     
-    // Check for authentication cookies using a more compatible approach
+    // Check for authentication using the session cookie
     let isLoggedIn = false;
     
     try {
-        const authCookie = request.cookies.get('auth-token');
-        const isLoggedInCookie = request.cookies.get('isLoggedIn');
+        const sessionCookie = request.cookies.get('session');
+        const accessTokenCookie = request.cookies.get('accessToken');
         
-        // Determine if user is logged in based on cookies
-        isLoggedIn = !!(authCookie?.value && isLoggedInCookie?.value === 'true');
+        // Determine if user is logged in based on session and access token cookies
+        isLoggedIn = !!(sessionCookie?.value && accessTokenCookie?.value);
     } catch (error) {
         // If there's an error accessing cookies, assume user is not logged in
         isLoggedIn = false;
