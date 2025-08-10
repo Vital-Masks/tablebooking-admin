@@ -47,6 +47,7 @@ export default function GeneralDetailForm({
     isPromoted: false,
     coverImage: [],
     currency: "",
+    city: "",
   });
 
   const onSubmit = async (data: CreateRestaurantGeneralParams) => {
@@ -136,8 +137,8 @@ export default function GeneralDetailForm({
     );
 
     const timezoneOptions = timezones.map((timezone: any) => ({
-      label: timezone.zone + " " + timezone.gmt,
-      value: timezone.zone + " " + timezone.gmt,
+      label: timezone.name + " " + timezone.gmt,
+      value: timezone.name + " " + timezone.gmt,
     }));
 
     const dinningStyleOptions = Object.entries(utilities?.[0].dinningStyle).map(
