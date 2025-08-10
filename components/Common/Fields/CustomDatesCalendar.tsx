@@ -101,6 +101,7 @@ const CustomDatesCalendar: React.FC<Props> = ({
   const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastValuesRef = useRef<Record<string, any>>({});
   const setFieldValueRef = useRef(setFieldValue);
+  const isInitializingRef = useRef(true);
 
   // Update the ref when setFieldValue changes
   useEffect(() => {
@@ -116,6 +117,73 @@ const CustomDatesCalendar: React.FC<Props> = ({
   const currentDateType = values.dateType || "Custom Date";
   const currentDateFrom = values.dateFrom;
   const currentDateTo = values.dateTo;
+
+  // Compute the correct selected dates for the calendar based on form values
+  const computedSelectedDates = useMemo(() => {
+    if (!isClient) return selectedDates;
+
+    console.log("Computing selected dates:", {
+      currentDateType,
+      currentDateFrom,
+      currentDateTo,
+      selectedDates
+    });
+
+    // If we have form values, use them to compute the selected dates
+    if (currentDateFrom) {
+      if (currentDateType === "Custom Date") {
+        const formattedDate = formatDateForCalendar(currentDateFrom);
+        console.log("Custom Date formatted:", formattedDate);
+        return formattedDate ? [formattedDate] : [];
+      } else {
+        // Custom Dates or Custom Days
+        const formattedDate = formatDateForCalendar(currentDateFrom);
+        console.log("Custom Dates formatted:", formattedDate);
+        if (formattedDate) {
+          if (currentDateTo) {
+            const rangeString = getDateRangeString(currentDateFrom, currentDateTo);
+            console.log("Range string:", rangeString);
+            return rangeString ? [rangeString] : [formattedDate];
+          } else {
+            return [formattedDate];
+          }
+        }
+      }
+    }
+
+    // Fall back to the state value
+    console.log("Falling back to selectedDates:", selectedDates);
+    return selectedDates;
+  }, [isClient, currentDateType, currentDateFrom, currentDateTo, selectedDates]);
+
+  // Compute the correct month and year based on form values
+  const computedSelectedMonth = useMemo(() => {
+    if (currentDateFrom) {
+      try {
+        const dateObj = new Date(currentDateFrom);
+        if (!isNaN(dateObj.getTime())) {
+          return dateObj.getMonth();
+        }
+      } catch (error) {
+        console.error("Error parsing date for month:", error);
+      }
+    }
+    return selectedMonth;
+  }, [currentDateFrom, selectedMonth]);
+
+  const computedSelectedYear = useMemo(() => {
+    if (currentDateFrom) {
+      try {
+        const dateObj = new Date(currentDateFrom);
+        if (!isNaN(dateObj.getTime())) {
+          return dateObj.getFullYear();
+        }
+      } catch (error) {
+        console.error("Error parsing date for year:", error);
+      }
+    }
+    return selectedYear;
+  }, [currentDateFrom, selectedYear]);
 
   // ============================================================================
   // EFFECTS
@@ -133,6 +201,12 @@ const CustomDatesCalendar: React.FC<Props> = ({
   // Handle date type and date changes
   useEffect(() => {
     if (!isClient || isUpdating) return;
+
+    // Skip the first render to prevent unnecessary updates during initialization
+    if (isInitializingRef.current) {
+      isInitializingRef.current = false;
+      return;
+    }
 
     // Check if values have actually changed to prevent infinite loops
     const currentValues = {
@@ -220,19 +294,15 @@ const CustomDatesCalendar: React.FC<Props> = ({
     };
   }, [isClient, isUpdating, currentDateType, currentDateFrom, currentDateTo]);
 
-  // Separate effect to handle form resets
+
+
+  // Force calendar update when computed values change
   useEffect(() => {
-    if (!isClient) return;
-    
-    // Check if form values are empty (form reset)
-    const isFormReset = (!currentDateFrom || currentDateFrom === '' || currentDateFrom === null || currentDateFrom === undefined) && 
-                       (!currentDateTo || currentDateTo === '' || currentDateTo === null || currentDateTo === undefined);
-    
-    if (isFormReset && selectedDates.length > 0) {
-      setSelectedDates([]);
+    if (isClient && computedSelectedDates.length > 0) {
+      // Force a re-render by updating the reset counter
       setResetCounter(prev => prev + 1);
     }
-  }, [isClient, currentDateFrom, currentDateTo, selectedDates.length]);
+  }, [isClient, computedSelectedDates]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -309,8 +379,8 @@ const CustomDatesCalendar: React.FC<Props> = ({
     type: currentDateType === "Custom Date" ? "default" : "multiple",
     selectionDatesMode:
       currentDateType === "Custom Date" ? "single" : "multiple-ranged",
-    selectedDates: selectedDates,
-    selectedMonth: selectedMonth as
+    selectedDates: computedSelectedDates,
+    selectedMonth: computedSelectedMonth as
       | 0
       | 1
       | 2
@@ -323,12 +393,18 @@ const CustomDatesCalendar: React.FC<Props> = ({
       | 9
       | 10
       | 11,
-    selectedYear,
+    selectedYear: computedSelectedYear,
     onClickDate: handleDateClick,
     selectedTheme: "light",
     dateMin:  new Date().toISOString().split('T')[0],
   } as any;
 
+  // Only log when we have meaningful changes, not during initialization
+  if (isClient && computedSelectedDates.length > 0) {
+    console.log(">>", computedSelectedDates);
+    console.log(">>", calendarConfig);
+  }
+  
   return (
     <div className="flex flex-col gap-5">
       {/* Date Type Selection */}
@@ -382,7 +458,7 @@ const CustomDatesCalendar: React.FC<Props> = ({
           className={`relative ${isUpdating ? "opacity-50 pointer-events-none" : ""}`}
         >
           <VanillaCalendar
-            key={`calendar-${resetCounter}`}
+            key={`calendar-${resetCounter}-${JSON.stringify(computedSelectedDates)}-${computedSelectedMonth}-${computedSelectedYear}`}
             config={calendarConfig}
             className={`w-full mx-auto border !min-w-full ${
               errors[field.name] ? "border-red-500" : "border-gray-300"
