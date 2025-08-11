@@ -37,17 +37,36 @@ export const foodFormField = [
 
 export const foodFormSchema = Yup.object().shape({
   foodName: Yup.string()
-    .matches(/^\S.*$/, "Cannot start with a space")
-    .min(3, "Min characters 3 only allowed")
-    .max(10, "Max characters 10 only allowed")
-    .required("This field cannot be empty"),
-  foodCategory: Yup.string().required("This field cannot be empty"),
+    .trim()
+    .min(2, 'Food name must be at least 2 characters')
+    .max(100, 'Food name cannot exceed 100 characters')
+    .matches(/^[a-zA-Z0-9\s\-_.,&()]+$/, 'Food name can only contain letters, numbers, spaces, hyphens, underscores, and basic punctuation')
+    .required('Food name is required'),
+  
+  foodCategory: Yup.string()
+    .trim()
+    .min(1, 'Please select a food category')
+    .required('Food category is required'),
+  
   description: Yup.string()
-    .matches(/^\S.*$/, "Cannot start with a space")
-    .max(1000, "Max characters 255 only allowed")
-    .required("This field cannot be empty"),
-  cousineType: Yup.string().required("This field cannot be empty"),
+    .trim()
+    .min(10, 'Description must be at least 10 characters')
+    .max(500, 'Description cannot exceed 500 characters')
+    .matches(/^[a-zA-Z0-9\s\-_.,!?()@#$%&*+=<>[\]{}|\\/:;"'`~]+$/, 'Description contains invalid characters')
+    .required('Description is required'),
+  
+  cousineType: Yup.string()
+    .trim()
+    .min(1, 'Please select a cuisine type')
+    .required('Cuisine type is required'),
+  
   price: Yup.number()
-    .positive("Price must be a positive number")
-    .required("This field cannot be empty"),
+    .typeError('Price must be a number')
+    .positive('Price must be a positive number')
+    .max(9999.99, 'Price cannot exceed $9,999.99')
+    .test('decimal-places', 'Price can have maximum 2 decimal places', function(value) {
+      if (!value) return false;
+      return /^\d+(\.\d{1,2})?$/.test(value.toString());
+    })
+    .required('Price is required'),
 });

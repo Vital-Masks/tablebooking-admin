@@ -8,6 +8,7 @@ import FormSlider from "@/components/Common/Form/FormSlider";
 import PageHeader from "@/components/Elements/PageHeader";
 import {
   convertImageToBase64,
+  findField,
   handleError,
   returnCommonObject,
 } from "@/lib/utils";
@@ -23,23 +24,25 @@ import {
 } from "@/lib/actions/bannerImage.action";
 import { uploadFileToS3 } from "@/lib/aws-s3";
 
-const BannerHeader = () => {
+const defaultValues = {
+  bannerName: "",
+  bannerFor: "",
+  redirectFor: "",
+  coverImage: "",
+  validFromDate: "",
+  validFromTime: "",
+  validTillDate: "",
+  validTillTime: "",
+  isAvailable: "",
+};
+
+const BannerHeader = ({ restaurantOptions }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const bannerId = searchParams.get("bannerId") ?? null;
 
   const [createForm, setCreateForm] = useState(false);
-  const [initialValues, setInitialValues] = useState({
-    bannerName: "",
-    bannerFor: "",
-    redirectFor: "",
-    coverImage: "",
-    validFromDate: "",
-    validFromTime: "",
-    validTillDate: "",
-    validTillTime: "",
-    isAvailable: "",
-  });
+  const [initialValues, setInitialValues] = useState(defaultValues) ;
 
   const pageHeaderData = {
     title: "Banner Image",
@@ -51,17 +54,7 @@ const BannerHeader = () => {
 
   const handleCloseForm = () => {
     setCreateForm(false);
-    setInitialValues({
-      bannerName: "",
-      bannerFor: "",
-      redirectFor: "",
-      coverImage: "",
-      validFromDate: "",
-      validFromTime: "",
-      validTillDate: "",
-      validTillTime: "",
-      isAvailable: "",
-    })
+    setInitialValues(defaultValues);
 
     if (bannerId) {
       router.push(ROUTE_BANNER_IMAGE);
@@ -70,13 +63,14 @@ const BannerHeader = () => {
 
   const handleFormSubmit = async (data: CreateBannerParams) => {
     const coverImage: any = data.coverImage[0];
+    console.log(">>", coverImage);
     const url = await uploadFileToS3(coverImage.preview, "banner-images");
 
     const body = {
       bannerName: data.bannerName,
       bannerFor: Array.isArray(data.bannerFor) ? data.bannerFor : [data.bannerFor],
       redirectFor: data.redirectFor,
-      coverImage: data.coverImage,
+      coverImage: url,
       validFromDateTime: moment(
         data.validFromDate + " " + data.validFromTime
       ).toLocaleString(),
@@ -107,7 +101,7 @@ const BannerHeader = () => {
       setCreateForm(true);
       const response = await getBannerImage(id);
       const commonObj = returnCommonObject(initialValues, response);
-
+   
       setInitialValues({
         ...commonObj,
         validFromDate: moment(response.validFromDateTime).format("YYYY-MM-DD"),
@@ -128,6 +122,13 @@ const BannerHeader = () => {
       fetchBannerImage(bannerId);
     }
   }, [bannerId]);
+
+  useEffect(() => {
+    if (restaurantOptions) {
+      findField(bannerFormField, 'bannerFor')['options'] =
+        restaurantOptions;
+    }
+  }, [restaurantOptions]);
 
   return (
     <>

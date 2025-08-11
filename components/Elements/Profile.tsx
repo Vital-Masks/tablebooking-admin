@@ -101,7 +101,7 @@ const Profile = () => {
               Pro
             </span>
           </h4>
-          <p className="text-black/60 hover:text-primary w-32 truncate">{displayEmail}</p>
+          <p className="text-black/60 w-34 truncate text-xs">{displayEmail}</p>
         </div>
       </div>
 

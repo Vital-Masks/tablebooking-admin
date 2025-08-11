@@ -24,13 +24,21 @@ export const seatingFormField = [
 
 export const seatingFormSchema = Yup.object().shape({
   sectionName: Yup.string()
-    .matches(/^\S.*$/, "Cannot start with a space")
-    .min(3, "Min characters 3 only allowed")
-    .max(10, "Max characters 10 only allowed")
-    .required("This field cannot be empty"),
+    .trim()
+    .min(2, 'Section name must be at least 2 characters')
+    .max(50, 'Section name cannot exceed 50 characters')
+    .matches(/^[a-zA-Z0-9\s\-_.,&()]+$/, 'Section name can only contain letters, numbers, spaces, hyphens, underscores, and basic punctuation')
+    .required('Section name is required'),
+  
   maximumSeats: Yup.number()
-    .integer("Seats must be a whole number")
-    .positive("Number of seats must be a positive number")
-    .required("This field cannot be empty"),
-  seatingAreaType: Yup.string().required("This field cannot be empty"),
+    .typeError('Maximum seats must be a number')
+    .integer('Seats must be a whole number')
+    .positive('Number of seats must be a positive number')
+    .max(1000, 'Maximum seats cannot exceed 1,000')
+    .required('Maximum seats is required'),
+  
+  seatingAreaType: Yup.string()
+    .trim()
+    .min(1, 'Please select a seating area type')
+    .required('Seating area type is required'),
 });

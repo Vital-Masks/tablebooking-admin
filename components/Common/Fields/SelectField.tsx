@@ -78,8 +78,9 @@ export const SelectField = ({
           state.isFocused
             ? "!border-primary !ring-transparent" :
             hasError ? "!border-red-500 !bg-red-50" :
+            disabled ? "!border-gray-300 !bg-gray-100 !text-gray-500" :
              "!border-white-light",
-        placeholder: (state) => hasError ? '!text-red-400' : ''
+        placeholder: (state) => hasError ? '!text-red-400' : disabled ? '!text-gray-400' : ''
           
       }}
       styles={{

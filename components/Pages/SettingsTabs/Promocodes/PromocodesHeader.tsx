@@ -19,22 +19,24 @@ import {
   promoFormSchema,
 } from '@/constants/FormsDataJs/PromocodeForm';
 
+const defaultValues = {
+  restaurantIds: '',
+  promocode: '',
+  valuePercentage: '',
+  validFromDate: '',
+  validFromTime: '',
+  validTillDate: '',
+  validTillTime: '',
+  availabilityStatus: '',
+};
+
 const PromocodesHeader = ({ restaurantOptions }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const promoId = searchParams.get('promoId') ?? null;
 
   const [createForm, setCreateForm] = useState(false);
-  const [initialValues, setInitialValues] = useState({
-    restaurantIds: '',
-    promocode: '',
-    valuePercentage: '',
-    validFromDate: '',
-    validFromTime: '',
-    validTillDate: '',
-    validTillTime: '',
-    availabilityStatus: '',
-  });
+  const [initialValues, setInitialValues] = useState(defaultValues);
 
   const pageHeaderData = {
     title: 'Promo codes',
@@ -45,6 +47,7 @@ const PromocodesHeader = ({ restaurantOptions }: any) => {
   };
 
   const handleCloseForm = () => {
+    setInitialValues(defaultValues);
     setCreateForm(false);
     if (promoId) {
       router.push(ROUTE_PROMO_CODE);

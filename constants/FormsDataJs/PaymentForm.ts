@@ -11,22 +11,61 @@ export const paymentFormField = [
 ];
 
 // Updated validation schema for payments
-export const paymentFormSchema = {
+export const paymentFormSchema = Yup.object().shape({
   from: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
-//   paymentreference: Yup.string()
-//     .max(255, 'Max characters 255 only allowed')
-//     .required('This field cannot be empty'),
+    .trim()
+    .min(2, 'From field must be at least 2 characters')
+    .max(100, 'From field cannot exceed 100 characters')
+    .matches(/^[a-zA-Z0-9\s\-_.,@]+$/, 'From field contains invalid characters')
+    .required('From field is required'),
+  
+  paymentreference: Yup.string()
+    .trim()
+    .min(3, 'Payment reference must be at least 3 characters')
+    .max(50, 'Payment reference cannot exceed 50 characters')
+    .matches(/^[A-Z0-9\-_]+$/, 'Payment reference can only contain uppercase letters, numbers, hyphens, and underscores')
+    .required('Payment reference is required'),
+  
   subscription: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
+    .trim()
+    .min(2, 'Subscription type must be at least 2 characters')
+    .max(50, 'Subscription type cannot exceed 50 characters')
+    .matches(/^[a-zA-Z0-9\s\-_]+$/, 'Subscription type can only contain letters, numbers, spaces, hyphens, and underscores')
+    .required('Subscription type is required'),
+  
   amount: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
+    .trim()
+    .matches(/^\d+(\.\d{1,2})?$/, 'Please enter a valid amount (e.g., 100.50)')
+    .test('positive-amount', 'Amount must be greater than 0', function(value) {
+      if (!value) return false;
+      const numValue = parseFloat(value);
+      return numValue > 0;
+    })
+    .required('Amount is required'),
+  
   paymentdate: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
+    .trim()
+    .matches(/^\d{4}-\d{2}-\d{2}$/, 'Please enter a valid date in YYYY-MM-DD format')
+    .test('valid-date', 'Please enter a valid date', function(value) {
+      if (!value) return false;
+      const date = new Date(value);
+      return !isNaN(date.getTime());
+    })
+    .required('Payment date is required'),
+  
   nextpayment: Yup.string()
-    .max(255, 'Max characters 255 only allowed'),
-};
+    .trim()
+    .matches(/^\d{4}-\d{2}-\d{2}$/, 'Please enter a valid date in YYYY-MM-DD format')
+    .test('valid-date', 'Please enter a valid date', function(value) {
+      if (!value) return false;
+      const date = new Date(value);
+      return !isNaN(date.getTime());
+    })
+    .test('future-date', 'Next payment date must be in the future', function(value) {
+      if (!value) return true; // Optional field
+      const nextPaymentDate = new Date(value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return nextPaymentDate > today;
+    }),
+});

@@ -1,49 +1,52 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
-import FormComponent from '@/components/Common/Form';
-import FormSlider from '@/components/Common/Form/FormSlider';
-import PageHeader from '@/components/Elements/PageHeader';
+import FormComponent from "@/components/Common/Form";
+import FormSlider from "@/components/Common/Form/FormSlider";
+import PageHeader from "@/components/Elements/PageHeader";
 import {
   hospitalChainFormField,
   hospitalChainFormSchema,
-} from '@/constants/FormsDataJs/HospitalChainForm';
+} from "@/constants/FormsDataJs/HospitalChainForm";
 import {
   createHospitalChain,
   getHospitalChain,
   updateHospitalChain,
-} from '@/lib/actions/hospitalChain.action';
-import { handleError, returnCommonObject } from '@/lib/utils';
-import { ROUTE_HOSPITAL_CHAIN } from '@/constants/routes';
+} from "@/lib/actions/hospitalChain.action";
+import { handleError, returnCommonObject } from "@/lib/utils";
+import { ROUTE_HOSPITAL_CHAIN } from "@/constants/routes";
+
+const defaultValues = {
+  chainName: "",
+  address: "",
+  registrationNumber: "",
+  contactNumber: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  mobileNumber: "",
+};
 
 const HospitalityHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const hospitalId = searchParams.get('hospitalId') ?? null;
+  const hospitalId = searchParams.get("hospitalId") ?? null;
 
   const [createForm, setCreateForm] = useState(false);
-  const [initialValues, setInitialValues] = useState({
-    chainName: '',
-    address: '',
-    registrationNumber: '',
-    contactNumber: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    mobileNumber: '',
-  });
+  const [initialValues, setInitialValues] = useState(defaultValues);
 
   const pageHeaderData = {
-    title: 'Hospitality Chains',
+    title: "Hospitality Chains",
     button1: {
-      title: 'Create Chain',
+      title: "Create Chain",
       action: () => setCreateForm(true),
     },
   };
 
   const handleCloseForm = () => {
+    setInitialValues(defaultValues);
     setCreateForm(false);
     if (hospitalId) {
       router.push(ROUTE_HOSPITAL_CHAIN);
@@ -61,7 +64,7 @@ const HospitalityHeader = () => {
       setCreateForm(false);
     } catch (error) {
       handleError(
-        'An error occurred while submitting the hospital chain form:',
+        "An error occurred while submitting the hospital chain form:",
         error
       );
     }
@@ -76,7 +79,7 @@ const HospitalityHeader = () => {
       );
     } catch (error) {
       handleError(
-        'An error occurred while submitting the hospital chain form:',
+        "An error occurred while submitting the hospital chain form:",
         error
       );
     }
@@ -91,7 +94,6 @@ const HospitalityHeader = () => {
   return (
     <>
       <PageHeader pageHeaderData={pageHeaderData} />
-
       <FormSlider isOpen={createForm}>
         <FormComponent
           title="Create Hospital"

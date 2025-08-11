@@ -20,19 +20,21 @@ import {
 } from '@/lib/actions/pushNotification.action';
 import moment from 'moment';
 
+const defaultValues = {
+  notificationTitle: '',
+  notification: '',
+  customersOf: '',
+  date: '',
+  time: '',
+};
+
 const NotificationHeader = ({ restaurantOptions }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const notificationId = searchParams.get('notificationId') ?? null;
 
   const [createForm, setCreateForm] = useState(false);
-  const [initialValues, setInitialValues] = useState({
-    notificationTitle: '',
-    notification: '',
-    customersOf: '',
-    date: '',
-    time: '',
-  });
+  const [initialValues, setInitialValues] = useState(defaultValues);
 
   const pageHeaderData = {
     title: 'Custom Notification',
@@ -43,6 +45,7 @@ const NotificationHeader = ({ restaurantOptions }: any) => {
   };
 
   const handleCloseForm = () => {
+    setInitialValues(defaultValues);
     setCreateForm(false);
     if (notificationId) {
       router.push(ROUTE_PUSH_NOTIFICATION);

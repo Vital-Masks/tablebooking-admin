@@ -37,37 +37,58 @@ export const customerFormField = [
       },
   ];
   
-  export const customerFormSchema = {
+  export const customerFormSchema = Yup.object().shape({
         firstname: Yup.string()
-          .max(255, 'Max characters 255 only allowed')
-          .required('First Name is required'),
+          .trim()
+          .min(2, 'First name must be at least 2 characters')
+          .max(50, 'First name cannot exceed 50 characters')
+          .matches(/^[a-zA-Z\s]+$/, 'First name can only contain letters and spaces')
+          .required('First name is required'),
         
         lastname: Yup.string()
-          .max(255, 'Max characters 255 only allowed')
-          .required('Last Name is required'),
+          .trim()
+          .min(2, 'Last name must be at least 2 characters')
+          .max(50, 'Last name cannot exceed 50 characters')
+          .matches(/^[a-zA-Z\s]+$/, 'Last name can only contain letters and spaces')
+          .required('Last name is required'),
       
         contactNumber: Yup.string()
-          .max(255, 'Max characters 255 only allowed')
-          .required('Contact Number is required'),
+          .trim()
+          .matches(/^[\+]?[1-9][\d]{0,15}$/, 'Please enter a valid contact number')
+          .min(10, 'Contact number must be at least 10 digits')
+          .max(15, 'Contact number cannot exceed 15 digits')
+          .required('Contact number is required'),
       
         email: Yup.string()
-          .email('Invalid email format')
-          .max(255, 'Max characters 255 only allowed')
-          .required('Email Address is required'),
+          .trim()
+          .email('Please enter a valid email address')
+          .max(255, 'Email cannot exceed 255 characters')
+          .required('Email address is required'),
       
         addressLine1: Yup.string()
-          .max(255, 'Max characters 255 only allowed')
-          .required('Address Line 1 is required'),
+          .trim()
+          .min(5, 'Address line 1 must be at least 5 characters')
+          .max(255, 'Address line 1 cannot exceed 255 characters')
+          .matches(/^[a-zA-Z0-9\s\-_.,#()]+$/, 'Address line 1 contains invalid characters')
+          .required('Address line 1 is required'),
       
         addressLine2: Yup.string()
-          .max(255, 'Max characters 255 only allowed'),
+          .trim()
+          .max(255, 'Address line 2 cannot exceed 255 characters')
+          .matches(/^[a-zA-Z0-9\s\-_.,#()]*$/, 'Address line 2 contains invalid characters'),
       
         city: Yup.string()
-          .max(255, 'Max characters 255 only allowed')
+          .trim()
+          .min(2, 'City must be at least 2 characters')
+          .max(100, 'City cannot exceed 100 characters')
+          .matches(/^[a-zA-Z\s\-_.,()]+$/, 'City can only contain letters, spaces, hyphens, underscores, and basic punctuation')
           .required('City is required'),
       
         stateOrProvince: Yup.string()
-          .max(255, 'Max characters 255 only allowed')
+          .trim()
+          .min(2, 'State/Province must be at least 2 characters')
+          .max(100, 'State/Province cannot exceed 100 characters')
+          .matches(/^[a-zA-Z\s\-_.,()]+$/, 'State/Province can only contain letters, spaces, hyphens, underscores, and basic punctuation')
           .required('State/Province is required'),
-  };
+  });
   

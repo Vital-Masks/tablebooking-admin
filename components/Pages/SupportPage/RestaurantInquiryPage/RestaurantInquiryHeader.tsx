@@ -14,20 +14,22 @@ import {
   inquiryFormSchema,
 } from "@/constants/FormsDataJs/inquiryForm";
 
+const defaultValues = {
+  firstName: "",
+  lastName: "",
+  companyName: "",
+  contactNo: "",
+  email: "",
+  status: "",
+};
+
 const RestaurantInquiryHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const inquiryId = searchParams.get("inquiryId") ?? null;
 
   const [createForm, setCreateForm] = useState(false);
-  const [initialValues, setInitialValues] = useState({
-    firstName: "",
-    lastName: "",
-    companyName: "",
-    contactNo: "",
-    email: "",
-    status: "",
-  });
+  const [initialValues, setInitialValues] = useState(defaultValues);
 
   const pageHeaderData = {
     title: "Restaurant Inquiry",
@@ -38,6 +40,7 @@ const RestaurantInquiryHeader = () => {
   };
 
   const handleCloseForm = () => {
+    setInitialValues(defaultValues);
     setCreateForm(false);
     if (inquiryId) {
       router.push(ROUTE_RESTAURANT_INQUIRY);

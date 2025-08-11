@@ -11,20 +11,22 @@ import { ROUTE_DEMO_INQUIRY } from "@/constants/routes";
 import { createInquiry, getInquiry } from "@/lib/actions/support.action";
 import { inquiryFormField, inquiryFormSchema } from "@/constants/FormsDataJs/inquiryForm";
 
+const defaultValues = {
+  firstName: "",
+  lastName: "",
+  companyName: "",
+  contactNo: "",
+  email: "",
+  status: "",
+};
+
 const InquiryHeader = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const inquiryId = searchParams.get("inquiryId") ?? null;
 
   const [createForm, setCreateForm] = useState(false);
-  const [initialValues, setInitialValues] = useState({
-    firstName: "",
-    lastName: "",
-    companyName: "",
-    contactNo: "",
-    email: "",
-    status: "",
-  });
+  const [initialValues, setInitialValues] = useState(defaultValues);
 
   const pageHeaderData = {
     title: "Inquiry",
@@ -35,6 +37,7 @@ const InquiryHeader = () => {
   };
 
   const handleCloseForm = () => {
+    setInitialValues(defaultValues);
     setCreateForm(false);
     if (inquiryId) {
       router.push(ROUTE_DEMO_INQUIRY);
@@ -62,6 +65,7 @@ const InquiryHeader = () => {
     try {
       setCreateForm(true);
       const response = await getInquiry(id);
+   
       const commonObj = returnCommonObject(initialValues, response);
       setInitialValues({
         ...commonObj,

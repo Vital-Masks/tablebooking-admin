@@ -19,18 +19,36 @@ export const reservationFormField = [
   { id: 'email', name: 'email', label: 'Email address', type: 'email' },
 ];
 
-export const reservationFormSchema = {
+export const reservationFormSchema = Yup.object().shape({
   date: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
+    .trim()
+    .min(1, 'Please select a valid date')
+    .max(50, 'Date selection cannot exceed 50 characters')
+    .required('Date is required'),
+  
   time: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
-  fullname: Yup.string().required('This field cannot be empty'),
+    .trim()
+    .min(1, 'Please select a valid time')
+    .max(20, 'Time selection cannot exceed 20 characters')
+    .required('Time is required'),
+  
+  fullname: Yup.string()
+    .trim()
+    .min(2, 'Full name must be at least 2 characters')
+    .max(100, 'Full name cannot exceed 100 characters')
+    .matches(/^[a-zA-Z\s]+$/, 'Full name can only contain letters and spaces')
+    .required('Full name is required'),
+  
   contactNumber: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
+    .trim()
+    .matches(/^[\+]?[1-9][\d]{0,15}$/, 'Please enter a valid contact number')
+    .min(10, 'Contact number must be at least 10 digits')
+    .max(15, 'Contact number cannot exceed 15 digits')
+    .required('Contact number is required'),
+  
   email: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
-};
+    .trim()
+    .email('Please enter a valid email address')
+    .max(255, 'Email cannot exceed 255 characters')
+    .required('Email address is required'),
+});

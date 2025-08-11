@@ -19,17 +19,19 @@ import {
   getAutoNotification,
 } from '@/lib/actions/pushNotification.action';
 
+const defaultValues = {
+  automativeNotificationType: '',
+  notification: '',
+  restaurantIds: '',
+};
+
 const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const notificationId = searchParams.get('notificationId') ?? null;
 
   const [createForm, setCreateForm] = useState(false);
-  const [initialValues, setInitialValues] = useState({
-    automativeNotificationType: '',
-    notification: '',
-    restaurantIds: '',
-  });
+  const [initialValues, setInitialValues] = useState(defaultValues);
 
   const pageHeaderData = {
     title: 'Automatice Notification',
@@ -40,6 +42,7 @@ const AutoNotificationHeader = ({ restaurantOptions, utilities }: any) => {
   };
 
   const handleCloseForm = () => {
+    setInitialValues(defaultValues);
     setCreateForm(false);
     if (notificationId) {
       router.push(ROUTE_AUTO_NOTIFICATION);

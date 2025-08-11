@@ -26,6 +26,7 @@ interface FormField {
   hasTime?: boolean;
   maxFiles: number;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const FormComponent = ({
@@ -179,13 +180,14 @@ const RenderField: React.FC<RenderFieldProps> = ({
             key={field.id}
             className={`${errors[field.name] && "has-error"}`}
           >
-            <label htmlFor={field.name}>{field.label}</label>
+            <label htmlFor={field.name} className={field.disabled ? "text-gray-500" : ""}>{field.label}</label>
             <Field
               name={field.name}
               component={SelectField}
               options={field.options}
               isMulti={field.isMulti}
               hasError={errors[field.name]}
+              disabled={field.disabled}
             />
             <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
           </div>
@@ -197,7 +199,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
               key={field.id}
               className={`${errors[field.name] && "has-error"}`}
             >
-              <label htmlFor={field.name}>{field.label}</label>
+              <label htmlFor={field.name} className={field.disabled ? "text-gray-500" : ""}>{field.label}</label>
 
               {/* <Field name={field.name} as="select" className="form-input">
                 <option key="0">Select</option>
@@ -219,6 +221,7 @@ const RenderField: React.FC<RenderFieldProps> = ({
               options={field.options}
               isMulti={field.isMulti}
               hasError={errors[field.name]}
+              disabled={field.disabled}
             />
 
               <div className="text-danger mt-1 text-xs">
@@ -258,13 +261,14 @@ const RenderField: React.FC<RenderFieldProps> = ({
     case "switch":
       return (
         <div key={field.id}>
-          <label htmlFor={field.name}>{field.label}</label>
-          <label className="relative h-6 w-12">
+          <label htmlFor={field.name} className={field.disabled ? "text-gray-500" : ""}>{field.label}</label>
+          <label className={`relative h-6 w-12 ${field.disabled ? "opacity-60 cursor-not-allowed" : ""}`}>
             <Field
               type="checkbox"
               className="custom_switch peer absolute z-10 h-full w-full cursor-pointer opacity-0"
               id={field.name}
               name={field.name}
+              disabled={field.disabled}
             />
             <span className="outline_checkbox block h-full rounded-full border-2 border-[#ebedf2] before:absolute before:left-1 before:bottom-1 before:h-4 before:w-4 before:rounded-full before:bg-[#ebedf2] before:transition-all before:duration-300 peer-checked:border-primary peer-checked:before:left-7 peer-checked:before:bg-primary dark:border-white-dark dark:before:bg-white-dark"></span>
           </label>
@@ -274,12 +278,13 @@ const RenderField: React.FC<RenderFieldProps> = ({
     case "textarea":
       return (
         <div key={field.id} className={`${errors[field.name] && "has-error"}`}>
-          <label htmlFor={field.name}>{field.label}</label>
+          <label htmlFor={field.name} className={field.disabled ? "text-gray-500" : ""}>{field.label}</label>
           <Field
             id={field.name}
             name={field.name}
             as="textarea"
-            className="form-textarea mb-0"
+            className={`form-textarea mb-0 ${field.disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed opacity-60" : ""}`}
+            disabled={field.disabled}
           />
           <div className="text-danger text-xs">{errors[field.name]}</div>
         </div>
@@ -334,13 +339,14 @@ const RenderField: React.FC<RenderFieldProps> = ({
               key={field.id}
               className={`${errors[field.name] && "has-error"}`}
             >
-              <label htmlFor={field.name}>{field.label}</label>
+              <label htmlFor={field.name} className={field.disabled ? "text-gray-500" : ""}>{field.label}</label>
               <Field
                 id={field.name}
                 name={field.name}
                 type={field.type}
                 placeholder={field.placeholder}
-                className="form-input"
+                className={`form-input ${field.disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed opacity-60" : ""}`}
+                disabled={field.disabled}
               />
               <div className="text-danger mt-1 text-xs">
                 {errors[field.name]}
@@ -354,13 +360,14 @@ const RenderField: React.FC<RenderFieldProps> = ({
       // Default rendering for fields without conditional logic
       return (
         <div key={field.id} className={`${errors[field.name] && "has-error"}`}>
-          <label htmlFor={field.name}>{field.label}</label>
+          <label htmlFor={field.name} className={field.disabled ? "text-gray-500" : ""}>{field.label}</label>
           <Field
             id={field.name}
             name={field.name}
             type={field.type}
             placeholder={field.placeholder}
-            className="form-input"
+            className={`form-input ${field.disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed opacity-60" : ""}`}
+            disabled={field.disabled}
           />
           <div className="text-danger mt-1 text-xs">{errors[field.name]}</div>
         </div>

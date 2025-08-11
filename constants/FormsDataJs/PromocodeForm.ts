@@ -71,18 +71,45 @@ export const promoFormField = [
 ];
 
 export const promoFormSchema = Yup.object().shape({
-  restaurantIds:Yup.array()
-      .min(1, 'At least one cuisine must be selected')
-      .required('This field cannot be empty'),
+  restaurantIds: Yup.array()
+    .of(Yup.string().required())
+    .min(1, 'Please select at least one restaurant')
+    .required('Please select restaurants'),
+  
   promocode: Yup.string()
-    .max(255, 'Max characters 255 only allowed')
-    .required('This field cannot be empty'),
+    .trim()
+    .min(3, 'Promocode must be at least 3 characters')
+    .max(20, 'Promocode cannot exceed 20 characters')
+    .matches(/^[A-Z0-9\-_]+$/, 'Promocode can only contain uppercase letters, numbers, hyphens, and underscores')
+    .required('Promocode is required'),
+  
   valuePercentage: Yup.number()
+    .typeError('Percentage must be a number')
     .positive('Percentage must be positive')
-    .required('This field cannot be empty'),
-  validFromDate: Yup.date().required('This field cannot be empty'),
-  validFromTime: Yup.string().required('This field cannot be empty'),
-  validTillDate: Yup.date().required('This field cannot be empty'),
-  validTillTime: Yup.string().required('This field cannot be empty'),
-  availabilityStatus: Yup.string().required('This field cannot be empty'),
+    .max(100, 'Percentage cannot exceed 100%')
+    .required('Percentage is required'),
+  
+  validFromDate: Yup.date()
+    .typeError('Please enter a valid date')
+    .min(new Date(), 'Valid from date must be today or in the future')
+    .required('Valid from date is required'),
+  
+  validFromTime: Yup.string()
+    .trim()
+    .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Please enter a valid time in HH:MM format')
+    .required('Valid from time is required'),
+  
+  validTillDate: Yup.date()
+    .typeError('Please enter a valid date')
+    .min(Yup.ref('validFromDate'), 'Valid till date must be after valid from date')
+    .required('Valid till date is required'),
+  
+  validTillTime: Yup.string()
+    .trim()
+    .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Please enter a valid time in HH:MM format')
+    .required('Valid till time is required'),
+  
+  availabilityStatus: Yup.string()
+    .oneOf(['Active', 'Inactive'], 'Please select a valid status')
+    .required('Availability status is required'),
 });
