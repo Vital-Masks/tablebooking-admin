@@ -81,5 +81,5 @@ export const getRestaurantInquiry = async (id: string) => {
     }
   );
 
-  return result?.[0];
+  return result;
 };
