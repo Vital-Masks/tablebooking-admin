@@ -38,7 +38,7 @@ interface ReservationFormData {
   specialRequest: string;
   tableNo: string;
   status: string;
-  promocode: string;
+  promocode?: string;
   reason?: string;
   guestUserId?: string;
 }
@@ -88,8 +88,7 @@ const INITIAL_FORM_VALUES: ReservationFormData = {
   occasion: "",
   specialRequest: "",
   tableNo: "",
-  status: "",
-  promocode: "",
+  status: ""
 };
 
 // Custom hook for managing reservation data
@@ -175,10 +174,9 @@ const useUserManagement = () => {
           password: "123456", // Consider making this configurable
         });
 
-        if(newUser._id){
+        if (newUser._id) {
           return newUser._id;
         }
-
       } catch (error) {
         console.error("Error creating user:", error);
         throw error;
@@ -201,9 +199,15 @@ const useUserManagement = () => {
             lastName: formData.lastname,
             contactNo: formData.contactNumber,
             email: formData.email,
+            password: "123456",
           };
-          const newUserId = await handleUserCreation(userData);
-          return newUserId;
+          const result: any = await createUser(userData);
+          console.log("result >>", result);
+          if (result.success) {
+            return result.result._id;
+          } else {
+            return null;
+          }
         }
       } catch (error) {
         console.error("Error in user management:", error);
@@ -375,7 +379,7 @@ const ReservationHeader = () => {
     async (values: ReservationFormData) => {
       try {
         console.log("Form values received:", values);
-        
+
         if (!values) {
           toast.error("Form data is missing. Please try again.");
           return;
@@ -383,26 +387,26 @@ const ReservationHeader = () => {
 
         // Get or create user
         const userId = await getOrCreateUser(values);
-        
+
         if (!userId) {
           toast.error("Failed to create or get user. Please try again.");
           return;
         }
 
+        console.log("userId >>", userId);
         // Add user ID to the form data
         const formDataWithUserId = {
           ...values,
           guestUserId: userId,
         };
 
-        console.log("Form data with user ID:", formDataWithUserId);
-
         // Create or update reservation
         if (reservationId) {
           await updateReservation(reservationId, formDataWithUserId);
           toast.success("Reservation updated successfully!");
         } else {
-          await createReservation(formDataWithUserId);
+          const result: any = await createReservation(formDataWithUserId);
+          console.log("result >>", result);
           toast.success("Reservation created successfully!");
         }
 
@@ -414,7 +418,9 @@ const ReservationHeader = () => {
         }
       } catch (error) {
         console.error("Form submission error:", error);
-        toast.error("Something went wrong while saving the reservation. Please try again.");
+        toast.error(
+          "Something went wrong while saving the reservation. Please try again."
+        );
         handleError(
           "An error occurred while submitting the reservation form:",
           error

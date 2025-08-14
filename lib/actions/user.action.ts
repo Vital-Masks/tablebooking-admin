@@ -43,6 +43,7 @@ export const createUser = async (data: any) => {
   if (result.status?.includes('Successfully')) {
     return {
       success: true,
+      result: result.result,
     };
   }
 
