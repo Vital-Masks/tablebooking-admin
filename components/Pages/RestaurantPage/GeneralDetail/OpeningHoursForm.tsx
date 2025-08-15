@@ -334,6 +334,8 @@ const transformApiDataToFormValues = (
 };
 
 const OpeningHoursForm = ({ params, openingTimes }: any) => {
+  console.log("Opening times:", openingTimes);
+
   const { restaurantId } = params;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -347,7 +349,7 @@ const OpeningHoursForm = ({ params, openingTimes }: any) => {
     }
   }, [openingTimes]);
 
-  console.log("Opening times:", openingTimes);
+ 
   console.log("Form values:", formValues);
 
   const handleSubmit = async (values: OpeningHours) => {
