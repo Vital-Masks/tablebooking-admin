@@ -160,6 +160,12 @@ export const userroleFormField: FormField[] = [
     placeholder: "07XXXXXXXX",
     required: true,
   },
+  {
+    id: "password",
+    name: "password",
+    label: "Password",
+    type: "text",
+  },
 ];
 
 // ============================================================================
@@ -197,6 +203,12 @@ export const userroleFormSchema = Yup.object().shape({
     .required("Gender is required"),
 
   phoneNumber: createPhoneValidation(),
+
+  password: Yup.string()
+    .trim()
+    .min(8, 'Password must be at least 8 characters')
+    .max(255, 'Password cannot exceed 255 characters')
+    .required('Password is required'),
 });
 
 // ============================================================================

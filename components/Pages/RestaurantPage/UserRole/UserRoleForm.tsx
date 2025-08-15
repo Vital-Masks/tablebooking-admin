@@ -12,6 +12,7 @@ import {
   getRestaurantUserRoleById,
   updateUserRoles,
 } from '@/lib/actions/restaurant.actions';
+import { createUser } from '@/lib/actions/user.action';
 import { handleError, returnCommonObject } from '@/lib/utils';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
@@ -32,6 +33,7 @@ const UserRoleForm = ({ params }: any) => {
       email: '',
       gender: '',
       phoneNumber: '',
+      password: '',
     }),
     []
   );
@@ -82,12 +84,21 @@ const UserRoleForm = ({ params }: any) => {
       }
       data.restaurantId = params.restaurantId;
 
+      const userData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        contactNo: data.phoneNumber,
+        email: data.email,
+        password: data.password,
+      };
+
       if (userRoleId) {
         await updateUserRoles(userRoleId, data);
         toast.custom((t) => (
           <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
         ));
       } else {
+        await createUser(userData);
         await createUserRoles(data);
         toast.custom((t) => (
           <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />

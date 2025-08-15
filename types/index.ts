@@ -146,6 +146,7 @@ declare type UserRolesParams = {
   phoneNumber: string;
   hospitalityChainId?: string;
   restaurantId?: string;
+  password: string;
 };
 
 declare type UserRole = {
