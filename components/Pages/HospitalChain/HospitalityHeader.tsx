@@ -17,6 +17,7 @@ import {
 } from "@/lib/actions/hospitalChain.action";
 import { handleError, returnCommonObject } from "@/lib/utils";
 import { ROUTE_HOSPITAL_CHAIN } from "@/constants/routes";
+import { createUser } from "@/lib/actions/user.action";
 
 const defaultValues = {
   chainName: "",
@@ -27,6 +28,7 @@ const defaultValues = {
   lastName: "",
   email: "",
   mobileNumber: "",
+  password: "",
 };
 
 const HospitalityHeader = () => {
@@ -38,7 +40,7 @@ const HospitalityHeader = () => {
   const [initialValues, setInitialValues] = useState(defaultValues);
 
   const pageHeaderData = {
-    title: "Hospitality Chains",
+    title: "Hospitality Chain",
     button1: {
       title: "Create Chain",
       action: () => setCreateForm(true),
@@ -55,10 +57,19 @@ const HospitalityHeader = () => {
 
   const handleFormSubmit = async (data: CreateHospitalChainParams) => {
     try {
+      const userData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        contactNo: data.contactNumber,
+        email: data.email,
+        password: data.password,
+      };
+
       if (hospitalId) {
         await updateHospitalChain(hospitalId, data);
         router.push(ROUTE_HOSPITAL_CHAIN);
       } else {
+        await createUser(userData);
         await createHospitalChain(data);
       }
       setCreateForm(false);
@@ -96,7 +107,7 @@ const HospitalityHeader = () => {
       <PageHeader pageHeaderData={pageHeaderData} />
       <FormSlider isOpen={createForm}>
         <FormComponent
-          title="Create Hospital"
+          title="Create Hospitality Chain"
           fields={hospitalChainFormField}
           initialValues={initialValues}
           validationSchema={hospitalChainFormSchema}

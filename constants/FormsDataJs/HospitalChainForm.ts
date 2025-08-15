@@ -1,5 +1,44 @@
 import * as Yup from 'yup';
 
+const VALIDATION_PATTERNS = {
+  NAME_REGEX: /^[a-zA-Z\s'-]+$/,
+  EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  PHONE_REGEX: /^[\d\s\-\+\(\)]+$/,
+  TABLE_NO_REGEX: /^[a-zA-Z0-9\s\-_]+$/,
+  NO_LEADING_SPACE: /^\S.*$/,
+  TIME_REGEX: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
+} as const;
+
+const VALIDATION_LIMITS = {
+  NAME: { min: 2, max: 50 },
+  EMAIL: { min: 5, max: 100 },
+  PHONE: { max: 20 },
+  TABLE_NO: { min: 1, max: 20 },
+  OCCASION: { min: 2, max: 50 },
+  SPECIAL_REQUEST: { min: 3, max: 500 },
+  PROMO_CODE: { min: 3, max: 20 },
+  REASON: { min: 3, max: 500 },
+  GUEST_SIZE: { min: 1, max: 100 },
+} as const;
+
+const createPhoneValidation = () => {
+  return Yup.string()
+    .trim()
+    .matches(
+      VALIDATION_PATTERNS.NO_LEADING_SPACE,
+      "Contact number cannot start with a space"
+    )
+    .matches(
+      VALIDATION_PATTERNS.PHONE_REGEX,
+      "Please enter a valid contact number"
+    )
+    .max(
+      VALIDATION_LIMITS.PHONE.max,
+      `Contact number cannot exceed ${VALIDATION_LIMITS.PHONE.max} characters`
+    )
+    .required("Contact number is required");
+};
+
 export const hospitalChainFormField = [
   {
     id: 'grid1',
@@ -53,6 +92,13 @@ export const hospitalChainFormField = [
       },
     ],
   },
+  {
+    id: 'grid5',
+    name: 'grid',
+    fields: [
+      { id: 'password', name: 'password', label: 'Password', type: 'text' },
+    ],
+  },
 ];
 
 export const hospitalChainFormSchema = Yup.object().shape({
@@ -78,7 +124,7 @@ export const hospitalChainFormSchema = Yup.object().shape({
   
   contactNumber: Yup.string()
     .trim()
-    .matches(/^[\+]?[1-9][\d]{0,15}$/, 'Please enter a valid contact number')
+    .matches(/^[\+]?[0-9]{10,15}$/, 'Please enter a valid contact number')
     .min(10, 'Contact number must be at least 10 digits')
     .max(15, 'Contact number cannot exceed 15 digits')
     .required('Contact number is required'),
@@ -105,8 +151,14 @@ export const hospitalChainFormSchema = Yup.object().shape({
   
   mobileNumber: Yup.string()
     .trim()
-    .matches(/^[\+]?[1-9][\d]{0,15}$/, 'Please enter a valid mobile number')
+    .matches(/^[\+]?[0-9]{10,15}$/, 'Please enter a valid contact number')
     .min(10, 'Mobile number must be at least 10 digits')
     .max(15, 'Mobile number cannot exceed 15 digits')
     .required('Mobile number is required'),
+
+  password: Yup.string()
+    .trim()
+    .min(8, 'Password must be at least 8 characters')
+    .max(255, 'Password cannot exceed 255 characters')
+    .required('Password is required'),
 });

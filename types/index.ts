@@ -61,6 +61,7 @@ declare type CreateHospitalChainParams = {
   lastName: string;
   email: string;
   mobileNumber: string;
+  password: string;
 };
 
 declare type CuisineMenu = {
