@@ -12,7 +12,7 @@ const DiningTimingPage = async ({ params }: any) => {
 
     diningArea?.map((res: any) => {
       diningAreas.push({
-        value: res.sectionName,
+        value: res._id,
         label: res.sectionName,
       });
     });

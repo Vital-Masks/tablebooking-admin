@@ -42,7 +42,7 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
     timeTo: "",
     availabilityStatus: "",
     pricePerPerson: "",
-    diningAreas: "",
+    diningAreas: [],
   };
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -59,14 +59,16 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
     if (!diningId || params.restaurantId === "c") return;
 
     try {
-      const response = await getRestaurantDiningTimingById(
+      const response: any = await getRestaurantDiningTimingById(
         params.restaurantId,
         diningId
       );
+
       
       if (response) {
         let data = returnCommonObject(initialValues, response);
         data["coverImage"] = [{photo: response.coverImage}];
+        data["diningAreas"] = [...response.diningAreaIds];
         setInitialValues(data);
         setIsFormOpen(true);
       }
