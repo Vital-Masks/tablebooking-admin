@@ -63,7 +63,6 @@ const BannerHeader = ({ restaurantOptions }: any) => {
 
   const handleFormSubmit = async (data: CreateBannerParams) => {
     const coverImage: any = data.coverImage[0];
-    console.log(">>", coverImage);
     const url = await uploadFileToS3(coverImage.preview, "banner-images");
 
     const body = {

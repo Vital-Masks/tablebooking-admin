@@ -124,7 +124,7 @@ const CuisineMenuForm = ({ params }: any) => {
     const formData = new FormData(event.target as HTMLFormElement);
     const url = formData.get("url") as string | null;
     const files: any = formData.getAll("imgFile") as File[];
-    console.log(">>", files);
+   
     if (files.length > 0) {
       const imageUrls = await uploadMultipleFilesToS3(
         files,

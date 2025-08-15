@@ -64,7 +64,7 @@ export async function uploadFileToS3(file: File, imageCategory: string): Promise
 export async function uploadMultipleFilesToS3(files: File[], imageCategory: string): Promise<string[]> {
   const uploadPromises = files.map(file => uploadFileToS3(file, imageCategory));
   const results = await Promise.all(uploadPromises);
-  console.log(">>", results);
+
   // Filter out null results (failed uploads)
   return results.filter((key): key is string => key !== null);
 }

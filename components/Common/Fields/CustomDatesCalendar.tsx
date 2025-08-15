@@ -399,11 +399,7 @@ const CustomDatesCalendar: React.FC<Props> = ({
     dateMin:  new Date().toISOString().split('T')[0],
   } as any;
 
-  // Only log when we have meaningful changes, not during initialization
-  if (isClient && computedSelectedDates.length > 0) {
-    console.log(">>", computedSelectedDates);
-    console.log(">>", calendarConfig);
-  }
+
   
   return (
     <div className="flex flex-col gap-5">
