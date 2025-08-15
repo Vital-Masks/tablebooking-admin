@@ -378,7 +378,6 @@ const ReservationHeader = () => {
   const handleFormSubmit = useCallback(
     async (values: ReservationFormData) => {
       try {
-        console.log("Form values received:", values);
 
         if (!values) {
           toast.error("Form data is missing. Please try again.");
@@ -393,10 +392,10 @@ const ReservationHeader = () => {
           return;
         }
 
-        console.log("userId >>", userId);
         // Add user ID to the form data
         const formDataWithUserId = {
           ...values,
+          reservationType: "Manual",
           guestUserId: userId,
         };
 
