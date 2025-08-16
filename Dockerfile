@@ -1,9 +1,10 @@
-FROM node:18
+FROM public.ecr.aws/docker/library/node:18
+
 
 WORKDIR /app
 COPY . .
 
-RUN npm install 
+RUN npm install --legacy-peer-deps
 RUN npm run build
 
 EXPOSE 3000
