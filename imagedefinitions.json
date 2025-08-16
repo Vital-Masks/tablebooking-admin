@@ -1,0 +1,6 @@
+[
+  {
+    "name": "vreserv-admin-container",
+    "imageUri": "276569199324.dkr.ecr.us-east-1.amazonaws.com/vreserv-admin-repo:edc5093"
+  }
+]
