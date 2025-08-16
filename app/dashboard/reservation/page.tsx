@@ -1,15 +1,25 @@
-import ReservationHeader from "@/components/Pages/ReservationPage/ReservationHeader";
-import ReservationTable from "@/components/Pages/ReservationPage/ReservationTable";
+import { redirect } from "next/navigation";
+import { getRestaurantsList } from "@/lib/actions/restaurant.actions";
 
 export const dynamic = 'force-dynamic';
 
 const ReservationPage = async () => {
-  return (
-    <main>
-      <ReservationHeader/>
-      <ReservationTable />
-    </main>
-  );
+  const restaurants = await getRestaurantsList();
+  
+  // If no restaurants exist, show an empty state
+  if (!restaurants || restaurants.length === 0) {
+    return (
+      <main>
+        <div className="p-8 text-center">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">No Restaurants Found</h2>
+          <p className="text-gray-600">Please add restaurants to view reservations.</p>
+        </div>
+      </main>
+    );
+  }
+
+  // Redirect to the first restaurant's reservation page
+  redirect(`/dashboard/reservation/${restaurants[0]._id}`);
 };
 
 export default ReservationPage;
