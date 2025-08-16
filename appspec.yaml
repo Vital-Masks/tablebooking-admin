@@ -1,0 +1,9 @@
+version: 1
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "vreserv-admin-taskDef:1"
+        LoadBalancerInfo:
+          ContainerName: "vreserv-admin-container"   
+          ContainerPort: 3000
