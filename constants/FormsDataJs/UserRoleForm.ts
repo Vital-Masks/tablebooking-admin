@@ -164,7 +164,13 @@ export const userroleFormField: FormField[] = [
     id: "password",
     name: "password",
     label: "Password",
-    type: "text",
+    type: "password",
+  },
+  {
+    id: "confirmPassword",
+    name: "confirmPassword",
+    label: "Confirm Password",
+    type: "password",
   },
 ];
 

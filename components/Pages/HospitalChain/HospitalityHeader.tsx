@@ -29,6 +29,7 @@ const defaultValues = {
   email: "",
   mobileNumber: "",
   password: "",
+  confirmPassword: "",
 };
 
 const HospitalityHeader = () => {
@@ -57,19 +58,10 @@ const HospitalityHeader = () => {
 
   const handleFormSubmit = async (data: CreateHospitalChainParams) => {
     try {
-      const userData = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        contactNo: data.contactNumber,
-        email: data.email,
-        password: data.password,
-      };
-
       if (hospitalId) {
         await updateHospitalChain(hospitalId, data);
         router.push(ROUTE_HOSPITAL_CHAIN);
       } else {
-        await createUser(userData);
         await createHospitalChain(data);
       }
       setCreateForm(false);

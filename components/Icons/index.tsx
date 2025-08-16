@@ -8,6 +8,7 @@ import IconMenuCalendar from './IconMenuCalendar';
 import IconTrash from './IconTrash';
 import IconPencil from './IconPencil';
 import IconEye from './IconEye';
+import IconEyeOff from './IconEyeOff';
 import IconFilter from './IconFilter';
 import IconUserRole from './IconUserRole';
 import IconChefHat from './IconChefHat';
@@ -32,6 +33,7 @@ export {
   IconTrash,
   IconPencil,
   IconEye,
+  IconEyeOff,
   IconFilter,
   IconUserRole,
   IconChefHat,

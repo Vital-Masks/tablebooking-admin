@@ -3,6 +3,7 @@
 import { FormEvent, useRef, useState } from "react";
 import IconLockDots from "@/components/Icons/IconLockDots";
 import IconMail from "@/components/Icons/IconMail";
+import { IconEye, IconEyeOff } from "@/components/Icons";
 import { signInCognitoUser } from "@/lib/aws-auth";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -11,6 +12,7 @@ import * as Yup from "yup";
 
 const LoginForm = () => {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const [initialValues, setInitialValues] = useState({
     email: "",
     password: "",
@@ -25,14 +27,20 @@ const LoginForm = () => {
   const formikRef = useRef<FormikProps<any>>(null);
 
   const handleSubmit = async (values: any) => {
-    const email = values.email;
-    const password = values.password;
+    try {
+      const email = values.email;
+      const password = values.password;
 
-    const userLoggedInDetails = await signInCognitoUser(email, password);
-    if (userLoggedInDetails.error) {
-      toast.error("Invalid email or password");
-    } else {
-      router.push("/");
+      const userLoggedInDetails = await signInCognitoUser(email, password);
+
+      if (userLoggedInDetails.error) {
+        toast.error("Invalid email or password");
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Invalid email or password.");
     }
   };
 
@@ -77,13 +85,24 @@ const LoginForm = () => {
                 <Field
                   id="Password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Enter Password"
-                  className="form-input ps-10 placeholder:text-white-dark"
+                  className="form-input ps-10 pe-10 placeholder:text-white-dark"
                 />
                 <span className="absolute start-4 top-1/2 -translate-y-1/2">
                   <IconLockDots fill={true} />
                 </span>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute end-4 top-1/2 -translate-y-1/2 text-white-dark hover:text-white-dark/80 focus:outline-none"
+                >
+                  {showPassword ? (
+                    <IconEyeOff className="w-4 h-4" />
+                  ) : (
+                    <IconEye className="w-4 h-4" />
+                  )}
+                </button>
               </div>
               {errors.password && touched.password && (
                 <small className="text-red-500">{errors.password}</small>

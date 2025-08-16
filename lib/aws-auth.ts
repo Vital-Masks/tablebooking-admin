@@ -16,19 +16,19 @@ const poolData = {
 const userPool = new CognitoUserPool(poolData);
 
 export async function signInCognitoUser(username: string, password: string) {
-  const authenticationDetails = new AuthenticationDetails({
-    Username: username,
-    Password: password,
-  });
-
-  const userData = {
-    Username: username,
-    Pool: userPool,
-  };
-
-  const cognitoUser = new CognitoUser(userData);
-
   try {
+    const authenticationDetails = new AuthenticationDetails({
+      Username: username,
+      Password: password,
+    });
+
+    const userData = {
+      Username: username,
+      Pool: userPool,
+    };
+
+    const cognitoUser = new CognitoUser(userData);
+
     const result = await new Promise<CognitoUserSession>((resolve, reject) => {
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: (result) => resolve(result),
@@ -45,7 +45,6 @@ export async function signInCognitoUser(username: string, password: string) {
     return { idToken, accessToken, refreshToken, user: user[0] };
   } catch (error) {
     console.log(error);
-    1;
     return { error: error };
   }
 }
