@@ -7,6 +7,7 @@ phases:
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo Logging into Amazon ECR...
       - aws ecr get-login-password | docker login --username AWS --password-stdin $REPO_URI
+
   build:
     commands:
       - echo Build started on `date`
@@ -14,6 +15,7 @@ phases:
       - docker build -t $REPO_URI:$IMAGE_TAG .
       - docker push $REPO_URI:$IMAGE_TAG
       - echo "[{\"name\":\"nextjs-container\",\"imageUri\":\"$REPO_URI:$IMAGE_TAG\"}]" > imagedefinitions.json
+
 artifacts:
   files:
-    - imagedefinitions.json
+    - "imagedefinitions.json"
