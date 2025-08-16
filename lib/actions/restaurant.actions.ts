@@ -291,7 +291,8 @@ export const updateRestaurantDiningArea = async (
 // GET RESTAURANT USER ROLES
 export const getRestaurantUserRoles = async (restaurantId: string) => {
   return await fetcher<UserRole[]>(
-    `/restaurant/${restaurantId}/userRole/getAllUserRolesForRestaurant`,
+   
+    `/restaurant/${restaurantId}/restaurentAdmin/getAllrestaurentAdminsForRestaurant`,
     {
       method: 'GET',
     }
@@ -316,7 +317,7 @@ export const createUserRoles = async (
   general: UserRolesParams
 ): Promise<UserRole | null> => {
   const newDining = await fetcher<UserRole>(
-    `/restaurant/${general?.restaurantId}/userRole`,
+    `/restaurant/${general?.restaurantId}/restaurentAdmin`,
     {
       method: 'POST',
       body: general,
