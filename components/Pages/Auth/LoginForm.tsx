@@ -25,14 +25,20 @@ const LoginForm = () => {
   const formikRef = useRef<FormikProps<any>>(null);
 
   const handleSubmit = async (values: any) => {
-    const email = values.email;
-    const password = values.password;
+    try {
+      const email = values.email;
+      const password = values.password;
 
-    const userLoggedInDetails = await signInCognitoUser(email, password);
-    if (userLoggedInDetails.error) {
-      toast.error("Invalid email or password");
-    } else {
-      router.push("/");
+      const userLoggedInDetails = await signInCognitoUser(email, password);
+
+      if (userLoggedInDetails.error) {
+        toast.error("Invalid email or password");
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Invalid email or password.");
     }
   };
 
