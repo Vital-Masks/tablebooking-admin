@@ -1,39 +1,40 @@
-'use client';
-import FormComponent from '@/components/Common/Form';
-import FormSlider from '@/components/Common/Form/FormSlider';
-import Button from '@/components/Elements/Button';
-import ToastBanner from '@/components/Elements/ToastBanner';
+"use client";
+import FormComponent from "@/components/Common/Form";
+import FormSlider from "@/components/Common/Form/FormSlider";
+import Button from "@/components/Elements/Button";
+import ToastBanner from "@/components/Elements/ToastBanner";
 import {
   userroleFormField,
   userroleFormSchema,
-} from '@/constants/FormsDataJs/UserRoleForm';
+} from "@/constants/FormsDataJs/UserRoleForm";
 import {
   createUserRoles,
   getRestaurantUserRoleById,
   updateUserRoles,
-} from '@/lib/actions/restaurant.actions';
-import { createUser } from '@/lib/actions/user.action';
-import { handleError, returnCommonObject } from '@/lib/utils';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+} from "@/lib/actions/restaurant.actions";
+import { createUser } from "@/lib/actions/user.action";
+import { handleError, returnCommonObject } from "@/lib/utils";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
-import React, { useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
+import React, { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
 const UserRoleForm = ({ params }: any) => {
   const searchParams = useSearchParams();
-  const userRoleId = searchParams.get('edit');
+  const userRoleId = searchParams.get("edit");
   const router = useRouter();
   const pathname = usePathname();
 
   const defaultInitialValues = useMemo(
     () => ({
-      firstName: '',
-      lastName: '',
-      role: '',
-      email: '',
-      gender: '',
-      phoneNumber: '',
-      password: '',
+      firstName: "",
+      lastName: "",
+      role: "",
+      email: "",
+      gender: "",
+      phoneNumber: "",
+      password: "",
+      confirmPassword: "",
     }),
     []
   );
@@ -48,7 +49,7 @@ const UserRoleForm = ({ params }: any) => {
   };
 
   const fetchUserRoles = async () => {
-    if (!userRoleId || params.restaurantId === 'c') return;
+    if (!userRoleId || params.restaurantId === "c") return;
 
     try {
       const response = await getRestaurantUserRoleById(
@@ -63,7 +64,7 @@ const UserRoleForm = ({ params }: any) => {
       }
     } catch (error) {
       handleError(
-        'An error occurred while fetching cuisine menu details:',
+        "An error occurred while fetching cuisine menu details:",
         error
       );
     }
@@ -71,7 +72,7 @@ const UserRoleForm = ({ params }: any) => {
 
   const onSubmit = async (data: UserRolesParams) => {
     try {
-      if (params.restaurantId === 'c') {
+      if (params.restaurantId === "c") {
         toast.custom((t) => (
           <ToastBanner
             t={t}
@@ -84,21 +85,12 @@ const UserRoleForm = ({ params }: any) => {
       }
       data.restaurantId = params.restaurantId;
 
-      const userData = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        contactNo: data.phoneNumber,
-        email: data.email,
-        password: data.password,
-      };
-
       if (userRoleId) {
         await updateUserRoles(userRoleId, data);
         toast.custom((t) => (
           <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
         ));
       } else {
-        await createUser(userData);
         await createUserRoles(data);
         toast.custom((t) => (
           <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
@@ -111,7 +103,7 @@ const UserRoleForm = ({ params }: any) => {
         <ToastBanner t={t} type="ERROR" message="Something went wrong!" />
       ));
       handleError(
-        'An error occurred while submitting the restaurant (general) form:',
+        "An error occurred while submitting the restaurant (general) form:",
         error
       );
     }
