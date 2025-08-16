@@ -3,7 +3,7 @@ FROM node:18
 WORKDIR /app
 COPY . .
 
-RUN npm install #updated from RUN npm ci <-- due to code build failiure
+RUN npm install 
 RUN npm run build
 
 EXPOSE 3000
