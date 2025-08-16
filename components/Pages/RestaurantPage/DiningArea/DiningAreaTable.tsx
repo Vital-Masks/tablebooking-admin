@@ -20,6 +20,9 @@ const DiningAreaTable = async ({ params }: any) => {
 
   return (
     <div>
+       <div className="p-5">
+        <h1 className="text-2xl font-bold">Dining Areas</h1>
+      </div>
       <Table columns={columns} rowData={rowData} />
     </div>
   );

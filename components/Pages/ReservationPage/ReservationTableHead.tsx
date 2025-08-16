@@ -16,7 +16,7 @@ const ReservationTableHead = ({ restaurants, restaurantId }: any) => {
 
   return (
     <>
-      <div className="flex flex-col justify-between flex-wrap gap-5 md:flex-row md:items-center bg-white p-5 shadow-lg rounded-t-lg">
+      <div className="flex flex-col justify-between flex-wrap gap-5 bg-white p-5 shadow-lg rounded-t-lg">
         <div className="flex items-center gap-5">
           <div className="dropdown">
             <button
@@ -40,8 +40,8 @@ const ReservationTableHead = ({ restaurants, restaurantId }: any) => {
           </div>
         </div>
         {currentRestaurant && (
-          <div className="text-sm text-gray-600">
-            Current: <span className="font-medium">{currentRestaurant.restaurantName}</span>
+          <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0">
+            Restaurant: <span className="font-medium">{currentRestaurant.restaurantName}</span>
           </div>
         )}
       </div>

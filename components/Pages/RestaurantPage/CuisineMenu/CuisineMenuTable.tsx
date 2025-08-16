@@ -1,4 +1,3 @@
-
 import React from "react";
 import { columns } from "./columns";
 import Table from "@/components/Common/Table";
@@ -13,7 +12,6 @@ const CuisineMenuTable = async ({ params }: any) => {
     const cuisines: any = await getRestaurantCuisineMenu(params.restaurantId);
     PDF_RES = cuisines?.findLast((res: any) => res.pdf);
 
-
     cuisines?.map((res: any) => {
       rowData.push({
         id: res._id,
@@ -26,15 +24,33 @@ const CuisineMenuTable = async ({ params }: any) => {
 
   return (
     <div className="p-5">
-      {PDF_RES ? <div className="flex w-[500px] h-[700px] overflow-x-auto border border-gray-300 rounded-md snap-x snap-mandatory touch-pan-x">
-        {PDF_RES?.pdf?.map((res: any) => {
-          return (
-            <div key={res} className="min-w-[500px] h-full flex-1 p-2 snap-start">
-              <Image src={res} alt="PDF" className="w-full h-full object-cover bg-gray-200" width={480} height={480} />
-            </div>
-          );
-        })}
-      </div> : <Table columns={columns} rowData={rowData} />}
+      {PDF_RES ? (
+        <div className="flex w-[500px] h-[700px] overflow-x-auto border border-gray-300 rounded-md snap-x snap-mandatory touch-pan-x">
+          {PDF_RES?.pdf?.map((res: any) => {
+            return (
+              <div
+                key={res}
+                className="min-w-[500px] h-full flex-1 p-2 snap-start"
+              >
+                <Image
+                  src={res}
+                  alt="PDF"
+                  className="w-full h-full object-cover bg-gray-200"
+                  width={480}
+                  height={480}
+                />
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div>
+          <div className="p-5">
+            <h1 className="text-2xl font-bold">Cuisine Menu</h1>
+          </div>
+          <Table columns={columns} rowData={rowData} />
+        </div>
+      )}
     </div>
   );
 };
