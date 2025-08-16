@@ -33,7 +33,7 @@ const Table = ({
 
   return (
     <div className="panel h-full flex-1">
-      {title && <p className="mb-2 font-semibold">{title}</p>}
+      {/* {title && <p className="mb-2 font-semibold">{title}</p>}
       <div className="flex flex-col justify-between flex-wrap gap-5 mb-5 md:flex-row md:items-center">
         <div className="flex gap-5">
           <div className="dropdown">
@@ -69,7 +69,7 @@ const Table = ({
             </Button>
           </div>
         )}
-      </div>
+      </div> */}
       <div className="datatables h-full">
         <DataTable
           noRecordsText={

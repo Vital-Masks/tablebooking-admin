@@ -8,11 +8,13 @@ const Modal = ({
   open,
   setOpen,
   title,
+  className,
   children,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   title: string;
+  className?: string;
   children: React.ReactNode;
 }) => {
   return (
@@ -34,7 +36,7 @@ const Modal = ({
           className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto"
         >
           <div className="flex items-start justify-center min-h-screen px-4">
-            <Dialog.Panel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-sm my-8 text-black dark:text-white-dark animate__animated animate__fadeInUp">
+            <Dialog.Panel className={`panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-sm my-8 text-black dark:text-white-dark animate__animated animate__fadeInUp ${className}`}>
               <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
                 <h5 className="font-bold text-lg">{title}</h5>
                 <button

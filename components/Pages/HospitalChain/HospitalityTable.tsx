@@ -1,6 +1,6 @@
-import Table from '@/components/Common/Table';
-import { columns } from './columns';
-import { getHospitalChainList } from '@/lib/actions/hospitalChain.action';
+import Table from "@/components/Common/Table";
+import { columns } from "./columns";
+import { getHospitalChainList } from "@/lib/actions/hospitalChain.action";
 
 const HospitalityTable = async () => {
   const rowData: HospitalChain[] = [];
@@ -18,7 +18,11 @@ const HospitalityTable = async () => {
     });
   });
 
-  return <Table columns={columns} rowData={rowData} />;
+  return (
+    <div>
+      <Table columns={columns} rowData={rowData} />
+    </div>
+  );
 };
 
 export default HospitalityTable;

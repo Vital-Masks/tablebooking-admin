@@ -9,7 +9,7 @@ const DiningTimingPage = async ({ params }: any) => {
   const diningAreas: any[] = [];
   if (params.restaurantId !== 'c') {
     const diningArea = await getRestaurantDiningAreas(params.restaurantId);
-
+ 
     diningArea?.map((res: any) => {
       diningAreas.push({
         value: res._id,

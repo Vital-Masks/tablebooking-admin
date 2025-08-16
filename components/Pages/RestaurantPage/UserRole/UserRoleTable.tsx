@@ -23,6 +23,9 @@ const UserRoleTable = async ({ params }: any) => {
 
   return (
     <div>
+      <div className="p-5">
+        <h1 className="text-2xl font-bold">User Roles</h1>
+      </div>
       <Table columns={columns} rowData={rowData} />
     </div>
   );

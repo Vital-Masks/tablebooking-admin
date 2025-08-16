@@ -4,8 +4,8 @@ import DiningAreaTable from '@/components/Pages/RestaurantPage/DiningArea/Dining
 const DiningAreasPage = ({ params }: any) => {
   return (
     <div>
-      <DiningAreaTable params={params} />
       <DiningAreaForm params={params}/>
+      <DiningAreaTable params={params} />
     </div>
   );
 };
