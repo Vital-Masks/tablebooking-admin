@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  tablebooking-admin:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      # NextAuth Configuration
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=your-nextauth-secret-key-here
+      - AUTH_SECRET=your-auth-secret-key-here
+      
+      # API Configuration - Use host.docker.internal to access host machine
+      - API_ENDPOINT=http://host.docker.internal:3000/api
+      
+      # AWS Configuration (replace with your actual values)
+      - AWS_ACCESS_KEY_ID=your-aws-access-key
+      - AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+      - AWS_REGION=us-east-1
+      - AWS_IMAGE_BUCKET=your-image-bucket-name
+      
+      # Application Configuration
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    volumes:
+      - ./.env:/app/.env:ro
