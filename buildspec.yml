@@ -16,8 +16,8 @@ phases:
       - docker build -t $REPO_URI:$IMAGE_TAG .
       - echo "Pushing Docker image to ECR..."
       - docker push $REPO_URI:$IMAGE_TAG
-      - echo "Generating imagedefinitions.json..."
-      - printf '[{"name":"nextjs-container","imageUri":"%s"}]' $REPO_URI:$IMAGE_TAG > imagedefinitions.json
+      - echo "Generating imagedefinitions.json with correct container name..."
+      - printf '[{"name":"vreserv-admin-container","imageUri":"%s"}]' $REPO_URI:$IMAGE_TAG > imagedefinitions.json
       - echo "Contents of imagedefinitions.json:"
       - cat imagedefinitions.json
 
