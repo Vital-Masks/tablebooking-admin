@@ -22,7 +22,7 @@ import { createUser, getUserByEmail } from "@/lib/actions/user.action";
 import { IconEye, IconXCircle } from "@/components/Icons";
 import toast from "react-hot-toast";
 
-// Types
+// Typess
 interface ReservationFormData {
   date: string;
   time: string;
