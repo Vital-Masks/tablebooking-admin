@@ -32,10 +32,14 @@ const LoginForm = () => {
       const password = values.password;
 
       const userLoggedInDetails = await signInCognitoUser(email, password);
-
+ 
       if (userLoggedInDetails.error) {
         toast.error("Invalid email or password");
       } else {
+        // Store access token in localStorage for client-side access
+        if ('accessToken' in userLoggedInDetails && userLoggedInDetails.accessToken) {
+          localStorage.setItem('accessToken', userLoggedInDetails.accessToken);
+        }
         router.push("/");
       }
     } catch (error) {

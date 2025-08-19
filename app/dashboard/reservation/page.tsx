@@ -1,7 +1,22 @@
+import type { Metadata } from 'next';
 import { redirect } from "next/navigation";
 import { getRestaurantsList } from "@/lib/actions/restaurant.actions";
 
 export const dynamic = 'force-dynamic';
+
+// Dynamic metadata generation
+export const generateMetadata = async (): Promise<Metadata> => {
+  return {
+    title: 'Reservations | VReserve Admin',
+    description: 'View and manage restaurant reservations, booking details, and customer information in VReserve Admin',
+    keywords: ['reservations', 'bookings', 'restaurant reservations', 'customer bookings', 'vreserve', 'admin'],
+    openGraph: {
+      title: 'Reservations | VReserve Admin',
+      description: 'View and manage restaurant reservations, booking details, and customer information in VReserve Admin',
+      type: 'website',
+    },
+  };
+};
 
 const ReservationPage = async () => {
   const restaurants = await getRestaurantsList();

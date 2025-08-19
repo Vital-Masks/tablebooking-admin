@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { IconLogout } from "../Icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ProfileSkeleton from "../Skeleton/ProfileSkeleton";
 
 interface User {
   firstName: string;
@@ -68,19 +69,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-3">
-          <span className="flex justify-center items-center w-10 h-10 text-center rounded-lg object-cover bg-indigo-500 text-lg text-white">
-            VR
-          </span>
-          <div className="truncate">
-            <h4 className="text-base">Loading...</h4>
-            <p className="text-black/60">Loading...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   const displayName = user ? `${user.firstName}` : 'VReserve';

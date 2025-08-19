@@ -15,6 +15,11 @@ export const tabs = [
     description: 'Update your general details here',
   },
   {
+    id: restaurantTabs.openHours,
+    name: 'Open Hours',
+    description: 'Update your Open Hours details here',
+  },
+  {
     id: restaurantTabs.cuisineMenu,
     name: 'Menu Items',
     description: 'Update your Cuisine and Menu details here',
@@ -33,11 +38,6 @@ export const tabs = [
     id: restaurantTabs.userRoles,
     name: 'User Roles',
     description: 'Update your User details here',
-  },
-  {
-    id: restaurantTabs.openHours,
-    name: 'Open Hours',
-    description: 'Update your Open Hours details here',
   },
   {
     id: restaurantTabs.subscriptions,

@@ -42,7 +42,7 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
     timeTo: "",
     availabilityStatus: "",
     pricePerPerson: "",
-    diningAreas: [],
+    diningAreaIds: [],
   };
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -63,6 +63,8 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
         params.restaurantId,
         diningId
       );
+
+      console.log(">>", response);
 
       
       if (response) {
@@ -94,9 +96,10 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
         return;
       }
 
+      if(data?.coverImage){
       // Handle file uploads
       const images = await Promise.all(
-        data.coverImage.map(async (img: any) => {
+        data?.coverImage?.map(async (img: any) => {
           if (img.preview) {
             const url = await uploadFileToS3(
               img.preview,
@@ -107,10 +110,8 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
           return img;
         })
       );
-
       // Filter out failed uploads
       const validImages = images.filter(img => img.photo !== null);
-      
       if (validImages.length === 0) {
         toast.custom((t) => (
           <ToastBanner 
@@ -122,8 +123,10 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
         ));
         return;
       }
-
+  
       data.coverImage = validImages;
+    }
+      
       data.restaurantId = params.restaurantId;
 
       let result;
@@ -183,7 +186,7 @@ const DiningTimingForm = ({ params, diningAreas, utilities }: any) => {
 
   useEffect(() => {
     if (diningAreas.length > 0) {
-      findField(diningFormField, "diningAreas")["options"] = diningAreas;
+      findField(diningFormField, "diningAreaIds")["options"] = diningAreas;
     }
   }, [diningAreas]);
 

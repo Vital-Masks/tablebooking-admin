@@ -25,9 +25,9 @@ export const columns = [
     accessor: "action",
     title: "",
     titleClassName: "!text-center",
-    render: ({ id }: any) => (
+    render: ({ id, restaurantId }: any) => (
       <div className="flex items-center gap-4 mx-auto w-max">
-          <Link href={`${ROUTE_RESERVATIONS}?reservationId=${id}`}>
+          <Link href={`${ROUTE_RESERVATIONS}/${restaurantId}?reservationId=${id}`}>
             <IconEye />
           </Link>
       </div>

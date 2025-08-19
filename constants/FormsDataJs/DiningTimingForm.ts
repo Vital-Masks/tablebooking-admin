@@ -189,8 +189,8 @@ export const diningFormFields: FormField[] = [
     ],
   },
   {
-    id: "diningAreas",
-    name: "diningAreas",
+    id: "diningAreaIds",
+    name: "diningAreaIds",
     label: "Dining Areas",
     type: "select",
     placeholder: "Select dining areas",
@@ -267,11 +267,11 @@ export const diningFormSchema = Yup.object().shape({
     .required("Price per person is required"),
 
   availabilityStatus: Yup.boolean().required("Availability status is required"),
-  diningAreas: Yup.array()
+  diningAreaIds: Yup.array()
     .min(1, "Please select at least one dining area")
     .required("Dining areas are required"),
 
-  coverImage: createFileValidation(),
+  // coverImage: createFileValidation(),
 });
 
 // ============================================================================

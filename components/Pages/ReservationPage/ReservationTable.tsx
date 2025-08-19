@@ -23,6 +23,7 @@ const ReservationTable = async ({ restaurants, restaurantId }: any) => {
     reservations?.map((res: any) => {
       rowData.push({
         id: res._id,
+        restaurantId: res.restaurantId?._id,
         fullname:
           `${res.guestUserId?.firstName || ""} ${res.guestUserId?.lastName || ""}`.trim(),
         contact: res.guestUserId?.contactNo || "",

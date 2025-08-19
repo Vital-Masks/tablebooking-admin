@@ -1,17 +1,17 @@
-import { revalidatePath } from 'next/cache';
 import { getSession } from '../session';
+import { revalidatePath } from 'next/cache';
 
 const ENDPOINT = process.env.API_ENDPOINT;
 
-export interface FetcherOptions extends RequestInit {
+export interface AuthenticatedFetcherOptions extends RequestInit {
   headers?: HeadersInit;
   body?: any;
   requireAuth?: boolean; // Set to false if the endpoint doesn't require authentication
 }
 
-export async function fetcher<T>(
+export async function authenticatedFetcher<T>(
   url: string,
-  options: FetcherOptions = {}
+  options: AuthenticatedFetcherOptions = {}
 ): Promise<T | null> {
   try {
     const { method = 'GET', body, requireAuth = true, ...restOptions } = options;
@@ -63,7 +63,7 @@ export async function fetcher<T>(
     const { result } = await response.json();
     return await result;
   } catch (error) {
-    console.error('🚨 Fetch error:', error);
+    console.error('🚨 Authenticated fetch error:', error);
     return null;
   }
 }
@@ -71,9 +71,9 @@ export async function fetcher<T>(
 // Helper function for public endpoints (no auth required)
 export async function publicFetcher<T>(
   url: string,
-  options: FetcherOptions = {}
+  options: AuthenticatedFetcherOptions = {}
 ): Promise<T | null> {
-  return fetcher<T>(url, { ...options, requireAuth: false });
+  return authenticatedFetcher<T>(url, { ...options, requireAuth: false });
 }
 
 export function revalidate(route: string) {

@@ -5,7 +5,6 @@ import {
   AuthenticationDetails,
   CognitoUserSession,
 } from "amazon-cognito-identity-js";
-import { getUserByEmail } from "./actions/user.action";
 import { createSession } from "./session";
 
 const poolData = {
@@ -36,13 +35,20 @@ export async function signInCognitoUser(username: string, password: string) {
       });
     });
 
-    const idToken = result.getIdToken().getJwtToken();
     const accessToken = result.getAccessToken().getJwtToken();
     const refreshToken = result.getRefreshToken().getToken();
-    const user = await getUserByEmail(username);
-    await createSession({ accessToken, refreshToken, user: user[0] });
 
-    return { idToken, accessToken, refreshToken, user: user[0] };
+    // Create session with user data from token
+    await createSession({
+      accessToken,
+      refreshToken,
+    });
+
+    return {
+      success: true,
+      accessToken,
+      refreshToken,
+    };
   } catch (error) {
     console.log(error);
     return { error: error };
