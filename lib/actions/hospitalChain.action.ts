@@ -1,8 +1,8 @@
-'use server';
+"use server";
 
-import { handleError, parseStringify } from '../utils';
-import { ROUTE_HOSPITAL_CHAIN } from '@/constants/routes';
-import { fetcher, revalidate } from './fetcher';
+import { handleError, parseStringify } from "../utils";
+import { ROUTE_HOSPITAL_CHAIN } from "@/constants/routes";
+import { fetcher, revalidate } from "./fetcher";
 
 const ENDPOINT = process.env.API_ENDPOINT;
 
@@ -11,17 +11,21 @@ export const getHospitalChainList = async (): Promise<
   HospitalChain[] | null
 > => {
   try {
-    const response = await fetch(
-      `${ENDPOINT}/hospitalityChain/getAllHospitalityChains`
+    const response: any = await fetcher<HospitalChain[]>(
+      `/hospitalityChain/getAllHospitalityChains`,
+      {
+        method: "GET",
+      }
     );
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
+
+    if (response?.error) {
+      throw new Error(`Failed to fetch: ${response.error}`);
     }
-    const { result }: { result: HospitalChain[] } = await response.json();
-    return result;
+
+    return response;
   } catch (error) {
     handleError(
-      'An error occurred while retrieving the hospital chains',
+      "An error occurred while retrieving the hospital chains",
       error
     );
     return null;
@@ -32,8 +36,8 @@ export const getHospitalChainList = async (): Promise<
 export const createHospitalChain = async (
   general: CreateHospitalChainParams
 ): Promise<HospitalChain | null> => {
-  const newRestaurant = await fetcher<HospitalChain>('/hospitalityChain', {
-    method: 'POST',
+  const newRestaurant = await fetcher<HospitalChain>("/hospitalityChain", {
+    method: "POST",
     body: general,
   });
 
@@ -47,7 +51,7 @@ export const createHospitalChain = async (
 // GET HOSPITAL CHAIN
 export const getHospitalChain = async (id: string) => {
   return await fetcher<HospitalChain>(`/hospitalityChain/${id}`, {
-    method: 'GET',
+    method: "GET",
   });
 };
 
@@ -59,7 +63,7 @@ export const updateHospitalChain = async (
   const newRestaurant = await fetcher<HospitalChain>(
     `/hospitalityChain/${id}`,
     {
-      method: 'PUT',
+      method: "PUT",
       body: data,
     }
   );
