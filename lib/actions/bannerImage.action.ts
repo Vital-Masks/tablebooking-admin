@@ -1,14 +1,8 @@
 "use server";
 
 import { handleError, parseStringify } from "../utils";
-import {
-  ROUTE_AUTO_NOTIFICATION,
-  ROUTE_BANNER_IMAGE,
-  ROUTE_PROMO_CODE
-} from "@/constants/routes";
+import { ROUTE_BANNER_IMAGE } from "@/constants/routes";
 import { fetcher, revalidate } from "./fetcher";
-
-const ENDPOINT = process.env.API_ENDPOINT;
 
 export const bannerImageAction = async (body: any, id?: string) => {
   const newBanner = await fetcher(`/bannerImages${id ? "/" : ""}${id ?? ""}`, {
@@ -26,12 +20,13 @@ export const bannerImageAction = async (body: any, id?: string) => {
 // GET ALL Notification List
 export const getBannerImageList = async () => {
   try {
-    const response = await fetch(`${ENDPOINT}/bannerImages/getAllBannerImages`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
+    const response: any = await fetcher(`/bannerImages/getAllBannerImages`);
+
+    if (response.error) {
+      throw new Error(`Failed to fetch: ${response.error}`);
     }
-    const { result } = await response.json();
-    return result;
+
+    return response;
   } catch (error) {
     handleError(
       "An error occurred while retrieving the hospital chains",
@@ -43,12 +38,9 @@ export const getBannerImageList = async () => {
 
 // GET NOTIFICATION
 export const getBannerImage = async (id: string) => {
-  const result: any = await fetcher(
-    `/bannerImages/${id}`,
-    {
-      method: "GET",
-    }
-  );
+  const result: any = await fetcher(`/bannerImages/${id}`, {
+    method: "GET",
+  });
 
   return result;
 };

@@ -4,21 +4,18 @@ import { ROUTE_RESTAURANTS } from '@/constants/routes';
 import { handleError, parseStringify } from '../utils';
 import { fetcher, revalidate } from './fetcher';
 
-const ENDPOINT = process.env.API_ENDPOINT;
-
 // GET ALL RESERVATIONS
 export const getReservationList = async (
   restaurantId: string
 ): Promise<Reservation[] | null> => {
-  try {
-    const response = await fetch(
-      `${ENDPOINT}/restaurant/${restaurantId}/reservation/getAllForRestaurant`
+  try { 
+    const response: any = await fetcher(
+      `/restaurant/${restaurantId}/reservation/getAllForRestaurant`
     );
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
+    if (response.error) {
+      throw new Error(`Failed to fetch: ${response.error}`);
     }
-    const { result }: { result: Reservation[] } = await response.json();
-    return result;
+    return response;
   } catch (error) {
     handleError(
       'An error occurred while retrieving the hospital chains',

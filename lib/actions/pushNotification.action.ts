@@ -34,12 +34,11 @@ export const getNotificationList = async (): Promise<
   NotificationType[] | null
 > => {
   try {
-    const response = await fetch(`${ENDPOINT}/notification/getAll/custom`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
+    const response: any = await fetcher(`/notification/getAll/custom`);
+    if (response.error) {
+      throw new Error(`Failed to fetch: ${response.error}`);
     }
-    const { result }: { result: NotificationType[] } = await response.json();
-    return result;
+    return response;
   } catch (error) {
     handleError(
       "An error occurred while retrieving the hospital chains",
@@ -66,13 +65,11 @@ export const getAutoNotificationList = async (): Promise<
   AutoNotificationType[] | null
 > => {
   try {
-    const response = await fetch(`${ENDPOINT}/notification/getAll/automative`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
+    const response: any = await fetcher(`/notification/getAll/automative`);
+    if (response.error) {
+      throw new Error(`Failed to fetch: ${response.error}`);
     }
-    const { result }: { result: AutoNotificationType[] } =
-      await response.json();
-    return result;
+    return response;
   } catch (error) {
     handleError(
       "An error occurred while retrieving the hospital chains",
@@ -117,12 +114,11 @@ export const getAutoNotification = async (id: string) => {
 // GET ALL Notification List
 export const getPromoList = async (): Promise<any[] | null> => {
   try {
-    const response = await fetch(`${ENDPOINT}/promocodes/getAllPromocodes`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
+    const response: any = await fetcher(`/promocodes/getAllPromocodes`);
+    if (response.error) {
+      throw new Error(`Failed to fetch: ${response.error}`);
     }
-    const { result }: { result: any[] } = await response.json();
-    return result;
+    return response;
   } catch (error) {
     handleError(
       "An error occurred while retrieving the hospital chains",
