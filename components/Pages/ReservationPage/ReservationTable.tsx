@@ -5,10 +5,14 @@ import Table from "@/components/Common/Table";
 import { columns } from "./columns";
 import { getReservationList } from "@/lib/actions/reservation.action";
 import ReservationTableHead from "./ReservationTableHead";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import { Fragment } from "react";
 
 const ReservationTable = ({ restaurants, restaurantId }: any) => {
   const [rowData, setRowData] = useState<Reservation[]>([]);
   const [initialData, setInitialData] = useState<Reservation[]>([]);
+  const [systemReservations, setSystemReservations] = useState<Reservation[]>([]);
+  const [manualReservations, setManualReservations] = useState<Reservation[]>([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,6 +24,8 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
     } else {
       setRowData([]);
       setInitialData([]);
+      setSystemReservations([]);
+      setManualReservations([]);
       setError(null);
     }
   }, [restaurantId]);
@@ -28,6 +34,7 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
   useEffect(() => {
     if (search.trim() === "") {
       setRowData(initialData);
+      filterReservationsByType(initialData);
     } else {
       const filteredData = initialData.filter((reservation) =>
         Object.values(reservation).some((value) =>
@@ -35,34 +42,46 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
         )
       );
       setRowData(filteredData);
+      filterReservationsByType(filteredData);
     }
   }, [search, initialData]);
+
+  // Filter reservations by type
+  const filterReservationsByType = (reservations: Reservation[]) => {
+    const system = reservations.filter(res => res.reservationType?.toLowerCase() === 'system');
+    const manual = reservations.filter(res => res.reservationType?.toLowerCase() === 'manual');
+    setSystemReservations(system);
+    setManualReservations(manual);
+  };
 
   const fetchReservations = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const reservations = await getReservationList(restaurantId);
-      const formattedData: Reservation[] = reservations?.map((res: any) => ({
-        id: res._id,
-        restaurantId: res.restaurantId?._id,
-        fullname:
-          `${res.guestUserId?.firstName || ""} ${res.guestUserId?.lastName || ""}`.trim(),
-        contact: res.guestUserId?.contactNo || "",
-        restaurant: res.restaurantId?.restaurantName || "",
-        reservedfor: res.dining?.diningName || "",
-        date: res.date || "",
-        time: res.time || "",
-        pax: res.guestSize || "",
-        diningarea: res.diningArea?.sectionName || "",
-        status: res.status || "",
-        table: res.tableNo || "",
-        createdOn: res.created_at || "",
-      })) || [];
+      const formattedData: Reservation[] =
+        reservations?.map((res: any) => ({
+          id: res._id,
+          restaurantId: res.restaurantId?._id,
+          fullname:
+            `${res.guestUserId?.firstName || ""} ${res.guestUserId?.lastName || ""}`.trim(),
+          contact: res.guestUserId?.contactNo || "",
+          restaurant: res.restaurantId?.restaurantName || "",
+          reservedfor: res.dining?.diningName || "",
+          date: res.date || "",
+          time: res.time || "",
+          pax: res.guestSize || "",
+          diningarea: res.diningArea?.sectionName || "",
+          status: res.status || "",
+          table: res.tableNo || "",
+          createdOn: res.created_at || "",
+          reservationType: res.reservationType || "",
+        })) || [];
 
       setInitialData(formattedData);
       setRowData(formattedData);
+      filterReservationsByType(formattedData);
     } catch (error) {
       console.error("Error fetching reservations:", error);
       setError("Error loading reservations. Please try again.");
@@ -90,15 +109,17 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
   if (!restaurantId) {
     return (
       <div>
-        <ReservationTableHead 
-          restaurants={restaurants} 
-          restaurantId={restaurantId} 
+        <ReservationTableHead
+          restaurants={restaurants}
+          restaurantId={restaurantId}
           onFilterChange={handleFilterChange}
           onSearchChange={handleSearchChange}
           onResetToInitial={handleResetToInitial}
         />
         <div className="p-8 text-center">
-          <p className="text-gray-600">Please select a restaurant to view reservations.</p>
+          <p className="text-gray-600">
+            Please select a restaurant to view reservations.
+          </p>
         </div>
       </div>
     );
@@ -108,9 +129,9 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
   if (error) {
     return (
       <div>
-        <ReservationTableHead 
-          restaurants={restaurants} 
-          restaurantId={restaurantId} 
+        <ReservationTableHead
+          restaurants={restaurants}
+          restaurantId={restaurantId}
           onFilterChange={handleFilterChange}
           onSearchChange={handleSearchChange}
           onResetToInitial={handleResetToInitial}
@@ -126,9 +147,9 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
   if (isLoading) {
     return (
       <div>
-        <ReservationTableHead 
-          restaurants={restaurants} 
-          restaurantId={restaurantId} 
+        <ReservationTableHead
+          restaurants={restaurants}
+          restaurantId={restaurantId}
           onFilterChange={handleFilterChange}
           onSearchChange={handleSearchChange}
           onResetToInitial={handleResetToInitial}
@@ -142,14 +163,47 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
 
   return (
     <div>
-      <ReservationTableHead 
-        restaurants={restaurants} 
-        restaurantId={restaurantId} 
+      <ReservationTableHead
+        restaurants={restaurants}
+        restaurantId={restaurantId}
         onFilterChange={handleFilterChange}
         onSearchChange={handleSearchChange}
         onResetToInitial={handleResetToInitial}
       />
-      <Table columns={columns} rowData={rowData} />
+      <TabGroup>
+        <TabList className="flex flex-wrap bg-white">
+          <Tab as={Fragment}>
+            {({ selected }) => (
+              <button
+                className={`${selected ? "!border-secondary text-secondary !outline-none" : ""} flex items-center border-t-2 border-transparent bg-white p-7 py-3 before:inline-block hover:border-secondary hover:text-secondary`}
+              >
+                System
+              </button>
+            )}
+          </Tab>
+          <Tab as={Fragment}>
+            {({ selected }) => (
+              <button
+                className={`${selected ? "!border-secondary text-secondary !outline-none" : ""} flex items-center border-t-2 border-transparent bg-white p-7 py-3 before:inline-block hover:border-secondary hover:text-secondary`}
+              >
+                Manual
+              </button>
+            )}
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <div className="active">
+              <Table columns={columns} rowData={systemReservations} />
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="active">
+              <Table columns={columns} rowData={manualReservations} />
+            </div>
+          </TabPanel>
+        </TabPanels>
+      </TabGroup>
     </div>
   );
 };

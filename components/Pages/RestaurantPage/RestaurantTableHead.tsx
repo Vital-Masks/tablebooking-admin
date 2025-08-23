@@ -376,7 +376,7 @@ const RestaurantTableHead = ({
                           />
                           <label
                             htmlFor={`${group.title}-${item.value}`}
-                            className="ml-3 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 transition-colors duration-200"
+                            className="ml-3 mb-0 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 transition-colors duration-200"
                           >
                             {item.title}
                           </label>

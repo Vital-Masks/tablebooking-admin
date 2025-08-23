@@ -173,6 +173,7 @@ declare type Reservation = {
   status: string;
   table: string;
   createdOn: string;
+  reservationType?: string;
   guestUserId?: any;
   restaurantId?: any;
   dining?: any;
