@@ -9,6 +9,21 @@ export const getRestaurantsList = async (): Promise<Restaurant[] | null> => {
   return await fetcher<Restaurant[]>('/restaurant/getAllRestaurants');
 };
 
+// FILTER RESTAURANTS
+export const filterRestaurants = async (filterData: {
+  dateType?: string;
+  startDate?: string;
+  endDate?: string;
+  restaurantType?: string[];
+  availabilityStatus?: string[];
+  subscription?: string[];
+}): Promise<Restaurant[] | null> => {
+  return await fetcher<Restaurant[]>('/adminFilter/restaurantFilter', {
+    method: 'POST',
+    body: filterData,
+  });
+};
+
 // ********************* //
 // ** GENERAL DETAILS ** //
 // ********************* //
