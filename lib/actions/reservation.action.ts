@@ -1,27 +1,24 @@
-'use server';
+"use server";
 
-import { ROUTE_RESTAURANTS } from '@/constants/routes';
-import { handleError, parseStringify } from '../utils';
-import { fetcher, revalidate } from './fetcher';
-
-const ENDPOINT = process.env.API_ENDPOINT;
+import { ROUTE_RESTAURANTS } from "@/constants/routes";
+import { handleError, parseStringify } from "../utils";
+import { fetcher, revalidate } from "./fetcher";
 
 // GET ALL RESERVATIONS
 export const getReservationList = async (
   restaurantId: string
 ): Promise<Reservation[] | null> => {
   try {
-    const response = await fetch(
-      `${ENDPOINT}/restaurant/${restaurantId}/reservation/getAllForRestaurant`
+    const response: any = await fetcher(
+      `/restaurant/${restaurantId}/reservation/getAllForRestaurant`
     );
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
+    if (response.error) {
+      throw new Error(`Failed to fetch: ${response.error}`);
     }
-    const { result }: { result: Reservation[] } = await response.json();
-    return result;
+    return response;
   } catch (error) {
     handleError(
-      'An error occurred while retrieving the hospital chains',
+      "An error occurred while retrieving the hospital chains",
       error
     );
     return null;
@@ -30,7 +27,7 @@ export const getReservationList = async (
 
 export const getReservation = async (id: string) => {
   return await fetcher<Reservation>(`/reservation/${id}`, {
-    method: 'GET',
+    method: "GET",
   });
 };
 
@@ -41,7 +38,7 @@ export const createReservation = async (
   const newReservation = await fetcher<Reservation>(
     `/restaurant/${body.restaurant}/reservation`,
     {
-      method: 'POST',
+      method: "POST",
       body: body,
     }
   );
@@ -61,7 +58,7 @@ export const updateReservation = async (
   const newReservation = await fetcher<Reservation>(
     `/restaurant/${body.restaurant}/reservation/${id}`,
     {
-      method: 'PUT',
+      method: "PUT",
       body: body,
     }
   );
@@ -71,4 +68,18 @@ export const updateReservation = async (
     return parseStringify(newReservation);
   }
   return null;
+};
+
+// FILTER RESTAURANTS
+export const filterReservations = async (filterData: {
+  dateType?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: string[];
+  table?: string[];
+}): Promise<Restaurant[] | null> => {
+  return await fetcher<Restaurant[]>("/adminFilter/reservationFilter", {
+    method: "POST",
+    body: filterData,
+  });
 };

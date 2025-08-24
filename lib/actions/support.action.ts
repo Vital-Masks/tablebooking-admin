@@ -9,12 +9,11 @@ const ENDPOINT = process.env.API_ENDPOINT;
 // GET ALL AUTOMATIC NOTIFICATION LIST
 export const getInquiryList = async (): Promise<InquiryType[] | null> => {
   try {
-    const response = await fetch(`${ENDPOINT}/demoInquiry/getAll`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
+    const response: any = await fetcher(`/demoInquiry/getAll`);
+    if (response.error) {
+      throw new Error(`Failed to fetch: ${response.error}`);
     }
-    const { result }: { result: InquiryType[] } = await response.json();
-    return result;
+    return response;
   } catch (error) {
     handleError("An error occurred while retrieving the inquiry list", error);
     return null;
@@ -59,14 +58,13 @@ export const getRestaurantInquiryList = async (): Promise<
   RestaurantInquiryType[] | null
 > => {
   try {
-    const response = await fetch(
-      `${ENDPOINT}/restaurantInquiry/getAllRestaurantInquirys`
+    const response: any = await fetcher(
+      `/restaurantInquiry/getAllRestaurantInquirys`
     );
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
+    if (response.error) {
+      throw new Error(`Failed to fetch: ${response.error}`);
     }
-    const { result }: { result: RestaurantInquiryType[] } = await response.json();
-    return result;
+    return response;
   } catch (error) {
     handleError("An error occurred while retrieving the inquiry list", error);
     return null;

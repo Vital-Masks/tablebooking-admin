@@ -21,12 +21,14 @@ export async function fetcher<T>(
     if (requireAuth) {
       const session = await getSession();
       accessToken = session?.accessToken;
-      
+
       if (!accessToken) {
         console.error('🚨 No access token found in session');
         return null;
       }
     }
+
+
 
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
@@ -35,7 +37,7 @@ export async function fetcher<T>(
 
     // Add bearer token if available
     if (accessToken) {
-      headers['Authorization'] = `Bearer ${accessToken}`;
+      (headers as Record<string, string>)['Authorization'] = `Bearer ${accessToken}`;
     }
 
     const fetchOptions: RequestInit = {
@@ -50,13 +52,13 @@ export async function fetcher<T>(
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`🚨 Response Error: ${response.status} ${errorText}`);
-      
+
       // Handle 401 Unauthorized - token might be expired
       if (response.status === 401 && requireAuth) {
         console.error('🚨 Unauthorized - token may be expired');
         // You could redirect to login here if needed
       }
-      
+
       return null;
     }
 

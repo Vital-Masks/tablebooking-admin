@@ -1,58 +1,156 @@
+"use client";
+
 import Button from "@/components/Elements/Button";
 import AnalyticsCard from "@/components/Elements/AnalyticsCard";
-export default function DashboardContent() {
-  const stats = [
+import Dropdown from "@/components/Elements/Dropdown";
+import { IconFilter } from "@/components/Icons";
+import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+import VanillaCalendar from "@/components/Common/Fields/VanillaCalendar";
+import { Options } from "vanilla-calendar-pro";
+import { useState, useCallback } from "react";
+
+export default function DashboardContent({
+  stats,
+  restaurants,
+  hospitalityChains,
+}: {
+  stats: any;
+  restaurants: any;
+  hospitalityChains: any;
+}) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+  // Transform the stats data to match the analytics card format
+  const analyticsData = [
     {
       title: "Total Reservations",
-      value: 24568,
+      value: stats?.reservations?.total || 0,
       icon: "🍴",
     },
     {
       title: "Restaurants Listed",
-      value: 568,
+      value: stats?.restaurants?.total || 0,
       icon: "🏢",
     },
     {
       title: "Customers",
-      value: 3559,
+      value: stats?.customers?.total || 0,
       icon: "👤",
     },
     {
-      title: "Completed Reservations",
-      value: 1234,
-      icon: "🍴",
+      title: "Booked Reservations",
+      value: stats?.reservations?.booked || 0,
+      icon: "📅",
     },
     {
       title: "Active Restaurants",
-      value: 1234,
-      icon: "🏢",
+      value: stats?.restaurants?.active || 0,
+      icon: "✅",
     },
     {
       title: "Active Customers",
-      value: 1234,
-      icon: "👤",
+      value: stats?.customers?.active || 0,
+      icon: "👥",
     },
     {
-      title: "Pending Reservations",
-      value: 1234,
-      icon: "🍴",
+      title: "Confirmed Reservations",
+      value: stats?.reservations?.confirmed || 0,
+      icon: "✅",
     },
     {
-      title: "Non Active Restaurants",
-      value: 1234,
-      icon: "🏢",
+      title: "Inactive Restaurants",
+      value: stats?.restaurants?.inactive || 0,
+      icon: "❌",
     },
     {
-      title: "Non Active Customers",
-      value: 0,
-      icon: "👤",
+      title: "Inactive Customers",
+      value: stats?.customers?.inactive || 0,
+      icon: "🚫",
     },
     {
       title: "Cancelled Reservations",
-      value: 1234,
-      icon: "🍴",
+      value: stats?.reservations?.cancelled || 0,
+      icon: "❌",
     },
   ];
+
+  // Helper function to build query params while preserving existing ones
+  const buildQueryParams = useCallback(
+    (newParams: Record<string, string>) => {
+      const currentParams = new URLSearchParams(searchParams.toString());
+      Object.entries(newParams).forEach(([key, value]) => {
+        currentParams.set(key, value);
+      });
+      return Object.fromEntries(currentParams.entries());
+    },
+    [searchParams]
+  );
+
+  // Handle date range selection
+  const handleDateRangeChange = useCallback(
+    (startDate: string, endDate: string) => {
+      const newParams = buildQueryParams({
+        customStart: startDate,
+        customEnd: endDate,
+      });
+      router.push(`/dashboard?${new URLSearchParams(newParams).toString()}`);
+      setIsCalendarOpen(false);
+    },
+    [buildQueryParams, router]
+  );
+
+  const calendarOptions: Options = {
+    inputMode: true,
+    onChangeToInput(self) {
+      if (!self.context.inputElement) return;
+      if (self.context.selectedDates[0]) {
+        self.context.inputElement.value = self.context.selectedDates[0];
+      } else {
+        self.context.inputElement.value = "";
+      }
+    },
+    onInit(self) {
+      const handleClickMainElement = (e: MouseEvent) => {
+        if ((e.target as HTMLElement).closest("#btn-close")) {
+          self.hide();
+        }
+      };
+      self.context.mainElement.addEventListener(
+        "click",
+        handleClickMainElement
+      );
+      return () =>
+        self.context.mainElement.removeEventListener(
+          "click",
+          handleClickMainElement
+        );
+    },
+    layouts: {
+      default: `
+        <div className="vc-header" data-vc="header" role="toolbar" aria-label="Calendar Navigation">
+          <#ArrowPrev />
+          <div className="vc-header__content" data-vc-header="content">
+            <#Month />
+            <#Year />
+          </div>
+          <#ArrowNext />
+        </div>
+        <div className="vc-wrapper" data-vc="wrapper">
+          <#WeekNumbers />
+          <div className="vc-content" data-vc="content">
+            <#Week />
+            <#Dates />
+            <#DateRangeTooltip />
+          </div>
+        </div>
+        <#ControlTime />
+        <button id="btn-close" type="button" aria-label="Close Calendar">Close</button>
+      `,
+    },
+  };
 
   return (
     <main>
@@ -60,6 +158,74 @@ export default function DashboardContent() {
         <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6">
           <h2 className="text-lg text-black font-bold">Dashboard</h2>
           <div className="flex items-center gap-2">
+            <div className="dropdown">
+              <Dropdown
+                placement="bottom-start"
+                btnClassName="btn btn-primary dropdown-toggle shadow-none"
+                button={
+                  <>
+                    <span>
+                      <IconFilter className="mr-2 inline-block w-4 h-4" />
+                    </span>
+                    <span>Restaurant</span>
+                  </>
+                }
+              >
+                <ul className="!min-w-[170px] max-h-[150px] overflow-y-auto">
+                  {restaurants.map((restaurant: any) => (
+                    <li key={restaurant._id}>
+                      <Link
+                        href={{
+                          pathname: "/dashboard",
+                          query: buildQueryParams({
+                            restaurantId: restaurant._id,
+                          }),
+                        }}
+                      >
+                        {restaurant.restaurantName}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </Dropdown>
+            </div>
+            <div className="dropdown">
+              <Dropdown
+                placement="bottom-start"
+                btnClassName="btn btn-primary dropdown-toggle shadow-none"
+                button={
+                  <>
+                    <span>
+                      <IconFilter className="mr-2 inline-block w-4 h-4" />
+                    </span>
+                    <span>Hospitality Chain</span>
+                  </>
+                }
+              >
+                <ul className="!min-w-[170px] max-h-[150px] overflow-y-auto">
+                  {hospitalityChains.map((hospitalityChain: any) => (
+                    <li key={hospitalityChain._id}>
+                      <Link
+                        href={{
+                          pathname: "/dashboard",
+                          query: buildQueryParams({
+                            hospitalityChainId: hospitalityChain._id,
+                          }),
+                        }}
+                      >
+                        {hospitalityChain.chainName}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </Dropdown>
+            </div>
+            <div className="p-4 w-[200px]">
+              <VanillaCalendar
+                config={calendarOptions}
+                className="w-full mx-auto border rounded-md h-10"
+              />
+            </div>
             <Button type="outlined">Export</Button>
           </div>
         </div>
@@ -67,7 +233,7 @@ export default function DashboardContent() {
         <div className="grid grid-cols-3 items-start gap-5">
           <div className={`col-span-3`}>
             <div className="grid grid-cols-3 mb-5 gap-5">
-              {stats.map((stat) => (
+              {analyticsData.map((stat) => (
                 <AnalyticsCard key={stat.title} {...stat} />
               ))}
             </div>

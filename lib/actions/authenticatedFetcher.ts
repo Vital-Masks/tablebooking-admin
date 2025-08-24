@@ -35,7 +35,7 @@ export async function authenticatedFetcher<T>(
 
     // Add bearer token if available
     if (accessToken) {
-      headers['Authorization'] = `Bearer ${accessToken}`;
+      (headers as Record<string, string>)['Authorization'] = `Bearer ${accessToken}`;
     }
 
     const fetchOptions: RequestInit = {

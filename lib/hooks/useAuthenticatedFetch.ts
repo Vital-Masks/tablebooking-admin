@@ -54,7 +54,7 @@ export function useAuthenticatedFetch(options: UseAuthenticatedFetchOptions = {}
 
       // Add bearer token if available
       if (accessToken) {
-        headers['Authorization'] = `Bearer ${accessToken}`;
+        (headers as HeadersInit)['Authorization'] = `Bearer ${accessToken}`;
       }
 
       const response = await fetch(url, {

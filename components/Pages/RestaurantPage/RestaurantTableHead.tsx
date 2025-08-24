@@ -2,63 +2,36 @@
 
 import FormSlider from "@/components/Common/Form/FormSlider";
 import { IconFilter, IconXCircle } from "@/components/Icons";
-import { ROUTE_RESERVATIONS } from "@/constants/routes";
-import { filterReservations } from "@/lib/actions/reservation.action";
-import Link from "next/link";
 import { useState } from "react";
 import AnimateHeight from "react-animate-height";
+import { filterRestaurants } from "@/lib/actions/restaurant.actions";
 
-const ReservationTableHead = ({
-  restaurants,
-  restaurantId,
+const RestaurantTableHead = ({
+  restaurantType,
   onFilterChange,
   onSearchChange,
   onResetToInitial,
-}: any) => {
+}: {
+  restaurantType: any[];
+  onFilterChange: (filteredData: any[]) => void;
+  onSearchChange: (searchTerm: string) => void;
+  onResetToInitial: () => void;
+}) => {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<string>("0");
-  const [isLoading, setIsLoading] = useState(false);
+  const [active, setActive] = useState<string>("1");
   const [filterValues, setFilterValues] = useState({
     dateType: "",
     startDate: "",
     endDate: "",
-    status: [] as string[],
-    table: [] as string[],
+    restaurantType: [] as string[],
+    availabilityStatus: [] as string[],
+    subscription: [] as string[],
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Get current restaurant name for display
-  const currentRestaurant = restaurants.find(
-    (r: any) => r._id === restaurantId
-  );
-
-  const togglePara = (value: string) => {
-    setActive((oldValue) => {
-      return oldValue === value ? "" : value;
-    });
-  };
-
-  const handleFilterChange = (groupTitle: string, value: string, checked: boolean) => {
-    setFilterValues((prev) => {
-      const newValues = { ...prev };
-
-      if (groupTitle === "Timeframe") {
-        newValues.dateType = checked ? value : "";
-        if (value === "customDates") {
-          newValues.startDate = "";
-          newValues.endDate = "";
-        }
-      } else if (groupTitle === "Status") {
-        newValues.status = checked 
-          ? [...newValues.status, value] 
-          : newValues.status.filter((item) => item !== value);
-      } else if (groupTitle === "Table") {
-        newValues.table = checked 
-          ? [...newValues.table, value] 
-          : newValues.table.filter((item) => item !== value);
-      }
-      return newValues;
-    });
+  const handleCloseForm = () => {
+    setOpen(false);
   };
 
   const handleClearFilters = () => {
@@ -67,27 +40,91 @@ const ReservationTableHead = ({
       dateType: "",
       startDate: "",
       endDate: "",
-      status: [],
-      table: [],
+      restaurantType: [],
+      availabilityStatus: [],
+      subscription: [],
     });
-
+    
     // Reset search
     setSearch("");
     onSearchChange("");
-
+    
     // Reset all form inputs
-    const inputs = document.querySelectorAll(
-      'input[type="radio"], input[type="checkbox"]'
-    );
+    const inputs = document.querySelectorAll('input[type="radio"], input[type="checkbox"]');
     inputs.forEach((input: any) => {
       input.checked = false;
     });
-
+    
     // Reset table to initial data
     onResetToInitial();
-
+    
     // Close the form
     setOpen(false);
+  };
+
+  const togglePara = (value: string) => {
+    setActive((oldValue) => {
+      return oldValue === value ? "" : value;
+    });
+  };
+
+  const handleFilterChange = (groupTitle: string, value: string, checked: boolean) => {
+    setFilterValues(prev => {
+      const newValues = { ...prev };
+      
+      if (groupTitle === "Timeframe") {
+        newValues.dateType = checked ? value : "";
+        if (value === "customDates") {
+          // Handle custom dates - you might want to add date pickers
+          newValues.startDate = "";
+          newValues.endDate = "";
+        }
+      } else if (groupTitle === "Restaurant Type") {
+        if (checked) {
+          if (value === "all") {
+            newValues.restaurantType = restaurantType.map(item => item.value);
+          } else {
+            newValues.restaurantType = [...prev.restaurantType, value];
+          }
+        } else {
+          if (value === "all") {
+            newValues.restaurantType = [];
+          } else {
+            newValues.restaurantType = prev.restaurantType.filter(item => item !== value);
+          }
+        }
+      } else if (groupTitle === "Availability") {
+        if (checked) {
+          if (value === "all") {
+            newValues.availabilityStatus = ["Available", "Not Available"];
+          } else {
+            newValues.availabilityStatus = [...prev.availabilityStatus, value];
+          }
+        } else {
+          if (value === "all") {
+            newValues.availabilityStatus = [];
+          } else {
+            newValues.availabilityStatus = prev.availabilityStatus.filter(item => item !== value);
+          }
+        }
+      } else if (groupTitle === "Subscription") {
+        if (checked) {
+          if (value === "all") {
+            newValues.subscription = ["Free", "Classic", "Signature", "Premium"];
+          } else {
+            newValues.subscription = [...prev.subscription, value];
+          }
+        } else {
+          if (value === "all") {
+            newValues.subscription = [];
+          } else {
+            newValues.subscription = prev.subscription.filter(item => item !== value);
+          }
+        }
+      }
+      
+      return newValues;
+    });
   };
 
   const handleApplyFilters = async () => {
@@ -97,36 +134,33 @@ const ReservationTableHead = ({
         dateType: filterValues.dateType,
         startDate: filterValues.startDate,
         endDate: filterValues.endDate,
-        status: filterValues.status,
-        table: filterValues.table,
+        restaurantType: filterValues.restaurantType,
+        availabilityStatus: filterValues.availabilityStatus,
+        subscription: filterValues.subscription,
       };
 
-      const filteredReservations = await filterReservations(filterData);
-
-      if (filteredReservations) {
-        const formattedData = filteredReservations.map((res: any) => ({
+      const filteredRestaurants = await filterRestaurants(filterData);
+      
+      if (filteredRestaurants) {
+        const formattedData = filteredRestaurants.map((res: any) => ({
           id: res._id,
-          restaurantId: res.restaurantId?._id,
-          fullname:
-            `${res.guestUserId?.firstName || ""} ${res.guestUserId?.lastName || ""}`.trim(),
-          contact: res.guestUserId?.contactNo || "",
-          restaurant: res.restaurantId?.restaurantName || "",
-          reservedfor: res.dining?.diningName || "",
-          date: res.date || "",
-          time: res.time || "",
-          pax: res.guestSize || "",
-          diningarea: res.diningArea?.sectionName || "",
-          status: res.status || "",
-          table: res.tableNo || "",
-          createdOn: res.created_at || "",
+          name: res.restaurantName,
+          type: res.restaurantType,
+          phone: res.contactNo,
+          email: res.email,
+          address: res.address,
+          subscription: "Free plan",
+          availability: res.availabilityStatus,
+          createdOn: res.created_at,
+          hospitalityChainId: res.hospitalityChainId?._id,
         }));
-
+        
         onFilterChange(formattedData);
       }
-
+      
       setOpen(false);
     } catch (error) {
-      console.error("Error applying filters:", error);
+      console.error('Error applying filters:', error);
     } finally {
       setIsLoading(false);
     }
@@ -170,43 +204,64 @@ const ReservationTableHead = ({
       ],
     },
     {
-      title: "Status",
+      title: "Restaurant Type",
       items: [
         {
           type: "checkbox",
-          title: "Booked",
-          value: "booked",
+          title: "All",
+          value: "all",
+        },
+        ...restaurantType,
+      ],
+    },
+    {
+      title: "Availability",
+      items: [
+        {
+          type: "checkbox",
+          title: "All",
+          value: "all",
         },
         {
           type: "checkbox",
-          title: "Confirmed",
-          value: "confirmed",
+          title: "Available",
+          value: "available",
         },
 
         {
           type: "checkbox",
-          title: "Arrived",
-          value: "arrived",
-        },
-        {
-          type: "checkbox",
-          title: "Cancelled",
-          value: "cancelled",
+          title: "Unavailable",
+          value: "unavailable",
         },
       ],
     },
     {
-      title: "Table",
+      title: "Subscription",
       items: [
         {
           type: "checkbox",
-          title: "Assigned",
-          value: "assigned",
+          title: "All",
+          value: "all",
         },
         {
           type: "checkbox",
-          title: "Unassigned",
-          value: "unassigned",
+          title: "Free",
+          value: "free",
+        },
+        {
+          type: "checkbox",
+          title: "Classic",
+          value: "classic",
+        },
+        {
+          type: "checkbox",
+          title: "Signature",
+          value: "signature",
+        },
+        {
+          type: "checkbox",
+          title: "Premium",
+          value: "premium",
         },
       ],
     },
@@ -214,38 +269,44 @@ const ReservationTableHead = ({
 
   return (
     <>
-      <div className="flex flex-col justify-between flex-wrap gap-5 bg-white p-5 shadow-lg rounded-t-lg">
-        <div className="flex items-center gap-5">
-          <div className="dropdown">
-            <button
-              className="btn btn-primary dropdown-toggle shadow-none"
-              onClick={() => setOpen(true)}
-            >
-              <span>
-                <IconFilter className="mr-2 inline-block w-4 h-4" />
-              </span>
-              <span>Filter</span>
-            </button>
-          </div>
-          <div className="w-full flex-1">
+      <div className="flex flex-col justify-between flex-wrap gap-5 bg-white p-6 shadow-sm border border-gray-100 rounded-lg">
+        <div className="flex items-center gap-4">
+          <button
+            className="btn btn-primary btn-sm flex items-center gap-2 hover:shadow-md transition-all duration-200"
+            onClick={() => setOpen(true)}
+          >
+            <IconFilter className="w-4 h-4" />
+            <span>Filter</span>
+          </button>
+
+          <div className="flex-1 relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="h-4 w-4 text-gray-400"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
+              </svg>
+            </div>
             <input
               type="text"
-              className="w-full form-input"
-              placeholder="Search..."
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 placeholder:text-gray-400"
+              placeholder="Search restaurants..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={handleSearchChange}
             />
           </div>
         </div>
-        {currentRestaurant && (
-          <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0">
-            Restaurant:{" "}
-            <span className="font-medium">
-              {currentRestaurant.restaurantName}
-            </span>
-          </div>
-        )}
       </div>
+
       <FormSlider isOpen={open}>
         <div className="relative p-6 bg-white">
           <div className="mb-6 flex items-center justify-between w-full">
@@ -253,7 +314,7 @@ const ReservationTableHead = ({
               Filter Options
             </h5>
             <button
-              onClick={() => setOpen(false)}
+              onClick={handleCloseForm}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
             >
               <IconXCircle className="w-5 h-5 text-gray-500" />
@@ -261,59 +322,6 @@ const ReservationTableHead = ({
           </div>
 
           <div className="space-y-4">
-            <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-              <button
-                type="button"
-                className={`w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors duration-200 ${
-                  active === "0" ? "bg-gray-50" : "bg-white"
-                }`}
-                onClick={() => togglePara("0")}
-              >
-                <span className="font-medium text-gray-700">Restaurant</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
-                    active === "0" ? "rotate-180" : ""
-                  }`}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              <AnimateHeight
-                duration={300}
-                height={active === "0" ? "auto" : 0}
-              >
-                <div className="p-4 bg-gray-50 border-t border-gray-200">
-                  <div className="space-y-3">
-                    {restaurants.map((restaurant: any) => (
-                      <div key={restaurant._id} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id={`restaurant-${restaurant._id}`}
-                          className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-                          checked={restaurantId === restaurant._id}
-                        />
-                        <Link
-                          href={`${ROUTE_RESERVATIONS}/${restaurant._id}`}
-                          className="ml-3 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 transition-colors duration-200"
-                        >
-                          {restaurant.restaurantName}
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </AnimateHeight>
-            </div>
             {filterGroup?.map((group: any, index: number) => (
               <div
                 key={index}
@@ -364,13 +372,7 @@ const ReservationTableHead = ({
                                 ? "w-4 h-4 text-primary border-gray-300 focus:ring-primary"
                                 : "w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
                             }`}
-                            onChange={(e) =>
-                              handleFilterChange(
-                                group.title,
-                                item.value,
-                                e.target.checked
-                              )
-                            }
+                            onChange={(e) => handleFilterChange(group.title, item.value, e.target.checked)}
                           />
                           <label
                             htmlFor={`${group.title}-${item.value}`}
@@ -408,4 +410,4 @@ const ReservationTableHead = ({
   );
 };
 
-export default ReservationTableHead;
+export default RestaurantTableHead;
