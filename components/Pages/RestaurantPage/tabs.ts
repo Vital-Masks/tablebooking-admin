@@ -6,6 +6,7 @@ export const restaurantTabs = {
   userRoles: 'user-roles',
   openHours: 'open-hours',
   subscriptions: 'subscriptions',
+  addOns: 'add-ons',
 };
 
 export const tabs = [
@@ -43,5 +44,10 @@ export const tabs = [
     id: restaurantTabs.subscriptions,
     name: 'Subscriptions',
     description: 'Update your User Subscriptions here',
+  },
+  {
+    id: restaurantTabs.addOns,
+    name: 'Add Ons',
+    description: 'Update your Add Ons details here',
   },
 ];
