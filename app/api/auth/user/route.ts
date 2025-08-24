@@ -11,16 +11,16 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       user: {
+        userId: session.userId,
+        restaurantId: session.restaurantId,
         firstName: session.firstName,
         lastName: session.lastName,
         email: session.email,
-        contactNo: session.contactNo,
-        birthDate: session.birthDate,
-        addressLine1: session.addressLine1,
-        addressLine2: session.addressLine2,
-        city: session.city,
-        state: session.state,
-        anniversaryDate: session.anniversaryDate,
+        gender: session.gender,
+        phoneNumber: session.phoneNumber,
+        profilePic: session.profilePic,
+        userType: session.userType,
+        subscription: session.subscription,
       }
     });
   } catch (error) {

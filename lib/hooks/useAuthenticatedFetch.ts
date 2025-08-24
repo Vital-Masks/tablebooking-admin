@@ -47,14 +47,14 @@ export function useAuthenticatedFetch(options: UseAuthenticatedFetchOptions = {}
         }
       }
 
-      const headers: HeadersInit = {
+      const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        ...fetchOptions.headers,
+        ...(fetchOptions.headers as Record<string, string> || {}),
       };
 
       // Add bearer token if available
       if (accessToken) {
-        (headers as HeadersInit)['Authorization'] = `Bearer ${accessToken}`;
+        headers['Authorization'] = `Bearer ${accessToken}`;
       }
 
       const response = await fetch(url, {

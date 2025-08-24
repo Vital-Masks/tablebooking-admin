@@ -8,7 +8,9 @@ import moment from "moment";
 const AdonsTable = async ({ params }: any) => {
   const rowData: any[] = [];
   if (params.restaurantId !== "c") {
-    const subscriptions = await getAllRestaurantSubscriptions();
+    const subscriptions = await getAllRestaurantSubscriptions({
+      restaurantId: params.restaurantId,
+    });
     console.log("subscriptions >>", subscriptions);
 
     subscriptions?.map((res: any) => {
