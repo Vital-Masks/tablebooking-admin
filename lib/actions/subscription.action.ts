@@ -1,8 +1,8 @@
 import { fetcher } from "./fetcher";
 
-export const getAllRestaurantSubscriptions = async () => {
+export const getAllRestaurantSubscriptions = async ({ restaurantId }: { restaurantId: string }) => {
     return await fetcher<DiningTiming[]>(
-        `/restaurantSubscription`,
+        `/restaurantSubscription/restaurant/${restaurantId}`,
         {
             method: 'GET',
         }

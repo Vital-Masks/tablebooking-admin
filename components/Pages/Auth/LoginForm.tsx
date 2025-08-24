@@ -35,16 +35,19 @@ const LoginForm = () => {
  
       if (userLoggedInDetails.error) {
         toast.error("Invalid email or password");
+        return false; // Return false to indicate failure
       } else {
         // Store access token in localStorage for client-side access
         if ('accessToken' in userLoggedInDetails && userLoggedInDetails.accessToken) {
           localStorage.setItem('accessToken', userLoggedInDetails.accessToken);
         }
         router.push("/");
+        return true; // Return true to indicate success
       }
     } catch (error) {
       console.log(error);
       toast.error("Invalid email or password.");
+      return false; // Return false to indicate failure
     }
   };
 
@@ -55,11 +58,12 @@ const LoginForm = () => {
       validationSchema={validationSchema}
       validateOnBlur={false}
       validateOnChange={false}
-      onSubmit={(values: any, actions) => {
-        handleSubmit(values).then(() => {
-          actions.setSubmitting(false);
+      onSubmit={async (values: any, actions) => {
+        const success = await handleSubmit(values);
+        actions.setSubmitting(false);
+        if (success) {
           actions.resetForm();
-        });
+        }
       }}
     >
       {({ handleSubmit, errors, touched, isSubmitting }: any) => {
