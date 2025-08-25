@@ -53,7 +53,7 @@ const SubscriptionForm = ({ params }: any) => {
             detail="Please fill the general details first."
           />
         ));
-        return;
+        return { success: false };
       }
 
       const data = {
@@ -74,6 +74,7 @@ const SubscriptionForm = ({ params }: any) => {
             <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
           ));
           closeForm();
+          return { success: true };
         } else {
           // Handle API error response
           const errorMessage = result?.error?.message || "Update failed!";
@@ -105,6 +106,7 @@ const SubscriptionForm = ({ params }: any) => {
               />
             ));
           }
+          return { success: false };
         }
       } else {
         result = await createSubscription(data);
@@ -113,27 +115,22 @@ const SubscriptionForm = ({ params }: any) => {
             <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
           ));
           closeForm();
+          return { success: true };
         } else {
+          const errorDetail =
+            result?.error?.details?.plan[0] ?? result?.error?.message;
           // Check for specific subscription plan error
-          if (result?.error?.details?.plan) {
+          if (errorDetail) {
             toast.custom((t) => (
               <ToastBanner
                 t={t}
                 type="ERROR"
                 message="Creation failed!"
-                detail={result?.error?.details?.plan[0]}
-              />
-            ));
-          } else {
-            toast.custom((t) => (
-              <ToastBanner
-                t={t}
-                type="ERROR"
-                message="Creation failed!"
-                detail={result?.error?.message}
+                detail={errorDetail}
               />
             ));
           }
+          return { success: false };
         }
       }
     } catch (error) {
@@ -146,6 +143,7 @@ const SubscriptionForm = ({ params }: any) => {
           detail="Please try again later."
         />
       ));
+      return { success: false };
     }
   };
 

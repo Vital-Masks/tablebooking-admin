@@ -76,9 +76,13 @@ const FormComponent = ({
           validateOnChange={false}
           onSubmit={async (values, actions) => {
             try {
-              await handleSubmit(values);
+              const result = await handleSubmit(values);
               actions.setSubmitting(false);
-              actions.resetForm();
+              
+              // Only reset form if the result indicates success
+              if (result && result.success !== false) {
+                actions.resetForm();
+              }
             } catch (error) {
               actions.setSubmitting(false);
               // Error is already handled in the handleSubmit function
