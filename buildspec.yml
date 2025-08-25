@@ -17,9 +17,9 @@ phases:
       - echo "Copying production env..."
       - cp .env.prod .env
       - echo "Installing dependencies..."
-      - npm ci
+      - yarn install --frozen-lockfile       # <-- use Yarn here
       - echo "Building Next.js frontend..."
-      - npm run build
+      - yarn build                           # <-- Yarn build command
 
       # ----------------- DOCKER IMAGE -----------------
       - echo "Building Docker image $REPO_URI:$IMAGE_TAG..."
