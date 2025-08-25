@@ -1,6 +1,13 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Using Node version $(node -v)"
+      - echo "Using Yarn version $(yarn -v)"
+
   pre_build:
     commands:
       - echo "Setting up environment variables..."
@@ -11,15 +18,15 @@ phases:
 
   build:
     commands:
-      - echo "Build started on `date`"
+      - echo "Build started on $(date)"
 
       # ----------------- FRONTEND BUILD -----------------
       - echo "Copying production env..."
       - cp .env.prod .env
       - echo "Installing dependencies..."
-      - npm ci
+      - yarn install --frozen-lockfile
       - echo "Building Next.js frontend..."
-      - npm run build
+      - yarn build
 
       # ----------------- DOCKER IMAGE -----------------
       - echo "Building Docker image $REPO_URI:$IMAGE_TAG..."
