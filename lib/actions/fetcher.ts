@@ -1,5 +1,7 @@
-import { revalidatePath } from 'next/cache';
-import { getSession } from '../session';
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { getSession } from "../session";
 
 const ENDPOINT = process.env.API_ENDPOINT;
 
@@ -14,7 +16,12 @@ export async function fetcher<T>(
   options: FetcherOptions = {}
 ): Promise<T | null> {
   try {
-    const { method = 'GET', body, requireAuth = true, ...restOptions } = options;
+    const {
+      method = "GET",
+      body,
+      requireAuth = true,
+      ...restOptions
+    } = options;
 
     // Get session to extract access token
     let accessToken: string | undefined;
@@ -23,21 +30,20 @@ export async function fetcher<T>(
       accessToken = session?.accessToken;
 
       if (!accessToken) {
-        console.error('🚨 No access token found in session');
+        console.error("🚨 No access token found in session");
         return null;
       }
     }
 
-
-
     const headers: HeadersInit = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...restOptions.headers,
     };
 
     // Add bearer token if available
     if (accessToken) {
-      (headers as Record<string, string>)['Authorization'] = `Bearer ${accessToken}`;
+      (headers as Record<string, string>)["Authorization"] =
+        `Bearer ${accessToken}`;
     }
 
     const fetchOptions: RequestInit = {
@@ -50,22 +56,21 @@ export async function fetcher<T>(
     const response = await fetch(ENDPOINT + url, fetchOptions);
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`🚨 Response Error: ${response.status} ${errorText}`);
+      const errorData = await response.json();
+      console.error(`🚨 Response Error: ${response.status}`, errorData);
 
       // Handle 401 Unauthorized - token might be expired
       if (response.status === 401 && requireAuth) {
-        console.error('🚨 Unauthorized - token may be expired');
+        console.error("🚨 Unauthorized - token may be expired");
         // You could redirect to login here if needed
       }
-
-      return null;
+      return errorData; // Return error data instead of throwing
     }
 
     const { result } = await response.json();
-    return await result;
+    return result; // Return the result directly, not await it
   } catch (error) {
-    console.error('🚨 Fetch error:', error);
+    console.error("🚨 Fetch error:", error);
     return null;
   }
 }
@@ -78,6 +83,6 @@ export async function publicFetcher<T>(
   return fetcher<T>(url, { ...options, requireAuth: false });
 }
 
-export function revalidate(route: string) {
-  revalidatePath(route, 'page');
+export async function revalidate(route: string) {
+  revalidatePath(route, "page");
 }

@@ -1,44 +1,36 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import FormComponent from "@/components/Common/Form";
 import FormSlider from "@/components/Common/Form/FormSlider";
 import Button from "@/components/Elements/Button";
 
 import {
-  createDiningTiming,
-  getRestaurantDiningTimingById,
-  updateDiningTiming,
-} from "@/lib/actions/restaurant.actions";
-
-import { findField, handleError, returnCommonObject } from "@/lib/utils";
-import {
   subscriptionFormFields,
   subscriptionFormSchema,
 } from "@/constants/FormsDataJs/SubscriptionForm";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
-import { uploadFileToS3 } from "@/lib/aws-s3";
+import {
+  createSubscription,
+  updateSubscription,
+} from "@/lib/actions/subscription.action";
 
-const SubscriptionForm = ({ params, diningAreas, utilities }: any) => {
+const SubscriptionForm = ({ params }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const diningId = searchParams.get("edit");
 
   const defaultInitialValues = {
-    diningType: "",
-    diningName: "",
-    description: "",
-    dateType: "Custom Date",
-    days: [],
-    startDate: "",
-    endDate: "",
-    timeFrom: "",
-    timeTo: "",
-    availabilityStatus: "",
-    pricePerPerson: "",
-    diningAreaIds: [],
+    subscriptionType: "",
+    period: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    payment: 0,
+    discountValue: 0,
+    discountType: "percentage",
+    isActive: false,
   };
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -50,33 +42,7 @@ const SubscriptionForm = ({ params, diningAreas, utilities }: any) => {
     router.replace(pathname, { scroll: false });
   };
 
-  const fetchDining = async () => {
-    if (!diningId || params.restaurantId === "c") return;
-
-    try {
-      const response: any = await getRestaurantDiningTimingById(
-        params.restaurantId,
-        diningId
-      );
-
-      console.log(">>", response);
-
-      if (response) {
-        let data = returnCommonObject(initialValues, response);
-        data["coverImage"] = [{ photo: response.coverImage }];
-        data["diningAreas"] = [...response.diningAreaIds];
-        setInitialValues(data);
-        setIsFormOpen(true);
-      }
-    } catch (error) {
-      handleError(
-        "An error occurred while fetching cuisine menu details:",
-        error
-      );
-    }
-  };
-
-  const onSubmit = async (data: CreateDiningTimingParams) => {
+  const onSubmit = async (formData: CreateSubscriptionParams) => {
     try {
       if (params.restaurantId === "c") {
         toast.custom((t) => (
@@ -90,73 +56,84 @@ const SubscriptionForm = ({ params, diningAreas, utilities }: any) => {
         return;
       }
 
-      if (data?.coverImage) {
-        // Handle file uploads
-        const images = await Promise.all(
-          data?.coverImage?.map(async (img: any) => {
-            if (img.preview) {
-              const url = await uploadFileToS3(
-                img.preview,
-                "dining-timing-images"
-              );
-              return { photo: url };
-            }
-            return img;
-          })
-        );
-        // Filter out failed uploads
-        const validImages = images.filter((img) => img.photo !== null);
-        if (validImages.length === 0) {
-          toast.custom((t) => (
-            <ToastBanner
-              t={t}
-              type="ERROR"
-              message="File upload failed!"
-              detail="Please try uploading the image again."
-            />
-          ));
-          return;
-        }
+      const data = {
+        ...formData,
+        planId: "689dc427f0afdcaf0c32853f",
+        restaurantId: params.restaurantId,
+        discount: {
+          value: formData.discountValue || 0,
+          type: formData.discountType || "percentage",
+        },
+      };
 
-        data.coverImage = validImages;
-      }
-
-      data.restaurantId = params.restaurantId;
-
-      let result;
+      let result: any;
       if (diningId) {
-        result = await updateDiningTiming(diningId, data);
-        if (result) {
+        result = await updateSubscription(diningId, data);
+        if (result && result.success) {
           toast.custom((t) => (
             <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
           ));
           closeForm();
         } else {
-          toast.custom((t) => (
-            <ToastBanner
-              t={t}
-              type="ERROR"
-              message="Update failed!"
-              detail="Please check your data and try again."
-            />
-          ));
+          // Handle API error response
+          const errorMessage = result?.error?.message || "Update failed!";
+          const errorDetail =
+            result?.error?.details?.plan?.[0] ||
+            "Please check your data and try again.";
+
+          // Check for specific subscription plan error
+          if (
+            result?.error?.details?.plan?.[0]?.includes(
+              "Already subscription plan exists"
+            )
+          ) {
+            toast.custom((t) => (
+              <ToastBanner
+                t={t}
+                type="ERROR"
+                message="Subscription Plan Already Exists"
+                detail="Please deactivate your current subscription plan before updating."
+              />
+            ));
+          } else {
+            toast.custom((t) => (
+              <ToastBanner
+                t={t}
+                type="ERROR"
+                message={errorMessage}
+                detail={errorDetail}
+              />
+            ));
+          }
         }
       } else {
-        result = await createDiningTiming(data);
-        if (result) {
+        result = await createSubscription(data);
+        if (result && result.success) {
           toast.custom((t) => (
             <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
           ));
           closeForm();
         } else {
-          toast.custom((t) => (
-            <ToastBanner
-              t={t}
-              type="ERROR"
-              message="Creation failed!"
-              detail="Please check your data and try again."
-            />
-          ));
+          // Check for specific subscription plan error
+          if (result?.error?.details?.plan) {
+            toast.custom((t) => (
+              <ToastBanner
+                t={t}
+                type="ERROR"
+                message="Creation failed!"
+                detail={result?.error?.details?.plan[0]}
+              />
+            ));
+          } else {
+            toast.custom((t) => (
+              <ToastBanner
+                t={t}
+                type="ERROR"
+                message="Creation failed!"
+                detail={result?.error?.message}
+              />
+            ));
+          }
         }
       }
     } catch (error) {
@@ -172,29 +149,6 @@ const SubscriptionForm = ({ params, diningAreas, utilities }: any) => {
     }
   };
 
-  useEffect(() => {
-    if (diningId) {
-      fetchDining();
-    }
-  }, [diningId]);
-
-  // useEffect(() => {
-  //   if (diningAreas.length > 0) {
-  //     findField(diningFormField, "diningAreaIds")["options"] = diningAreas;
-  //   }
-  // }, [diningAreas]);
-
-  // useEffect(() => {
-  //   const options = Object.entries(utilities?.[0].experienceType).map(
-  //     ([key, value]) => ({
-  //       label: value,
-  //       value: value,
-  //     })
-  //   );
-
-  //   findField(diningFormField, "diningType")["options"] = options;
-  // }, [utilities]);
-
   return (
     <>
       <Button
@@ -206,7 +160,7 @@ const SubscriptionForm = ({ params, diningAreas, utilities }: any) => {
       </Button>
       <FormSlider isOpen={isFormOpen}>
         <FormComponent
-          title="Create Dining Timing"
+          title="Create Subscription"
           fields={subscriptionFormFields}
           initialValues={initialValues}
           validationSchema={subscriptionFormSchema}
