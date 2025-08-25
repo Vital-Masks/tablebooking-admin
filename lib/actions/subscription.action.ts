@@ -1,5 +1,11 @@
 import { fetcher, revalidate } from "./fetcher";
 
+export const getAllRSubscriptionPlans = async () => {
+  return await fetcher<[]>(`/subscriptionPlans`, {
+    method: "GET",
+  });
+};
+
 export const getAllRestaurantSubscriptions = async ({
   restaurantId,
 }: {
@@ -7,6 +13,15 @@ export const getAllRestaurantSubscriptions = async ({
 }) => {
   return await fetcher<CreateSubscriptionParams[]>(
     `/restaurantSubscription/restaurant/${restaurantId}`,
+    {
+      method: "GET",
+    }
+  );
+};
+
+export const getRestaurantSubscriptionById = async (subscriptionId: string) => {
+  return await fetcher<CreateSubscriptionParams>(
+    `/restaurantSubscription/${subscriptionId}`,
     {
       method: "GET",
     }

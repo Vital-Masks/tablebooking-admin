@@ -276,6 +276,7 @@ declare type CreateInquiryParams = {
 
 declare type CreateSubscriptionParams = {
   _id?: string;
+  planId: string;
   restaurantId: string;
   subscriptionType: string;
   startDate: string;

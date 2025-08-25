@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import FormComponent from "@/components/Common/Form";
 import FormSlider from "@/components/Common/Form/FormSlider";
@@ -13,14 +13,17 @@ import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
 import {
   createSubscription,
+  getRestaurantSubscriptionById,
   updateSubscription,
 } from "@/lib/actions/subscription.action";
+import { findField, handleError, returnCommonObject } from "@/lib/utils";
+import moment from "moment";
 
-const SubscriptionForm = ({ params }: any) => {
+const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const diningId = searchParams.get("edit");
+  const subscriptionId = searchParams.get("edit");
 
   const defaultInitialValues = {
     subscriptionType: "",
@@ -58,7 +61,7 @@ const SubscriptionForm = ({ params }: any) => {
 
       const data = {
         ...formData,
-        planId: "689dc427f0afdcaf0c32853f",
+        planId: formData.planId,
         restaurantId: params.restaurantId,
         discount: {
           value: formData.discountValue || 0,
@@ -67,15 +70,9 @@ const SubscriptionForm = ({ params }: any) => {
       };
 
       let result: any;
-      if (diningId) {
-        result = await updateSubscription(diningId, data);
-        if (result && result.success) {
-          toast.custom((t) => (
-            <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
-          ));
-          closeForm();
-          return { success: true };
-        } else {
+      if (subscriptionId) {
+        result = await updateSubscription(subscriptionId, data);
+        if (result?.error) {
           // Handle API error response
           const errorMessage = result?.error?.message || "Update failed!";
           const errorDetail =
@@ -107,6 +104,12 @@ const SubscriptionForm = ({ params }: any) => {
             ));
           }
           return { success: false };
+        } else {
+          toast.custom((t) => (
+            <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
+          ));
+          closeForm();
+          return { success: true };
         }
       } else {
         result = await createSubscription(data);
@@ -146,6 +149,43 @@ const SubscriptionForm = ({ params }: any) => {
       return { success: false };
     }
   };
+
+  const fetchSubscription = async () => {
+    if (!subscriptionId || params.restaurantId === "c") return;
+
+    try {
+      const response: any = await getRestaurantSubscriptionById(subscriptionId);
+
+      if (response) {
+        let data = returnCommonObject(initialValues, response);
+        data["planId"] = response.planId._id;
+        data["startDate"] = moment(data["startDate"]).format("YYYY-MM-DD");
+        data["endDate"] = moment(data["endDate"]).format("YYYY-MM-DD");
+        data["discountType"] = response.discount?.type;
+        data["discountValue"] = response?.discount?.value;
+        setInitialValues(data);
+        setIsFormOpen(true);
+      }
+    } catch (error) {
+      handleError(
+        "An error occurred while fetching cuisine menu details:",
+        error
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (subscriptionId) {
+      fetchSubscription();
+    }
+  }, [subscriptionId]);
+
+  useEffect(() => {
+    if (subscriptionPlansOptions) {
+      findField(subscriptionFormFields, "planId")["options"] =
+        subscriptionPlansOptions;
+    }
+  }, [subscriptionPlansOptions]);
 
   return (
     <>

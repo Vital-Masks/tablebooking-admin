@@ -39,15 +39,22 @@ interface FormField {
 
 export const subscriptionFormFields: FormField[] = [
   {
+    id: "planId",
+    name: "planId",
+    label: "Plan",
+    type: "select",
+    placeholder: "Select plan",
+    options: [],
+  },
+  {
     id: "subscriptionType",
     name: "subscriptionType",
     label: "Subscription Type",
     type: "select",
     placeholder: "Select subscription type",
     options: [
-      { label: "Free", value: "free" },
-      { label: "Classic", value: "classic" },
-      { label: "Signature", value: "signature" },
+      { label: "Monthly", value: "Monthly" },
+      { label: "Yearly", value: "Yearly" },
     ],
   },
   {
@@ -96,7 +103,7 @@ export const subscriptionFormFields: FormField[] = [
         label: "Discount",
         type: "number",
         min: 0,
-        step: 1, 
+        step: 1,
         max: 100,
         placeholder: "Enter discount",
       },

@@ -11,6 +11,8 @@ const SubscriptionTable = async ({ params }: any) => {
       restaurantId: params.restaurantId,
     });
 
+    console.log("subscriptions >>>>", subscriptions);
+
     subscriptions?.map((res: any) => {
       rowData.push({
         id: res._id,
@@ -19,7 +21,7 @@ const SubscriptionTable = async ({ params }: any) => {
         fromDate: moment(res.startDate).format("DD-MM-YYYY"),
         toDate: moment(res.endDate).format("DD-MM-YYYY"),
         payment: res.payment,
-        amount: res.totalBill,
+        amount: res.totalFee,
       });
     });
   }
