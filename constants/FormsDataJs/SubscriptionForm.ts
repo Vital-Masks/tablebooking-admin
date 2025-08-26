@@ -27,6 +27,7 @@ interface FormField {
   isMulti?: boolean;
   min?: number;
   step?: number;
+  max?: number;
   accept?: string;
   maxSize?: number;
   fields?: FormField[];
@@ -38,27 +39,33 @@ interface FormField {
 
 export const subscriptionFormFields: FormField[] = [
   {
+    id: "planId",
+    name: "planId",
+    label: "Plan",
+    type: "select",
+    placeholder: "Select plan",
+    options: [],
+  },
+  {
     id: "subscriptionType",
     name: "subscriptionType",
     label: "Subscription Type",
     type: "select",
     placeholder: "Select subscription type",
     options: [
-      { label: "Free", value: "free" },
-      { label: "Classic", value: "classic" },
-      { label: "Signature", value: "signature" },
+      { label: "Monthly", value: "Monthly" },
+      { label: "Yearly", value: "Yearly" },
     ],
   },
   {
     id: "period",
     name: "period",
     label: "Period",
-    type: "select",
+    type: "number",
+    min: 1,
+    step: 1,
+    max: 12,
     placeholder: "Select period",
-    options: [
-      { label: "Monthly", value: "monthly" },
-      { label: "Yearly", value: "yearly" },
-    ],
   },
   {
     id: "startDate",
@@ -87,15 +94,35 @@ export const subscriptionFormFields: FormField[] = [
     ],
   },
   {
-    id: "discount",
-    name: "discount",
-    label: "Discount",
-    type: "number",
-    placeholder: "Enter discount",
+    id: "detailsGrid",
+    name: "grid",
+    fields: [
+      {
+        id: "discountValue",
+        name: "discountValue",
+        label: "Discount",
+        type: "number",
+        min: 0,
+        step: 1,
+        max: 100,
+        placeholder: "Enter discount",
+      },
+      {
+        id: "discountType",
+        name: "discountType",
+        label: "Discount Type",
+        type: "select",
+        placeholder: "Select discount type",
+        options: [
+          { label: "Percentage", value: "percentage" },
+          { label: "Fixed", value: "fixed" },
+        ],
+      }
+    ],
   },
   {
-    id: "status",
-    name: "status",
+    id: "isActive",
+    name: "isActive",
     label: "Status",
     type: "select",
     placeholder: "Select status",
@@ -109,12 +136,13 @@ export const subscriptionFormFields: FormField[] = [
 
 export const subscriptionFormSchema = Yup.object().shape({
   subscriptionType: Yup.string().required("Subscription type is required"),
-  period: Yup.string().required("Period is required"),
-  fromDate: Yup.date().required("From date is required"),
-  toDate: Yup.date().required("To date is required"),
+  period: Yup.number().required("Period is required"),
+  startDate: Yup.date().required("From date is required"),
+  endDate: Yup.date().required("To date is required"),
   payment: Yup.string().required("Payment is required"),
-  discount: Yup.number().required("Discount is required"),
-  status: Yup.string().required("Status is required"),
+  discountValue: Yup.number().required("Discount value is required"),
+  discountType: Yup.string().required("Discount type is required"),
+  isActive: Yup.boolean().required("Status is required"),
 });
 
 // ============================================================================

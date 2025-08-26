@@ -1,3 +1,5 @@
+'use server';
+
 import { getSession } from '../session';
 import { revalidatePath } from 'next/cache';
 
@@ -76,6 +78,6 @@ export async function publicFetcher<T>(
   return authenticatedFetcher<T>(url, { ...options, requireAuth: false });
 }
 
-export function revalidate(route: string) {
+export async function revalidate(route: string) {
   revalidatePath(route, 'page');
 }

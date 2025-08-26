@@ -1,5 +1,6 @@
 import React from 'react';
 import IconCheck from '../Icons/IconCheck';
+import IconXCircle from '../Icons/IconXCircle';
 import toast from 'react-hot-toast';
 
 type ToastBannerProps = {
@@ -38,9 +39,15 @@ const ToastBanner = ({ t, type, message, detail }: ToastBannerProps) => {
           <div
             className={`flex-shrink-0 ${currentType.iconBgColor} flex items-center justify-center p-1 rounded-lg`}
           >
-            <IconCheck
-              className={`bg-white w-6 h-6 rounded-full ${currentType.iconTextColor}`}
-            />
+            {type === 'SUCCESS' ? (
+              <IconCheck
+                className={`bg-white w-6 h-6 rounded-full ${currentType.iconTextColor}`}
+              />
+            ) : (
+              <IconXCircle
+                className={`bg-white w-6 h-6 rounded-full ${currentType.iconTextColor}`}
+              />
+            )}
           </div>
           <div className="ml-3 flex-1">
             <p className="text-sm text-gray-500">{message}</p>

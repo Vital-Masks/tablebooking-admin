@@ -273,3 +273,20 @@ declare type CreateInquiryParams = {
   companyName: string;
   status: string;
 };
+
+declare type CreateSubscriptionParams = {
+  _id?: string;
+  planId: string;
+  restaurantId: string;
+  subscriptionType: string;
+  startDate: string;
+  endDate: string;
+  payment: string;
+  discount?: {
+    value: number;
+    type: string;
+  };
+  discountValue?: number;
+  discountType?: string;
+  isActive: string;
+};  

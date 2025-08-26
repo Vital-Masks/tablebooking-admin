@@ -74,11 +74,20 @@ const FormComponent = ({
           validationSchema={validationSchema}
           validateOnBlur={false}
           validateOnChange={false}
-          onSubmit={(values, actions) => {
-            handleSubmit(values).then(() => {
+          onSubmit={async (values, actions) => {
+            try {
+              const result = await handleSubmit(values);
               actions.setSubmitting(false);
-              actions.resetForm();
-            });
+              
+              // Only reset form if the result indicates success
+              if (result && result.success !== false) {
+                actions.resetForm();
+              }
+            } catch (error) {
+              actions.setSubmitting(false);
+              // Error is already handled in the handleSubmit function
+              console.error("Form submission error:", error);
+            }
           }}
         >
           {({
@@ -95,6 +104,7 @@ const FormComponent = ({
           }) => {
             // Store the resetForm function in ref
             resetFormRef.current = resetForm;
+       
 
             return (
               // warn user when leaving the page without saving
@@ -386,6 +396,18 @@ const RenderField: React.FC<RenderFieldProps> = ({
       );
     case "password":
       return <PasswordField field={field} errors={errors} />;
+    case "number":
+      return (
+        <div key={field.id} className={`${errors[field.name] && "has-error"}`}>
+          <label htmlFor={field.name}>{field.label}</label>
+          <Field
+            type="number"
+            {...field}
+            className={`form-input ${field.disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed opacity-60" : ""}`}
+            disabled={field.disabled}
+          />
+        </div>
+      );
     default:
       // Check if field should be conditionally rendered
       if (field.ifRender) {

@@ -65,8 +65,21 @@ const InquiryPage = () => {
     },
   ];
 
-  const handleSubmit = (values: any) => {
-    console.log("form submit >>>>", values);
+  const handleSubmit = async (values: any) => {
+    try {
+      console.log("form submit >>>>", values);
+      // Add your API call here
+      // const result = await createInquiry(values);
+      // if (result && result.success) {
+      //   return { success: true };
+      // } else {
+      //   return { success: false };
+      // }
+      return { success: true }; // Temporary return for now
+    } catch (error) {
+      console.error('Error creating inquiry:', error);
+      return { success: false };
+    }
   };
 
   return (
