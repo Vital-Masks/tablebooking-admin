@@ -65,10 +65,14 @@ export async function createSession({
   const session = await encrypt(sessionData, expiresAt);
   const cookieStore = cookies();
 
+  // Determine if we're in production with HTTPS
+  const isProduction = process.env.NODE_ENV === 'production';
+  const isSecure = isProduction && (process.env.NEXT_PUBLIC_USE_HTTPS === 'true' || process.env.VERCEL_URL?.includes('https://'));
+
   // Set session cookie with minimal data
   cookieStore.set("session", session, {
     httpOnly: true,
-    secure: true,
+    secure: isSecure,
     expires: expiresAt,
     sameSite: "lax",
   });
@@ -76,14 +80,14 @@ export async function createSession({
   // Set tokens in separate cookies
   cookieStore.set("accessToken", accessToken, {
     httpOnly: true,
-    secure: true,
+    secure: isSecure,
     expires: expiresAt,
     sameSite: "lax",
   });
 
   cookieStore.set("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: true,
+    secure: isSecure,
     expires: expiresAt,
     sameSite: "lax",
   });
