@@ -5,7 +5,7 @@ import { getCustomers } from '@/lib/actions/user.action';
 const CustomerTable = async () => {
   const rowData: Customers[] = [];
   const customers = await getCustomers();
-
+  console.log("customers >>", customers);
   customers?.map((res: any) => {
     rowData.push({
       id: res._id,

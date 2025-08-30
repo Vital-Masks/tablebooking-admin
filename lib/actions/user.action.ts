@@ -1,12 +1,21 @@
 "use server";
 import { fetcher } from "./fetcher";
+import { getSession } from "../session";
 
 export const getCustomers = async (): Promise<any[] | null> => {
-  const response: any = await fetcher(`/guestUser/getAllGuestUsers`);
-  if (response.error) {
-    throw new Error(`Failed to fetch: ${response.error}`);
+  try {
+    console.log('🔍 API_ENDPOINT:', process.env.API_ENDPOINT);
+    const session = await getSession();
+    console.log('🔍 Session accessToken:', session?.accessToken ? 'Present' : 'Missing');
+    
+    const result = await fetcher<Restaurant[]>('/guestUser/getAllGuestUsers');
+    console.log('🔍 Fetcher result:', result);
+    
+    return result;
+  } catch (error) {
+    console.error('🚨 getCustomers error:', error);
+    return null;
   }
-  return response;
 };
 
 export const getUserById = async (id: string) => {
