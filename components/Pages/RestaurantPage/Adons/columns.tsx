@@ -4,7 +4,7 @@ import { IconEye } from "@/components/Icons";
 import Link from "next/link";
 
 export const columns = [
-  { accessor: "subscriptionType", title: "Subscription Type" },
+  { accessor: "addonsType", title: "Addons Type" },
   { accessor: "period", title: "Period" },
   { accessor: "fromDate", title: "From Date" },
   { accessor: "toDate", title: "To Date" },

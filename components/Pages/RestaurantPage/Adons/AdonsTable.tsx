@@ -7,19 +7,19 @@ import { getAllRestaurantAdons } from "@/lib/actions/adons.action";
 const AdonsTable = async ({ params }: any) => {
   const rowData: any[] = [];
   if (params.restaurantId !== "c") {
-    const subscriptions = await getAllRestaurantAdons({
+    const adons = await getAllRestaurantAdons({
       restaurantId: params.restaurantId,
     });
 
-    subscriptions?.map((res: any) => {
+    adons?.map((res: any) => {
       rowData.push({
         id: res._id,
-        subscriptionType: res.planId.name,
-        period: res.planId.billingCycle,
+        addonsType: res.addonType,
+        period: res.period,
         fromDate: moment(res.startDate).format("DD-MM-YYYY"),
         toDate: moment(res.endDate).format("DD-MM-YYYY"),
-        payment: res.payment,
-        amount: res.totalBill,
+        payment: res.paymentType,
+        amount: res.totalFee,
       });
     });
   }

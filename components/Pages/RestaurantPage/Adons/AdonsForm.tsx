@@ -1,25 +1,22 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import FormComponent from "@/components/Common/Form";
 import FormSlider from "@/components/Common/Form/FormSlider";
 import Button from "@/components/Elements/Button";
 
+import { handleError, returnCommonObject } from "@/lib/utils";
 import {
-  createDiningTiming,
-  getRestaurantDiningTimingById,
-  updateDiningTiming,
-} from "@/lib/actions/restaurant.actions";
-
-import { findField, handleError, returnCommonObject } from "@/lib/utils";
-import {
-  subscriptionFormFields,
-  subscriptionFormSchema,
-} from "@/constants/FormsDataJs/SubscriptionForm";
+  adonsFormFields,
+  adonsFormSchema,
+} from "@/constants/FormsDataJs/adonsForm";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
-import { uploadFileToS3 } from "@/lib/aws-s3";
-import { createAdon, getRestaurantAdonById, updateAdon } from "@/lib/actions/adons.action";
+import {
+  createAdon,
+  getRestaurantAdonById,
+  updateAdon,
+} from "@/lib/actions/adons.action";
 
 const AdonsForm = ({ params }: any) => {
   const searchParams = useSearchParams();
@@ -205,9 +202,9 @@ const AdonsForm = ({ params }: any) => {
       <FormSlider isOpen={isFormOpen}>
         <FormComponent
           title="Create Dining Timing"
-          fields={subscriptionFormFields}
+          fields={adonsFormFields}
           initialValues={initialValues}
-          validationSchema={subscriptionFormSchema}
+          validationSchema={adonsFormSchema}
           closeForm={closeForm}
           handleSubmit={onSubmit}
         />
