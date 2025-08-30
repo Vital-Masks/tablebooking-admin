@@ -290,3 +290,11 @@ declare type CreateSubscriptionParams = {
   discountType?: string;
   isActive: string;
 };  
+
+declare type CreateAdonParams = {
+  _id?: string;
+  name: string;
+  description: string;
+  price: string;
+  restaurantId: string;
+};

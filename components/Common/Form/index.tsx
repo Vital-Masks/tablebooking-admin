@@ -1,3 +1,4 @@
+import React, { useRef, useState, useEffect } from "react";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { IconXCircle, IconEye, IconEyeOff } from "@/components/Icons";
 import IconLoading from "@/components/Icons/IconLoading";
@@ -8,7 +9,6 @@ import DiningAreaSelect from "@/components/Elements/DiningAreaSelect";
 import Calendar from "../Fields/Calendar";
 import SelectField from "../Fields/SelectField";
 import FilePicker from "../Fields/FilePicker";
-import { useRef, useState } from "react";
 
 const options = [{ value: "select", label: "Select" }];
 
@@ -36,9 +36,12 @@ const FormComponent = ({
   validationSchema,
   handleSubmit,
   closeForm,
+  children,
+  onFormChange,
 }: any) => {
   const formikRef = useRef<FormikProps<any>>(null);
   const resetFormRef = useRef<(() => void) | null>(null);
+  const previousValuesRef = useRef(initialValues);
 
   const onCloseForm = () => {
     // Reset the form to initial values
@@ -78,7 +81,7 @@ const FormComponent = ({
             try {
               const result = await handleSubmit(values);
               actions.setSubmitting(false);
-              
+
               // Only reset form if the result indicates success
               if (result && result.success !== false) {
                 actions.resetForm();
@@ -104,7 +107,12 @@ const FormComponent = ({
           }) => {
             // Store the resetForm function in ref
             resetFormRef.current = resetForm;
-       
+
+            // Call onFormChange when values change
+            if (onFormChange && JSON.stringify(values) !== JSON.stringify(previousValuesRef.current)) {
+              onFormChange(values);
+              previousValuesRef.current = values;
+            }
 
             return (
               // warn user when leaving the page without saving
@@ -148,6 +156,7 @@ const FormComponent = ({
                       )}
                     </div>
                   ))}
+                <div>{children}</div>
                 <button
                   disabled={isSubmitting}
                   type="submit"

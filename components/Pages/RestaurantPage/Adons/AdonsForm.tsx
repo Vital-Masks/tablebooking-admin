@@ -19,12 +19,13 @@ import {
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
 import { uploadFileToS3 } from "@/lib/aws-s3";
+import { createAdon, getRestaurantAdonById, updateAdon } from "@/lib/actions/adons.action";
 
-const AdonsForm = ({ params, diningAreas, utilities }: any) => {
+const AdonsForm = ({ params }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const diningId = searchParams.get("edit");
+  const adonId = searchParams.get("edit");
 
   const defaultInitialValues = {
     diningType: "",
@@ -51,13 +52,10 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
   };
 
   const fetchDining = async () => {
-    if (!diningId || params.restaurantId === "c") return;
+    if (!adonId || params.restaurantId === "c") return;
 
     try {
-      const response: any = await getRestaurantDiningTimingById(
-        params.restaurantId,
-        diningId
-      );
+      const response: any = await getRestaurantAdonById(adonId);
 
       console.log(">>", response);
 
@@ -76,7 +74,7 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
     }
   };
 
-  const onSubmit = async (data: CreateDiningTimingParams) => {
+  const onSubmit = async (data: CreateAdonParams) => {
     try {
       if (params.restaurantId === "c") {
         toast.custom((t) => (
@@ -90,42 +88,42 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
         return;
       }
 
-      if (data?.coverImage) {
-        // Handle file uploads
-        const images = await Promise.all(
-          data?.coverImage?.map(async (img: any) => {
-            if (img.preview) {
-              const url = await uploadFileToS3(
-                img.preview,
-                "dining-timing-images"
-              );
-              return { photo: url };
-            }
-            return img;
-          })
-        );
-        // Filter out failed uploads
-        const validImages = images.filter((img) => img.photo !== null);
-        if (validImages.length === 0) {
-          toast.custom((t) => (
-            <ToastBanner
-              t={t}
-              type="ERROR"
-              message="File upload failed!"
-              detail="Please try uploading the image again."
-            />
-          ));
-          return;
-        }
+      // if (data?.coverImage) {
+      //   // Handle file uploads
+      //   const images = await Promise.all(
+      //     data?.coverImage?.map(async (img: any) => {
+      //       if (img.preview) {
+      //         const url = await uploadFileToS3(
+      //           img.preview,
+      //           "dining-timing-images"
+      //         );
+      //         return { photo: url };
+      //       }
+      //       return img;
+      //     })
+      //   );
+      //   // Filter out failed uploads
+      //   const validImages = images.filter((img) => img.photo !== null);
+      //   if (validImages.length === 0) {
+      //     toast.custom((t) => (
+      //       <ToastBanner
+      //         t={t}
+      //         type="ERROR"
+      //         message="File upload failed!"
+      //         detail="Please try uploading the image again."
+      //       />
+      //     ));
+      //     return;
+      //   }
 
-        data.coverImage = validImages;
-      }
+      //   // data.coverImage = validImages;
+      // }
 
       data.restaurantId = params.restaurantId;
 
       let result;
-      if (diningId) {
-        result = await updateDiningTiming(diningId, data);
+      if (adonId) {
+        result = await updateAdon(adonId, data);
         if (result) {
           toast.custom((t) => (
             <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
@@ -142,7 +140,7 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
           ));
         }
       } else {
-        result = await createDiningTiming(data);
+        result = await createAdon(data);
         if (result) {
           toast.custom((t) => (
             <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
@@ -173,10 +171,10 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
   };
 
   useEffect(() => {
-    if (diningId) {
+    if (adonId) {
       fetchDining();
     }
-  }, [diningId]);
+  }, [adonId]);
 
   // useEffect(() => {
   //   if (diningAreas.length > 0) {

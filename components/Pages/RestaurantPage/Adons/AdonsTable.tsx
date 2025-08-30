@@ -1,17 +1,15 @@
 import React from "react";
 import { columns } from "./columns";
 import Table from "@/components/Common/Table";
-import { getRestaurantDiningTiming } from "@/lib/actions/restaurant.actions";
-import { getAllRestaurantSubscriptions } from "@/lib/actions/subscription.action";
 import moment from "moment";
+import { getAllRestaurantAdons } from "@/lib/actions/adons.action";
 
 const AdonsTable = async ({ params }: any) => {
   const rowData: any[] = [];
   if (params.restaurantId !== "c") {
-    const subscriptions = await getAllRestaurantSubscriptions({
+    const subscriptions = await getAllRestaurantAdons({
       restaurantId: params.restaurantId,
     });
-    console.log("subscriptions >>", subscriptions);
 
     subscriptions?.map((res: any) => {
       rowData.push({
