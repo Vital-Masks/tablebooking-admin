@@ -41,7 +41,7 @@ const LoginForm = () => {
         if ('accessToken' in userLoggedInDetails && userLoggedInDetails.accessToken) {
           localStorage.setItem('accessToken', userLoggedInDetails.accessToken);
         }
-        router.push("/");
+        router.push("/dashboard");
         return true; // Return true to indicate success
       }
     } catch (error) {

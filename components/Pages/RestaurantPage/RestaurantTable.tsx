@@ -84,10 +84,6 @@ const RestaurantTable = () => {
     setFilteredRestaurants(restaurants);
   };
 
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
   return (
     <>
       <RestaurantTableHead 

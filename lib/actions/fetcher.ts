@@ -79,7 +79,6 @@ export async function fetcher<T>(
 
     // Check if response has 'result' property
     if (responseData && typeof responseData === 'object' && 'result' in responseData) {
-      console.log('🔍 Returning result property:', responseData.result);
       return responseData.result;
     } else {
       console.log('🔍 No result property found, returning entire response:', responseData);
