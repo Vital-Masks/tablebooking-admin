@@ -11,17 +11,19 @@ const AdonsTable = async ({ params }: any) => {
       restaurantId: params.restaurantId,
     });
 
-    adons?.map((res: any) => {
-      rowData.push({
-        id: res._id,
-        addonsType: res.addonType,
-        period: res.period,
-        fromDate: moment(res.startDate).format("DD-MM-YYYY"),
-        toDate: moment(res.endDate).format("DD-MM-YYYY"),
-        payment: res.paymentType,
-        amount: res.totalFee,
-      });
-    });
+    console.log("adons >>>>", adons);
+
+     adons?.map((res: any) => {
+       rowData.push({
+         id: res._id,
+         addonsType: res.addonid.name,
+         period: res.addontype,
+         fromDate: moment(res.startDate).format("DD-MM-YYYY"),
+         toDate: moment(res.endDate).format("DD-MM-YYYY"),
+         payment: res.paymenttype,
+         amount: res.totalfee,
+       });
+     });
   }
 
   return (

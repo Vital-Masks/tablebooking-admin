@@ -14,62 +14,31 @@ const Table = ({
   onButtonClick,
   Filter,
   isLoading,
+  pagination,
+  onPageChange,
 }: any) => {
-  const pageSize = 10;
-  const initialRecords = rowData.slice(0, pageSize);
-  const [page, setPage] = useState(1);
-  const [recordsData, setRecordsData] = useState(initialRecords);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    setPage(1);
-  }, []);
+  // For server-side pagination, use the data as-is
+  // For client-side pagination (when no onPageChange provided), use local pagination
+  const [page, setPage] = useState(1);
+  const [recordsData, setRecordsData] = useState(rowData);
 
   useEffect(() => {
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize;
-    setRecordsData(rowData.slice(from, to));
-  }, [page, rowData]);
+    if (!onPageChange) {
+      // Client-side pagination
+      const pageSize = pagination?.limit || 10;
+      const from = (page - 1) * pageSize;
+      const to = from + pageSize;
+      setRecordsData(rowData.slice(from, to));
+    } else {
+      // Server-side pagination - use data as provided
+      setRecordsData(rowData);
+    }
+  }, [page, rowData, onPageChange, pagination?.limit]);
 
   return (
     <div className="panel h-full flex-1">
-      {/* {title && <p className="mb-2 font-semibold">{title}</p>}
-      <div className="flex flex-col justify-between flex-wrap gap-5 mb-5 md:flex-row md:items-center">
-        <div className="flex gap-5">
-          <div className="dropdown">
-            <Dropdown
-              placement="bottom-start"
-              btnClassName="btn btn-primary dropdown-toggle shadow-none"
-              button={
-                <>
-                  <span>
-                    <IconFilter className="mr-2 inline-block w-4 h-4" />
-                  </span>
-                  <span>Filter</span>
-                </>
-              }
-            >
-              {Filter && <Filter />}
-            </Dropdown>
-          </div>
-          <div>
-            <input
-              type="text"
-              className="w-auto form-input"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        </div>
-        {onButtonClick && (
-          <div className="shrink-0">
-            <Button type="filled" onClick={() => onButtonClick()}>
-              + Create new
-            </Button>
-          </div>
-        )}
-      </div> */}
       <div className="datatables h-full">
         <DataTable
           noRecordsText={
@@ -79,10 +48,21 @@ const Table = ({
           minHeight={400}
           records={recordsData}
           columns={columns}
-          totalRecords={rowData.length}
-          recordsPerPage={pageSize}
-          page={page}
-          onPageChange={(p) => setPage(p)}
+          totalRecords={pagination?.total}
+          recordsPerPage={pagination?.limit}
+          page={pagination?.page}
+          paginationActiveTextColor="white"
+
+
+          onPageChange={(p) => {
+            if (onPageChange) {
+              // Server-side pagination
+              onPageChange(p);
+            } else {
+              // Client-side pagination
+              setPage(p);
+            }
+          }}
         />
       </div>
     </div>

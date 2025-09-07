@@ -1,16 +1,9 @@
 "use server";
 import { fetcher } from "./fetcher";
-import { getSession } from "../session";
 
-export const getCustomers = async (): Promise<any[] | null> => {
+export const getCustomers = async (params: string): Promise<any[] | null> => {
   try {
-    console.log('🔍 API_ENDPOINT:', process.env.API_ENDPOINT);
-    const session = await getSession();
-    console.log('🔍 Session accessToken:', session?.accessToken ? 'Present' : 'Missing');
-    
-    const result = await fetcher<Restaurant[]>('/guestUser/getAllGuestUsers');
-    console.log('🔍 Fetcher result:', result);
-    
+    const result = await fetcher<Restaurant[]>('/guestUser/getAllGuestUsers?' + params);
     return result;
   } catch (error) {
     console.error('🚨 getCustomers error:', error);

@@ -5,8 +5,8 @@ import * as Yup from "yup";
 // ============================================================================
 
 const AVAILABILITY_STATUSES = [
-  { label: "Available", value: true },
-  { label: "Not Available", value: false },
+  { label: "Available", value: "active" },
+  { label: "Not Available", value: "inactive" },
 ];
 
 // ============================================================================
@@ -39,14 +39,31 @@ interface FormField {
 
 export const adonsFormFields: FormField[] = [
   {
-    id: "addonsType",
-    name: "addonsType",
-    label: "Subscription Type",
+    id: "addonid",
+    name: "addonid",
+    label: "Addon Plan",
     type: "select",
     placeholder: "Select addons type",
+    options: [],
+  },
+  {
+    id: "count",
+    name: "count",
+    label: "Addons Count",
+    type: "number",
+    min: 1,
+    step: 1,
+    max: 10,
+    placeholder: "Select addons count",
+  },
+  {
+    id: "addontype",
+    name: "addontype",
+    label: "Addons Type",
+    type: "select",
     options: [
-      { label: "Monthly", value: "Monthly" },
-      { label: "Yearly", value: "Yearly" },
+      { label: "Monthly", value: "monthly" },
+      { label: "Yearly", value: "yearly" },
     ],
   },
   {
@@ -60,22 +77,22 @@ export const adonsFormFields: FormField[] = [
     placeholder: "Select period",
   },
   {
-    id: "startDate",
-    name: "startDate",
+    id: "startdate",
+    name: "startdate",
     label: "From Date",
     type: "date",
     placeholder: "Select from date",
   },
   {
-    id: "paymentType",
-    name: "paymentType",
+    id: "paymenttype",
+    name: "paymenttype",
     label: "Payment",
     type: "select",
     placeholder: "Select payment",
     options: [
-      { label: "Cash", value: "cash" },
-      { label: "Card", value: "card" },
-      { label: "Free", value: "free" },
+      { label: "Paid", value: "paid" },
+      { label: "Card", value: "Card" },
+      { label: "Free", value: "Free" },
     ],
   },
   {
@@ -102,17 +119,17 @@ export const adonsFormFields: FormField[] = [
           { label: "Percentage", value: "percentage" },
           { label: "Fixed", value: "fixed" },
         ],
-      }
+      },
     ],
   },
   {
-    id: "isActive",
-    name: "isActive",
+    id: "status",
+    name: "status",
     label: "Status",
     type: "select",
     placeholder: "Select status",
     options: AVAILABILITY_STATUSES,
-  }
+  },
 ];
 
 // ============================================================================
@@ -120,14 +137,15 @@ export const adonsFormFields: FormField[] = [
 // ============================================================================
 
 export const adonsFormSchema = Yup.object().shape({
-  subscriptionType: Yup.string().required("Subscription type is required"),
+  addonid: Yup.string().required("Addon plan is required"),
+  count: Yup.number().required("Addons count is required"),
+  addontype: Yup.string().required("Addons type is required"),
   period: Yup.number().required("Period is required"),
-  startDate: Yup.date().required("From date is required"),
-  endDate: Yup.date().required("To date is required"),
-  payment: Yup.string().required("Payment is required"),
-  discountValue: Yup.number().required("Discount value is required"),
+  startdate: Yup.date().required("From date is required"),
+  paymenttype: Yup.string().required("Payment is required"),
+  discountValue: Yup.string().required("Discount value is required"),
   discountType: Yup.string().required("Discount type is required"),
-  isActive: Yup.boolean().required("Status is required"),
+  status: Yup.string().required("Status is required"),
 });
 
 // ============================================================================

@@ -1,5 +1,17 @@
 import { fetcher, revalidate } from "./fetcher";
 
+export const getAllAdonsPlans = async () => {
+  return await fetcher<[]>(`/addonPlan`, {
+    method: "GET",
+  });
+};
+
+export const getAdonPlanById = async (id: string) => {
+  return await fetcher<[]>(`/addonPlan/${id}`, {
+    method: "GET",
+  });
+};
+
 export const getAllRAdons = async () => {
   return await fetcher<[]>(`/addon`, {
     method: "GET",
@@ -12,47 +24,35 @@ export const getAllRestaurantAdons = async ({
   restaurantId: string;
 }) => {
   return await fetcher<CreateAdonParams[]>(
-    `/addon/restaurant/${restaurantId}`,
+    `/restaurantAddon/restaurant/${restaurantId}`,
     {
       method: "GET",
     }
   );
 };
 
-export const getRestaurantAdonById = async ( adonId: string) => {
-  return await fetcher<CreateAdonParams>(
-    `/addon/restaurant/${adonId}`,
-    {
-      method: "GET",
-    }
-  );
+export const getRestaurantAdonById = async (adonId: string) => {
+  return await fetcher<CreateAdonParams>(`/restaurantAddon/${adonId}`, {
+    method: "GET",
+  });
 };
 
 export const createAdon = async (data: CreateAdonParams) => {
-  const result = await fetcher<CreateAdonParams>(
-    "/addon",
-    {
-      method: "POST",
-      body: data,
-    }
-  );
+  const result = await fetcher<CreateAdonParams>("/restaurantAddon", {
+    method: "POST",
+    body: data,
+  });
 
-  revalidate(`/restaurant/${data.restaurantId}/add-ons`);
+  revalidate(`/restaurant/${data.restaurantid}/add-ons`);
   return result;
 };
 
-export const updateAdon = async (
-  id: string,
-  data: CreateAdonParams
-) => {
-  const result = await fetcher<CreateAdonParams>(
-    `/addon/${id}`,
-    {
-      method: "PUT",
-      body: data,
-    }
-  );
+export const updateAdon = async (id: string, data: CreateAdonParams) => {
+  const result = await fetcher<CreateAdonParams>(`/restaurantAddon/${id}`, {
+    method: "PUT",
+    body: data,
+  });
 
-  revalidate(`/restaurant/${data.restaurantId}/add-ons`);
+  revalidate(`/restaurant/${data.restaurantid}/add-ons`);
   return result;
 };
