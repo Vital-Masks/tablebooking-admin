@@ -19,7 +19,6 @@ phases:
   build:
     commands:
       - echo "Build started on $(date)"
-      - cp .env.prod .env
       - echo "Installing dependencies..."
       - yarn install --frozen-lockfile
       - echo "Building Next.js frontend..."
