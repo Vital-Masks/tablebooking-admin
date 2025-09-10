@@ -1,12 +1,14 @@
 "use server";
 import { fetcher } from "./fetcher";
 
-export const getCustomers = async (): Promise<any[] | null> => {
-  const response: any = await fetcher(`/guestUser/getAllGuestUsers`);
-  if (response.error) {
-    throw new Error(`Failed to fetch: ${response.error}`);
+export const getCustomers = async (params: string): Promise<any[] | null> => {
+  try {
+    const result = await fetcher<Restaurant[]>('/guestUser/getAllGuestUsers?' + params);
+    return result;
+  } catch (error) {
+    console.error('🚨 getCustomers error:', error);
+    return null;
   }
-  return response;
 };
 
 export const getUserById = async (id: string) => {

@@ -1,44 +1,48 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import FormComponent from "@/components/Common/Form";
 import FormSlider from "@/components/Common/Form/FormSlider";
 import Button from "@/components/Elements/Button";
 
 import {
-  createDiningTiming,
-  getRestaurantDiningTimingById,
-  updateDiningTiming,
-} from "@/lib/actions/restaurant.actions";
-
-import { findField, handleError, returnCommonObject } from "@/lib/utils";
+  findField,
+  formatPriceInLKR,
+  handleError,
+  returnCommonObject,
+} from "@/lib/utils";
 import {
-  subscriptionFormFields,
-  subscriptionFormSchema,
-} from "@/constants/FormsDataJs/SubscriptionForm";
+  adonsFormFields,
+  adonsFormSchema,
+} from "@/constants/FormsDataJs/adonsForm";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
-import { uploadFileToS3 } from "@/lib/aws-s3";
+import {
+  createAdon,
+  getAdonPlanById,
+  getRestaurantAdonById,
+  updateAdon,
+} from "@/lib/actions/adons.action";
+import moment from "moment";
 
-const AdonsForm = ({ params, diningAreas, utilities }: any) => {
+const AdonsForm = ({ params, adonsPlansOptions }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const diningId = searchParams.get("edit");
+  const adonId = searchParams.get("edit");
+  const [planPrice, setPlanPrice] = useState<any>(null);
+  const [totalPrice, setTotalPrice] = useState<any>(null);
 
   const defaultInitialValues = {
-    diningType: "",
-    diningName: "",
-    description: "",
-    dateType: "Custom Date",
-    days: [],
-    dateFrom: "",
-    dateTo: "",
-    timeFrom: "",
-    timeTo: "",
-    availabilityStatus: "",
-    pricePerPerson: "",
-    diningAreaIds: [],
+    addonid: "",
+    count: "",
+    addontype: "",
+    period: "",
+    startdate: "",
+    paymenttype: "",
+    discountValue: "",
+    discountType: "",
+    status: "",
   };
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -47,24 +51,30 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
   const closeForm = () => {
     setInitialValues(defaultInitialValues);
     setIsFormOpen(false);
+    setPlanPrice(null);
+    setTotalPrice(null);
     router.replace(pathname, { scroll: false });
   };
 
-  const fetchDining = async () => {
-    if (!diningId || params.restaurantId === "c") return;
+  const fetchAdon = async () => {
+    if (!adonId || params.restaurantId === "c") return;
 
     try {
-      const response: any = await getRestaurantDiningTimingById(
-        params.restaurantId,
-        diningId
-      );
-
-      console.log(">>", response);
-
+      const response: any = await getRestaurantAdonById(adonId);
+   
       if (response) {
-        let data = returnCommonObject(initialValues, response);
-        data["coverImage"] = [{ photo: response.coverImage }];
-        data["diningAreas"] = [...response.diningAreaIds];
+        const data = {
+          addonid: response.addonid._id,
+          count: response.count,
+          addontype: response.addontype,
+          period: response.period,
+          startdate: moment(response.startdate).format("YYYY-MM-DD"),
+          paymenttype: response.paymenttype,
+          discountValue: response.discount.value,
+          discountType: response.discount.type,
+          status: response.status,
+        };
+
         setInitialValues(data);
         setIsFormOpen(true);
       }
@@ -76,7 +86,7 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
     }
   };
 
-  const onSubmit = async (data: CreateDiningTimingParams) => {
+  const onSubmit = async (formData: CreateAdonParams) => {
     try {
       if (params.restaurantId === "c") {
         toast.custom((t) => (
@@ -90,42 +100,19 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
         return;
       }
 
-      if (data?.coverImage) {
-        // Handle file uploads
-        const images = await Promise.all(
-          data?.coverImage?.map(async (img: any) => {
-            if (img.preview) {
-              const url = await uploadFileToS3(
-                img.preview,
-                "dining-timing-images"
-              );
-              return { photo: url };
-            }
-            return img;
-          })
-        );
-        // Filter out failed uploads
-        const validImages = images.filter((img) => img.photo !== null);
-        if (validImages.length === 0) {
-          toast.custom((t) => (
-            <ToastBanner
-              t={t}
-              type="ERROR"
-              message="File upload failed!"
-              detail="Please try uploading the image again."
-            />
-          ));
-          return;
-        }
-
-        data.coverImage = validImages;
-      }
-
-      data.restaurantId = params.restaurantId;
-
-      let result;
-      if (diningId) {
-        result = await updateDiningTiming(diningId, data);
+      const data = {
+        ...formData,
+        restaurantid: params.restaurantId,
+        discount: {
+          value: formData.discountValue || 0,
+          type: formData.discountType || "percentage",
+        },
+        addonfee: planPrice,
+        totalfee: totalPrice,
+      };
+      let result: any;
+      if (adonId) {
+        result = await updateAdon(adonId, data);
         if (result) {
           toast.custom((t) => (
             <ToastBanner t={t} type="SUCCESS" message="Updated Successfully!" />
@@ -142,20 +129,20 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
           ));
         }
       } else {
-        result = await createDiningTiming(data);
-        if (result) {
-          toast.custom((t) => (
-            <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
-          ));
-          closeForm();
-        } else {
+        result = await createAdon(data);
+        if (!result?.success) {
           toast.custom((t) => (
             <ToastBanner
               t={t}
               type="ERROR"
               message="Creation failed!"
-              detail="Please check your data and try again."
+              detail={result?.error?.message}
             />
+          ));
+          closeForm();
+        } else {
+          toast.custom((t) => (
+            <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
           ));
         }
       }
@@ -172,28 +159,86 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
     }
   };
 
-  useEffect(() => {
-    if (diningId) {
-      fetchDining();
+  // Calculate total price with discount
+  const calculateTotalPrice = (
+    basePrice: number,
+    period: string,
+    discountValue: number,
+    discountType: string
+  ) => {
+    const periodMultiplier = getPeriodMultiplier(period);
+    let totalPrice = basePrice * periodMultiplier;
+
+    if (discountValue > 0) {
+      const discountAmount =
+        discountType === "percentage"
+          ? totalPrice * (discountValue / 100)
+          : discountValue;
+      totalPrice -= discountAmount;
     }
-  }, [diningId]);
 
-  // useEffect(() => {
-  //   if (diningAreas.length > 0) {
-  //     findField(diningFormField, "diningAreaIds")["options"] = diningAreas;
-  //   }
-  // }, [diningAreas]);
+    return Math.max(0, totalPrice);
+  };
 
-  // useEffect(() => {
-  //   const options = Object.entries(utilities?.[0].experienceType).map(
-  //     ([key, value]) => ({
-  //       label: value,
-  //       value: value,
-  //     })
-  //   );
+  // Get period multiplier for pricing calculation
+  const getPeriodMultiplier = (period: string): number => {
+    const multipliers = {
+      monthly: 1,
+      quarterly: 3,
+      yearly: 12,
+    };
+    return multipliers[period as keyof typeof multipliers] || 1;
+  };
 
-  //   findField(diningFormField, "diningType")["options"] = options;
-  // }, [utilities]);
+  // Handle form value changes
+  const handleFormChange = async (values: any) => {
+    if (!values.addonid) {
+      setPlanPrice(null);
+      setTotalPrice(null);
+      return;
+    }
+
+    try {
+      const planData: any = await getAdonPlanById(values.addonid);
+      if (!planData || typeof planData.price !== "number") {
+        console.error("Invalid plan data received");
+        setPlanPrice(null);
+        setTotalPrice(null);
+        return;
+      }
+
+      const basePrice = planData.price;
+      const discountValue = parseFloat(values.discountValue) || 0;
+      const discountType = values.discountType || "percentage";
+
+      setPlanPrice(basePrice);
+
+      const calculatedTotalPrice = calculateTotalPrice(
+        basePrice,
+        values.period,
+        discountValue,
+        discountType
+      );
+
+      setTotalPrice(calculatedTotalPrice);
+    } catch (error) {
+      console.error("Error fetching plan details:", error);
+      setPlanPrice(null);
+      setTotalPrice(null);
+    }
+  };
+
+  useEffect(() => {
+    if (adonId) {
+      fetchAdon();
+    }
+  }, [adonId]);
+
+  useEffect(() => {
+    if (adonsPlansOptions) {
+      findField(adonsFormFields, "addonid")["options"] = adonsPlansOptions;
+    }
+  }, [adonsPlansOptions]);
 
   return (
     <>
@@ -207,12 +252,34 @@ const AdonsForm = ({ params, diningAreas, utilities }: any) => {
       <FormSlider isOpen={isFormOpen}>
         <FormComponent
           title="Create Dining Timing"
-          fields={subscriptionFormFields}
+          fields={adonsFormFields}
           initialValues={initialValues}
-          validationSchema={subscriptionFormSchema}
+          validationSchema={adonsFormSchema}
           closeForm={closeForm}
           handleSubmit={onSubmit}
-        />
+          onFormChange={handleFormChange}
+        >
+          {planPrice && (
+            <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <p>Amount</p>
+                <p></p>
+              </div>
+              <span className="flex justify-between items-center">
+                <p>Plan Fee</p>
+                <p className="font-bold">{formatPriceInLKR(planPrice)}</p>
+              </span>
+            </div>
+          )}
+          {totalPrice && (
+            <div className="space-y-1">
+              <span className="flex justify-between items-center">
+                <p>Total</p>
+                <p className="font-bold">{formatPriceInLKR(totalPrice)}</p>
+              </span>
+            </div>
+          )}
+        </FormComponent>
       </FormSlider>
     </>
   );

@@ -139,6 +139,8 @@ const RestaurantTableHead = ({
         subscription: filterValues.subscription,
       };
 
+      console.log(">>", filterData);
+
       const filteredRestaurants = await filterRestaurants(filterData);
       
       if (filteredRestaurants) {

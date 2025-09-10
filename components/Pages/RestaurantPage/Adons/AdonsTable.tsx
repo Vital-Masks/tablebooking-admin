@@ -1,29 +1,29 @@
 import React from "react";
 import { columns } from "./columns";
 import Table from "@/components/Common/Table";
-import { getRestaurantDiningTiming } from "@/lib/actions/restaurant.actions";
-import { getAllRestaurantSubscriptions } from "@/lib/actions/subscription.action";
 import moment from "moment";
+import { getAllRestaurantAdons } from "@/lib/actions/adons.action";
 
 const AdonsTable = async ({ params }: any) => {
   const rowData: any[] = [];
   if (params.restaurantId !== "c") {
-    const subscriptions = await getAllRestaurantSubscriptions({
+    const adons = await getAllRestaurantAdons({
       restaurantId: params.restaurantId,
     });
-    console.log("subscriptions >>", subscriptions);
 
-    subscriptions?.map((res: any) => {
-      rowData.push({
-        id: res._id,
-        subscriptionType: res.planId.name,
-        period: res.planId.billingCycle,
-        fromDate: moment(res.startDate).format("DD-MM-YYYY"),
-        toDate: moment(res.endDate).format("DD-MM-YYYY"),
-        payment: res.payment,
-        amount: res.totalBill,
-      });
-    });
+    console.log("adons >>>>", adons);
+
+     adons?.map((res: any) => {
+       rowData.push({
+         id: res._id,
+         addonsType: res.addonid.name,
+         period: res.addontype,
+         fromDate: moment(res.startDate).format("DD-MM-YYYY"),
+         toDate: moment(res.endDate).format("DD-MM-YYYY"),
+         payment: res.paymenttype,
+         amount: res.totalfee,
+       });
+     });
   }
 
   return (

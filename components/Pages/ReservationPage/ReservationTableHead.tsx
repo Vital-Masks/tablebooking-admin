@@ -101,7 +101,9 @@ const ReservationTableHead = ({
         table: filterValues.table,
       };
 
+      
       const filteredReservations = await filterReservations(filterData);
+     
 
       if (filteredReservations) {
         const formattedData = filteredReservations.map((res: any) => ({
@@ -119,6 +121,7 @@ const ReservationTableHead = ({
           status: res.status || "",
           table: res.tableNo || "",
           createdOn: res.created_at || "",
+          reservationType: res.reservationType || "",
         }));
 
         onFilterChange(formattedData);
@@ -175,7 +178,12 @@ const ReservationTableHead = ({
         {
           type: "checkbox",
           title: "Booked",
-          value: "booked",
+          value: "Booked",
+        },
+        {
+          type: "checkbox",
+          title: "Pending",
+          value: "Pending",
         },
         {
           type: "checkbox",

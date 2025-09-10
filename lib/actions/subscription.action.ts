@@ -6,6 +6,13 @@ export const getAllRSubscriptionPlans = async () => {
   });
 };
 
+export const getSubscriptionPlanById = async (id: string) => {
+  return await fetcher<CreateSubscriptionParams>(`/subscriptionPlans/${id}`, {
+    method: "GET",
+  });
+};
+
+
 export const getAllRestaurantSubscriptions = async ({
   restaurantId,
 }: {
@@ -29,7 +36,7 @@ export const getRestaurantSubscriptionById = async (subscriptionId: string) => {
 };
 
 export const createSubscription = async (data: CreateSubscriptionParams) => {
-  const result = await fetcher<CreateSubscriptionParams>(
+  const result: any = await fetcher<CreateSubscriptionParams>(
     "/restaurantSubscription",
     {
       method: "POST",
@@ -38,6 +45,9 @@ export const createSubscription = async (data: CreateSubscriptionParams) => {
   );
 
   revalidate(`/restaurant/${data.restaurantId}/subscription`);
+  if (!result.error) {
+    return { success: true, result };
+  }
   return result;
 };
 

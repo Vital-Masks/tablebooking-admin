@@ -52,7 +52,7 @@ export async function fetcher<T>(
       headers,
       body: body ? JSON.stringify(body) : undefined,
     };
-
+    
     const response = await fetch(ENDPOINT + url, fetchOptions);
 
     if (!response.ok) {
@@ -67,8 +67,23 @@ export async function fetcher<T>(
       return errorData; // Return error data instead of throwing
     }
 
-    const { result } = await response.json();
-    return result; // Return the result directly, not await it
+    const responseText = await response.text();
+    
+    let responseData;
+    try {
+      responseData = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('🚨 Failed to parse JSON response:', parseError);
+      return null;
+    }
+
+    // Check if response has 'result' property
+    if (responseData && typeof responseData === 'object' && 'result' in responseData) {
+      return responseData.result;
+    } else {
+      console.log('🔍 No result property found, returning entire response:', responseData);
+      return responseData;
+    }
   } catch (error) {
     console.error("🚨 Fetch error:", error);
     return null;

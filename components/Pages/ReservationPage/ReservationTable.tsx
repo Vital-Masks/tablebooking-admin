@@ -48,8 +48,8 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
 
   // Filter reservations by type
   const filterReservationsByType = (reservations: Reservation[]) => {
-    const system = reservations.filter(res => res.reservationType?.toLowerCase() === 'system');
-    const manual = reservations.filter(res => res.reservationType?.toLowerCase() === 'manual');
+    const system = rowData.filter(res => res.reservationType?.toLowerCase() === 'system');
+    const manual = rowData.filter(res => res.reservationType?.toLowerCase() === 'manual');
     setSystemReservations(system);
     setManualReservations(manual);
   };
@@ -94,6 +94,10 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
 
   const handleFilterChange = (filteredData: Reservation[]) => {
     setRowData(filteredData);
+    const system = filteredData.filter(res => res.reservationType?.toLowerCase() === 'system');
+    const manual = filteredData.filter(res => res.reservationType?.toLowerCase() === 'manual');
+    setSystemReservations(system);
+    setManualReservations(manual);
   };
 
   const handleSearchChange = (searchValue: string) => {

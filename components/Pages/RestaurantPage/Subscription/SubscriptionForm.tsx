@@ -14,9 +14,15 @@ import ToastBanner from "@/components/Elements/ToastBanner";
 import {
   createSubscription,
   getRestaurantSubscriptionById,
+  getSubscriptionPlanById,
   updateSubscription,
 } from "@/lib/actions/subscription.action";
-import { findField, handleError, returnCommonObject } from "@/lib/utils";
+import {
+  findField,
+  formatPriceInLKR,
+  handleError,
+  returnCommonObject,
+} from "@/lib/utils";
 import moment from "moment";
 
 const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
@@ -24,6 +30,9 @@ const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
   const router = useRouter();
   const pathname = usePathname();
   const subscriptionId = searchParams.get("edit");
+
+  const [planPrice, setPlanPrice] = useState<any>(null);
+  const [totalPrice, setTotalPrice] = useState<any>(null);
 
   const defaultInitialValues = {
     subscriptionType: "",
@@ -42,6 +51,8 @@ const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
   const closeForm = () => {
     setInitialValues(defaultInitialValues);
     setIsFormOpen(false);
+    setPlanPrice(null);
+    setTotalPrice(null);
     router.replace(pathname, { scroll: false });
   };
 
@@ -67,6 +78,8 @@ const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
           value: formData.discountValue || 0,
           type: formData.discountType || "percentage",
         },
+        planFee: planPrice,
+        totalFee: totalPrice,
       };
 
       let result: any;
@@ -113,6 +126,7 @@ const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
         }
       } else {
         result = await createSubscription(data);
+        console.log(">>", result);
         if (result && result.success) {
           toast.custom((t) => (
             <ToastBanner t={t} type="SUCCESS" message="Created Successfully!" />
@@ -136,6 +150,8 @@ const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
           return { success: false };
         }
       }
+
+      
     } catch (error) {
       console.error("Error in form submission:", error);
       toast.custom((t) => (
@@ -187,6 +203,74 @@ const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
     }
   }, [subscriptionPlansOptions]);
 
+  useEffect(() => {
+    console.log(initialValues);
+  }, [initialValues]);
+
+  // Calculate total price with discount
+  const calculateTotalPrice = (basePrice: number, period: string, discountValue: number, discountType: string) => {
+    const periodMultiplier = getPeriodMultiplier(period);
+    let totalPrice = basePrice * periodMultiplier;
+    
+    if (discountValue > 0) {
+      const discountAmount = discountType === "percentage" 
+        ? totalPrice * (discountValue / 100)
+        : discountValue;
+      totalPrice -= discountAmount;
+    }
+    
+    return Math.max(0, totalPrice);
+  };
+
+  // Get period multiplier for pricing calculation
+  const getPeriodMultiplier = (period: string): number => {
+    const multipliers = {
+      monthly: 1,
+      quarterly: 3,
+      yearly: 12
+    };
+    return multipliers[period as keyof typeof multipliers] || 1;
+  };
+
+  // Handle form value changes
+  const handleFormChange = async (values: any) => {
+    if (!values.planId) {
+      setPlanPrice(null);
+      setTotalPrice(null);
+      return;
+    }
+
+    try {
+      const planData: any = await getSubscriptionPlanById(values.planId);
+      
+      if (!planData || typeof planData.price !== 'number') {
+        console.error("Invalid plan data received");
+        setPlanPrice(null);
+        setTotalPrice(null);
+        return;
+      }
+      
+      const basePrice = planData.price;
+      const discountValue = parseFloat(values.discountValue) || 0;
+      const discountType = values.discountType || "percentage";
+      
+      setPlanPrice(basePrice);
+      
+      const calculatedTotalPrice = calculateTotalPrice(
+        basePrice,
+        values.period,
+        discountValue,
+        discountType
+      );
+      
+      setTotalPrice(calculatedTotalPrice);
+    } catch (error) {
+      console.error("Error fetching plan details:", error);
+      setPlanPrice(null);
+      setTotalPrice(null);
+    }
+  };
+
   return (
     <>
       <Button
@@ -204,7 +288,25 @@ const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
           validationSchema={subscriptionFormSchema}
           closeForm={closeForm}
           handleSubmit={onSubmit}
-        />
+          onFormChange={handleFormChange}
+        >
+          {planPrice && (
+            <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <p>Amount</p>
+                <p></p>
+              </div>
+              <span className="flex justify-between items-center">
+                <p>Plan Fee</p>
+                <p className="font-bold">{formatPriceInLKR(planPrice)}</p>
+              </span>
+              <span className="flex justify-between items-center">
+                <p>Total Fee</p>
+                <p className="font-bold">{formatPriceInLKR(totalPrice)}</p>
+              </span>
+            </div>
+          )}
+        </FormComponent>
       </FormSlider>
     </>
   );
