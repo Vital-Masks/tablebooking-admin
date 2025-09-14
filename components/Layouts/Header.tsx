@@ -24,7 +24,7 @@ const Header = () => {
             </button>
             <Link href="/" className="main-logo flex shrink-0 items-center">
               <span className="hidden align-middle text-2xl font-semibold  transition-all duration-300 ml-1.5 md:inline">
-                <Image src="/logo.png" alt="logo" width={100} height={100} className="h-5 !w-full object-contain" />
+                <Image src="/logo-2.png" alt="logo" width={100} height={100} className="h-8 !w-full object-contain" />
               </span>
             </Link>
           </div>

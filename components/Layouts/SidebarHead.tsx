@@ -10,10 +10,10 @@ const SidebarHead = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className="flex items-center justify-between px-4 py-3">
+    <div className="flex items-center justify-between px-4 py-3 border-b">
       <Link href="/" className="flex items-center main-logo shrink-0">
         <span className="align-middle text-2xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">
-        <Image src="/logo.png" alt="logo" width={100} height={100} className="h-5 !w-full object-contain" />
+        <Image src="/logo-2.png" alt="logo" width={100} height={100} className="h-8 !w-full object-contain" />
         </span>
       </Link>
 
