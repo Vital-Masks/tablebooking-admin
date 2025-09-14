@@ -29,7 +29,7 @@ const Header = () => {
             </Link>
           </div>
           <div></div>
-          <Notification />
+          {/* <Notification /> */}
         </div>
       </div>
     </header>
