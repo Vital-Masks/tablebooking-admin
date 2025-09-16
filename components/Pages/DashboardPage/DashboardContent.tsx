@@ -8,20 +8,33 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import VanillaCalendar from "@/components/Common/Fields/VanillaCalendar";
 import { Options } from "vanilla-calendar-pro";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { getRestaurantsListByHospitalityChain } from "@/lib/actions/restaurant.actions";
 
 export default function DashboardContent({
   stats,
-  restaurants,
   hospitalityChains,
 }: {
   stats: any;
-  restaurants: any;
   hospitalityChains: any;
 }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [restaurants, setRestaurants] = useState<any[]>([]);
+  const hospitalityChainId = searchParams.get("hospitalityChainId");
+
+ 
+
+  const loadRestaurants = async ({
+    hospitalityChainId,
+  }: {
+    hospitalityChainId: string;
+  }) => {
+    const restaurantsData =
+      await getRestaurantsListByHospitalityChain(hospitalityChainId);
+    setRestaurants(restaurantsData || []);
+  };
 
   // Transform the stats data to match the analytics card format
   const analyticsData = [
@@ -152,43 +165,21 @@ export default function DashboardContent({
     },
   };
 
+  useEffect(() => {
+    if(hospitalityChainId){
+      loadRestaurants({ hospitalityChainId: hospitalityChainId });
+    }
+    else if (hospitalityChains) {
+      loadRestaurants({ hospitalityChainId: hospitalityChains?.[0]?._id });
+    }
+  }, [hospitalityChainId]);
+
   return (
     <main>
       <div>
         <div className="flex items-center p-3 justify-between panel whitespace-nowrap text-primary mb-6">
           <h2 className="text-lg text-black font-bold">Dashboard</h2>
           <div className="flex items-center gap-2">
-            <div className="dropdown">
-              <Dropdown
-                placement="bottom-start"
-                btnClassName="btn btn-primary dropdown-toggle shadow-none"
-                button={
-                  <>
-                    <span>
-                      <IconFilter className="mr-2 inline-block w-4 h-4" />
-                    </span>
-                    <span>Restaurant</span>
-                  </>
-                }
-              >
-                <ul className="!min-w-[170px] max-h-[150px] overflow-y-auto">
-                  {restaurants.map((restaurant: any) => (
-                    <li key={restaurant._id}>
-                      <Link
-                        href={{
-                          pathname: "/dashboard",
-                          query: buildQueryParams({
-                            restaurantId: restaurant._id,
-                          }),
-                        }}
-                      >
-                        {restaurant.restaurantName}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </Dropdown>
-            </div>
             <div className="dropdown">
               <Dropdown
                 placement="bottom-start"
@@ -220,6 +211,38 @@ export default function DashboardContent({
                 </ul>
               </Dropdown>
             </div>
+            <div className="dropdown">
+              <Dropdown
+                placement="bottom-start"
+                btnClassName="btn btn-primary dropdown-toggle shadow-none"
+                button={
+                  <>
+                    <span>
+                      <IconFilter className="mr-2 inline-block w-4 h-4" />
+                    </span>
+                    <span>Restaurant</span>
+                  </>
+                }
+              >
+                <ul className="!min-w-[170px] max-h-[150px] overflow-y-auto">
+                  {restaurants?.map((restaurant: any) => (
+                    <li key={restaurant._id}>
+                      <Link
+                        href={{
+                          pathname: "/dashboard",
+                          query: buildQueryParams({
+                            restaurantId: restaurant._id,
+                          }),
+                        }}
+                      >
+                        {restaurant.restaurantName}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </Dropdown>
+            </div>
+
             <div className="p-4 w-[200px]">
               <VanillaCalendar
                 config={calendarOptions}

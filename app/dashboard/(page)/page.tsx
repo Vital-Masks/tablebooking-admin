@@ -35,5 +35,5 @@ export default async function Home({ searchParams }: DashboardPageProps) {
     customEnd: new Date().toISOString().split("T")[0],
   });
 
-  return <DashboardContent stats={stats ?? {}} restaurants={restaurants} hospitalityChains={hospitalityChains} />;
+  return <DashboardContent stats={stats ?? {}} hospitalityChains={hospitalityChains} />;
 }

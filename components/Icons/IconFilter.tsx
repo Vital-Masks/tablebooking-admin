@@ -15,22 +15,29 @@ const IconFilter: FC<IconFilterProps> = ({ className }) => {
       className={className}
     >
       <path
-        d="M22 7L9 7M2 7L5 7"
+        d="M3 7h18M6 12h12M9 17h6"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="2"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      <path
-        d="M19 12H16M5 12L12 12"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
+      <circle
+        cx="18"
+        cy="7"
+        r="2"
+        fill="currentColor"
       />
-      <path
-        d="M16 17H8"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
+      <circle
+        cx="9"
+        cy="12"
+        r="2"
+        fill="currentColor"
+      />
+      <circle
+        cx="12"
+        cy="17"
+        r="2"
+        fill="currentColor"
       />
     </svg>
   );
