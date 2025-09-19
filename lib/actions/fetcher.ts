@@ -54,7 +54,7 @@ export async function fetcher<T>(
     };
     
     const response = await fetch(ENDPOINT + url, fetchOptions);
-
+   
     if (!response.ok) {
       const errorData = await response.json();
       console.error(`🚨 Response Error: ${response.status}`, errorData);

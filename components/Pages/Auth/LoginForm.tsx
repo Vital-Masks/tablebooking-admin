@@ -1,132 +1,118 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
-import IconLockDots from "@/components/Icons/IconLockDots";
-import IconMail from "@/components/Icons/IconMail";
-import { IconEye, IconEyeOff } from "@/components/Icons";
-import { signInCognitoUser } from "@/lib/aws-auth";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { Field, Form, Formik, FormikProps } from "formik";
-import * as Yup from "yup";
+import { Form, Formik, FormikProps } from "formik";
+import { login } from "@/lib/actions/auth.action";
+import OTPForm from "./OTPForm";
+import LoginFormFields from "./LoginFormFields";
+import {
+  LOGIN_FORM_INITIAL_VALUES,
+  LOGIN_VALIDATION_SCHEMA,
+} from "@/constants/authConstants";
+import { LoginFormData, LoginResponse, LoginErrorResponse } from "@/types/auth";
+import Link from "next/link";
 
 const LoginForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [initialValues, setInitialValues] = useState({
-    email: "",
-    password: "",
-  });
-  const [validationSchema, setValidationSchema] = useState(
-    Yup.object().shape({
-      email: Yup.string().email("Invalid email").required("Email is required"),
-      password: Yup.string().required("Password is required"),
-    })
-  );
+  const [isOTPForm, setIsOTPForm] = useState(false);
+  const [otpMessage, setOtpMessage] = useState("");
+  const [userId, setUserId] = useState("");
+  const formikRef = useRef<FormikProps<LoginFormData>>(null);
 
-  const formikRef = useRef<FormikProps<any>>(null);
+  const handleOTPVerifySuccess = () => {
+    router.push("/dashboard");
+  };
 
-  const handleSubmit = async (values: any) => {
+  const handleBackToLogin = () => {
+    setIsOTPForm(false);
+    setOtpMessage("");
+    setUserId("");
+  };
+
+  const handleSubmit = async (values: LoginFormData): Promise<boolean> => {
     try {
-      const email = values.email;
-      const password = values.password;
+      const userLoggedInDetails: LoginResponse | LoginErrorResponse =
+        await login(values);
 
-      const userLoggedInDetails = await signInCognitoUser(email, password);
- 
-      if (userLoggedInDetails.error) {
-        toast.error("Invalid email or password");
-        return false; // Return false to indicate failure
+      if (
+        "success" in userLoggedInDetails &&
+        userLoggedInDetails.success &&
+        userLoggedInDetails.result
+      ) {
+        setIsOTPForm(true);
+        setOtpMessage(userLoggedInDetails.result.message || "");
+        setUserId(userLoggedInDetails.result.userId || "");
+        return true;
       } else {
-        // Store access token in localStorage for client-side access
-        if ('accessToken' in userLoggedInDetails && userLoggedInDetails.accessToken) {
-          localStorage.setItem('accessToken', userLoggedInDetails.accessToken);
-        }
-        router.push("/dashboard");
-        return true; // Return true to indicate success
+        const errorMessage =
+          "error" in userLoggedInDetails
+            ? userLoggedInDetails.error
+            : "Invalid email or password";
+        toast.error(errorMessage || "Invalid email or password");
+        return false;
       }
     } catch (error) {
-      console.log(error);
+      console.error("Login error:", error);
       toast.error("Invalid email or password.");
-      return false; // Return false to indicate failure
+      return false;
     }
   };
 
   return (
-    <Formik
-      ref={formikRef}
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      validateOnBlur={false}
-      validateOnChange={false}
-      onSubmit={async (values: any, actions) => {
-        const success = await handleSubmit(values);
-        actions.setSubmitting(false);
-        if (success) {
-          actions.resetForm();
-        }
-      }}
-    >
-      {({ handleSubmit, errors, touched, isSubmitting }: any) => {
-        return (
-          <Form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label htmlFor="Email">Email</label>
-              <div className="relative text-white-dark">
-                <Field
-                  id="Email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter Email"
-                  className="form-input ps-10 placeholder:text-white-dark"
+    <div className="flex flex-col">
+      {isOTPForm ? (
+        <OTPForm
+          userId={userId}
+          otpMessage={otpMessage}
+          onBackToLogin={handleBackToLogin}
+          onVerifySuccess={handleOTPVerifySuccess}
+        />
+      ) : (
+        <Formik
+          ref={formikRef}
+          initialValues={LOGIN_FORM_INITIAL_VALUES}
+          validationSchema={LOGIN_VALIDATION_SCHEMA}
+          validateOnBlur={false}
+          validateOnChange={false}
+          onSubmit={async (values: LoginFormData, actions) => {
+            const success = await handleSubmit(values);
+            actions.setSubmitting(false);
+            if (success) {
+              actions.resetForm();
+            }
+          }}
+        >
+          {({ handleSubmit, errors, touched, isSubmitting }) => {
+            return (
+              <Form onSubmit={handleSubmit} className="space-y-5">
+                <LoginFormFields
+                  showPassword={showPassword}
+                  onTogglePassword={() => setShowPassword(!showPassword)}
+                  errors={errors}
+                  touched={touched}
                 />
-                <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                  <IconMail fill={true} />
-                </span>
-              </div>
-              {errors.email && touched.email && (
-                <small className="text-red-500">{errors.email}</small>
-              )}
-            </div>
-            <div>
-              <label htmlFor="Password">Password</label>
-              <div className="relative text-white-dark">
-                <Field
-                  id="Password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter Password"
-                  className="form-input ps-10 pe-10 placeholder:text-white-dark"
-                />
-                <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                  <IconLockDots fill={true} />
-                </span>
                 <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute end-4 top-1/2 -translate-y-1/2 text-white-dark hover:text-white-dark/80 focus:outline-none"
+                  type="submit"
+                  className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
+                  disabled={isSubmitting}
                 >
-                  {showPassword ? (
-                    <IconEyeOff className="w-4 h-4" />
-                  ) : (
-                    <IconEye className="w-4 h-4" />
-                  )}
+                  {isSubmitting ? "Signing in..." : "Sign in"}
                 </button>
-              </div>
-              {errors.password && touched.password && (
-                <small className="text-red-500">{errors.password}</small>
-              )}
-            </div>
-            <button
-              type="submit"
-              className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Signing in..." : "Sign in"}
-            </button>
-          </Form>
-        );
-      }}
-    </Formik>
+              </Form>
+            );
+          }}
+        </Formik>
+      )}
+      <Link
+        href="/forgot-password"
+        className="text-primary hover:text-primary/80 text-sm text-center w-full mt-5"
+      >
+        Forgot Password
+      </Link>
+    </div>
   );
 };
 
