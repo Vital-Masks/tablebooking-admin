@@ -109,6 +109,7 @@ const ForgotPasswordForm = () => {
         otpMessage={emailMessage}
         onBackToLogin={handleBackToLogin}
         onVerifySuccess={handleOTPVerifySuccess}
+        purpose="forgot-password"
       />
     );
   }

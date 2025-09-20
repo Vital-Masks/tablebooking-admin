@@ -69,6 +69,7 @@ const LoginForm = () => {
           otpMessage={otpMessage}
           onBackToLogin={handleBackToLogin}
           onVerifySuccess={handleOTPVerifySuccess}
+          purpose="login"
         />
       ) : (
         <Formik

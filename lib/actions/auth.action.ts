@@ -36,6 +36,7 @@ export const login = async (data: any) => {
 };
 
 export const verifyOTP = async (data: any) => {
+
   try {
     const body = JSON.stringify(data);
     const requestOptions = {

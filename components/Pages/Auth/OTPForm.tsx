@@ -9,6 +9,7 @@ interface OTPFormProps {
   otpMessage: string;
   onBackToLogin: () => void;
   onVerifySuccess: () => void;
+  purpose: string;
 }
 
 const OTPForm: React.FC<OTPFormProps> = ({
@@ -16,6 +17,7 @@ const OTPForm: React.FC<OTPFormProps> = ({
   otpMessage,
   onBackToLogin,
   onVerifySuccess,
+  purpose,
 }) => {
   const {
     otp,
@@ -48,7 +50,7 @@ const OTPForm: React.FC<OTPFormProps> = ({
       const verifyOTPDetails: OTPResponse | OTPErrorResponse = await verifyOTP({
         userId,
         otp: otpString,
-        purpose: "login",
+        purpose: purpose,
       });
 
       if ('success' in verifyOTPDetails && verifyOTPDetails.success && verifyOTPDetails.result?.success) {
@@ -67,7 +69,7 @@ const OTPForm: React.FC<OTPFormProps> = ({
     try {
       const resendOTPDetails: OTPResponse | OTPErrorResponse = await resendOTP({
         userId,
-        purpose: "login",
+        purpose: purpose,
       });
 
       if ('success' in resendOTPDetails && resendOTPDetails.success && resendOTPDetails.result?.success) {
