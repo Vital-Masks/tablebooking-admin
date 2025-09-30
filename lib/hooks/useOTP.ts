@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import toast from "react-hot-toast";
 
 interface UseOTPProps {
@@ -38,14 +38,14 @@ export const useOTP = ({ onVerifySuccess, onResendSuccess }: UseOTPProps) => {
     };
   }, [isTimerActive, timeLeft]);
 
-  const startTimer = () => {
+  const startTimer = useCallback(() => {
     setTimeLeft(300);
     setIsTimerActive(true);
-  };
+  }, []);
 
-  const stopTimer = () => {
+  const stopTimer = useCallback(() => {
     setIsTimerActive(false);
-  };
+  }, []);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);

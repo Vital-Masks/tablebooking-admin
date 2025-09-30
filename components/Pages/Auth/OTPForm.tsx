@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { verifyOTP, resendOTP } from "@/lib/actions/auth.action";
 import { useOTP } from "@/lib/hooks/useOTP";
 import { OTPResponse, OTPErrorResponse } from "@/types/auth";
 import toast from "react-hot-toast";
+import IconLoading from "@/components/Icons/IconLoading";
 
 interface OTPFormProps {
   userId: string;
@@ -19,6 +20,7 @@ const OTPForm: React.FC<OTPFormProps> = ({
   onVerifySuccess,
   purpose,
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     otp,
     timeLeft,
@@ -29,10 +31,16 @@ const OTPForm: React.FC<OTPFormProps> = ({
     handleOTPPaste,
     resetOTP,
     getOTPString,
+    startTimer,
   } = useOTP({
     onVerifySuccess,
     onResendSuccess: () => {},
   });
+
+  // Start 5-minute timer when component mounts
+  useEffect(() => {
+    startTimer();
+  }, [startTimer]);
 
   const handleOTPSubmit = async () => {
     const otpString = getOTPString();
@@ -46,6 +54,7 @@ const OTPForm: React.FC<OTPFormProps> = ({
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const verifyOTPDetails: OTPResponse | OTPErrorResponse = await verifyOTP({
         userId,
@@ -53,15 +62,24 @@ const OTPForm: React.FC<OTPFormProps> = ({
         purpose: purpose,
       });
 
-      if ('success' in verifyOTPDetails && verifyOTPDetails.success && verifyOTPDetails.result?.success) {
+      if (
+        "success" in verifyOTPDetails &&
+        verifyOTPDetails.success &&
+        verifyOTPDetails.result?.success
+      ) {
         onVerifySuccess();
       } else {
-        const errorMessage = 'error' in verifyOTPDetails ? verifyOTPDetails.error : "Invalid OTP. Please try again.";
+        const errorMessage =
+          "error" in verifyOTPDetails
+            ? verifyOTPDetails.error
+            : "Invalid OTP. Please try again.";
         toast.error(errorMessage || "Invalid OTP. Please try again.");
       }
     } catch (error) {
       console.error("OTP verification error:", error);
       toast.error("Invalid OTP. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -72,11 +90,18 @@ const OTPForm: React.FC<OTPFormProps> = ({
         purpose: purpose,
       });
 
-      if ('success' in resendOTPDetails && resendOTPDetails.success && resendOTPDetails.result?.success) {
+      if (
+        "success" in resendOTPDetails &&
+        resendOTPDetails.success &&
+        resendOTPDetails.result?.success
+      ) {
         resetOTP();
         toast.success("OTP has been resent!");
       } else {
-        const errorMessage = 'error' in resendOTPDetails ? resendOTPDetails.error : "Failed to resend OTP. Please try again.";
+        const errorMessage =
+          "error" in resendOTPDetails
+            ? resendOTPDetails.error
+            : "Failed to resend OTP. Please try again.";
         toast.error(errorMessage || "Failed to resend OTP. Please try again.");
       }
     } catch (error) {
@@ -122,12 +147,16 @@ const OTPForm: React.FC<OTPFormProps> = ({
         <button
           type="button"
           onClick={handleOTPSubmit}
-          className="btn btn-gradient w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
+          className="btn btn-gradient w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)] hover:shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)] disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isSubmitting}
         >
-          Verify OTP
+          Verify OTP{" "}
+          {isSubmitting ? (
+            <IconLoading className="w-4 h-4 ml-2 animate-spin" />
+          ) : null}
         </button>
       </div>
-      
+
       <small
         className={`mt-1 ${timeLeft <= 60 ? "text-red-500" : "text-gray-600"}`}
       >

@@ -13,6 +13,7 @@ import {
 } from "@/constants/authConstants";
 import { LoginFormData, LoginResponse, LoginErrorResponse } from "@/types/auth";
 import Link from "next/link";
+import IconLoading from "@/components/Icons/IconLoading";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -23,7 +24,6 @@ const LoginForm = () => {
   const formikRef = useRef<FormikProps<LoginFormData>>(null);
 
   const handleOTPVerifySuccess = () => {
-
     router.push("/dashboard");
   };
 
@@ -79,7 +79,6 @@ const LoginForm = () => {
           validationSchema={LOGIN_VALIDATION_SCHEMA}
           validateOnBlur={false}
           validateOnChange={false}
-          
           onSubmit={async (values: LoginFormData, actions) => {
             const success = await handleSubmit(values);
             actions.setSubmitting(false);
@@ -102,7 +101,10 @@ const LoginForm = () => {
                   className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Signing in..." : "Sign in"}
+                  Sign in{" "}
+                  {isSubmitting ? (
+                    <IconLoading className="w-4 h-4 ml-2 animate-spin" />
+                  ) : null}
                 </button>
               </Form>
             );
