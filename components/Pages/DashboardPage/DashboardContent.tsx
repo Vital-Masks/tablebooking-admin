@@ -194,7 +194,7 @@ export default function DashboardContent({
                 }
               >
                 <ul className="!min-w-[170px] max-h-[150px] overflow-y-auto">
-                  {hospitalityChains.map((hospitalityChain: any) => (
+                  {hospitalityChains?.map((hospitalityChain: any) => (
                     <li key={hospitalityChain._id}>
                       <Link
                         href={{

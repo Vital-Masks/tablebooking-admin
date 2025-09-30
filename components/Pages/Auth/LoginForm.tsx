@@ -23,6 +23,7 @@ const LoginForm = () => {
   const formikRef = useRef<FormikProps<LoginFormData>>(null);
 
   const handleOTPVerifySuccess = () => {
+
     router.push("/dashboard");
   };
 
@@ -78,6 +79,7 @@ const LoginForm = () => {
           validationSchema={LOGIN_VALIDATION_SCHEMA}
           validateOnBlur={false}
           validateOnChange={false}
+          
           onSubmit={async (values: LoginFormData, actions) => {
             const success = await handleSubmit(values);
             actions.setSubmitting(false);

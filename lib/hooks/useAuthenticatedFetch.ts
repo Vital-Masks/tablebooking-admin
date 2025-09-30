@@ -22,26 +22,21 @@ export function useAuthenticatedFetch(options: UseAuthenticatedFetchOptions = {}
     setError(null);
 
     try {
-      // Get access token from localStorage or cookies
-      let accessToken: string | undefined;
+      // Check if session exists (client-side check)
+      let hasSession = false;
       
       if (options.requireAuth !== false) {
-        // Try to get token from localStorage first
-        accessToken = localStorage.getItem('accessToken') || undefined;
+        // Check if session cookie exists (we can't read httpOnly cookies client-side)
+        // but we can check if the cookie exists
+        const cookies = document.cookie.split(';');
+        const sessionCookie = cookies.find(cookie => 
+          cookie.trim().startsWith('session=')
+        );
         
-        // If not in localStorage, try to get from cookies (client-side)
-        if (!accessToken) {
-          const cookies = document.cookie.split(';');
-          const accessTokenCookie = cookies.find(cookie => 
-            cookie.trim().startsWith('accessToken=')
-          );
-          if (accessTokenCookie) {
-            accessToken = accessTokenCookie.split('=')[1];
-          }
-        }
+        hasSession = !!sessionCookie;
 
-        if (!accessToken) {
-          setError('No access token found');
+        if (!hasSession) {
+          setError('No session found');
           router.push('/login');
           return null;
         }
@@ -52,14 +47,11 @@ export function useAuthenticatedFetch(options: UseAuthenticatedFetchOptions = {}
         ...(fetchOptions.headers as Record<string, string> || {}),
       };
 
-      // Add bearer token if available
-      if (accessToken) {
-        headers['Authorization'] = `Bearer ${accessToken}`;
-      }
-
+      // Make request to your API endpoint that will handle authentication server-side
       const response = await fetch(url, {
         ...fetchOptions,
         headers,
+        credentials: 'include', // Include cookies in request
       });
 
       if (!response.ok) {

@@ -8,10 +8,10 @@ export function middleware(request: NextRequest) {
     
     try {
         const sessionCookie = request.cookies.get('session');
-        const accessTokenCookie = request.cookies.get('accessToken');
         
-        // Determine if user is logged in based on session and access token cookies
-        isLoggedIn = !!(sessionCookie?.value && accessTokenCookie?.value);
+        // Determine if user is logged in based on session cookie
+        // Session cookie contains sessionId and user info, tokens are stored server-side
+        isLoggedIn = !!(sessionCookie?.value);
     } catch (error) {
         // If there's an error accessing cookies, assume user is not logged in
         isLoggedIn = false;

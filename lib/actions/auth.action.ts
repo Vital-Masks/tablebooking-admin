@@ -1,4 +1,7 @@
 "use server";
+
+import { createSession } from "../session";
+
 const ENDPOINT = process.env.API_ENDPOINT;
 
 export const login = async (data: any) => {
@@ -36,7 +39,6 @@ export const login = async (data: any) => {
 };
 
 export const verifyOTP = async (data: any) => {
-
   try {
     const body = JSON.stringify(data);
     const requestOptions = {
@@ -56,9 +58,16 @@ export const verifyOTP = async (data: any) => {
     const result = await res.json();
 
     if (result.success) {
+      await createSession({
+        accessToken: result.cognitoAuthResult?.accessToken,
+        refreshToken: result.cognitoAuthResult?.refreshToken,
+      });
       return {
         success: true,
-        result: result,
+        result: {
+          success: true,
+          ...result.cognitoAuthResult,
+        },
       };
     }
 

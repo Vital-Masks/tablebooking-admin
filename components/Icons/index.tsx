@@ -10,6 +10,7 @@ import IconPencil from './IconPencil';
 import IconEye from './IconEye';
 import IconEyeOff from './IconEyeOff';
 import IconFilter from './IconFilter';
+import IconX from './IconX';
 import IconUserRole from './IconUserRole';
 import IconChefHat from './IconChefHat';
 import IconSettings from './IconSettings';

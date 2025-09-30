@@ -4,6 +4,18 @@ import { cookies } from "next/headers";
 
 const encodedKey = new TextEncoder().encode("123");
 
+// Global session store type (in production, use Redis or similar)
+declare global {
+  var sessionStore: Map<string, {
+    accessToken: string;
+    refreshToken: string;
+    userDetails: any;
+    subscription: any;
+    tokenExp: number;
+    tokenIat: number;
+  }> | undefined;
+}
+
 // Function to decode JWT token
 function decodeJWT(token: string) {
   try {
@@ -41,35 +53,43 @@ export async function createSession({
   const expiresAt =
     tokenExpiration || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-  // Store user data and subscription info in session
-  const sessionData = {
-    // User details
-    userId: decodedAccessToken.userDetails._id,
-    restaurantId: decodedAccessToken.restaurantId,
-    email: decodedAccessToken.userDetails.email,
-    firstName: decodedAccessToken.userDetails.firstName,
-    lastName: decodedAccessToken.userDetails.lastName,
-    gender: decodedAccessToken.userDetails.gender,
-    phoneNumber: decodedAccessToken.userDetails.phoneNumber,
-    profilePic: decodedAccessToken.userDetails.profilePic,
-    userType: decodedAccessToken.userType,
+  // Store minimal user data in session to keep cookie size under 4KB
+  // const sessionData = {
+  //   // Essential user details only
+  //   userId: decodedAccessToken.userDetails._id,
+  //   restaurantId: decodedAccessToken.restaurantId,
+  //   email: decodedAccessToken.userDetails.email,
+  //   firstName: decodedAccessToken.userDetails.firstName,
+  //   lastName: decodedAccessToken.userDetails.lastName,
+  //   userType: decodedAccessToken.userType,
 
-    // Subscription information
-    subscription: decodedAccessToken.subscription,
+  //   // Token metadata
+  //   tokenExp: decodedAccessToken.exp,
+  //   tokenIat: decodedAccessToken.iat,
+  // };
 
-    // Token metadata
-    tokenExp: decodedAccessToken.exp,
-    tokenIat: decodedAccessToken.iat,
-  };
-
-  const session = await encrypt(sessionData, expiresAt);
   const cookieStore = cookies();
 
   // Determine if we're in production with HTTPS
   const isProduction = process.env.NODE_ENV === 'production';
   const isSecure = isProduction && (process.env.NEXT_PUBLIC_USE_HTTPS === 'true' || process.env.VERCEL_URL?.includes('https://'));
 
-  // Set session cookie with minimal data
+  // Create a unique session ID
+  const sessionId = crypto.randomUUID();
+  
+  // Store minimal data in cookie - just session ID and essential user info
+  const minimalSessionData: SessionPayload = {
+    sessionId,
+    sub: decodedAccessToken.sub,
+    userId: decodedAccessToken.userId,
+    restaurantId: decodedAccessToken.restaurantId,
+    subscriptionId: decodedAccessToken.subscriptionId,
+    userType: decodedAccessToken.userType,
+    iat: decodedAccessToken.iat,
+    exp: decodedAccessToken.exp,
+  };
+  
+  const session = await encrypt(minimalSessionData, expiresAt);
   cookieStore.set("session", session, {
     httpOnly: true,
     secure: isSecure,
@@ -77,58 +97,49 @@ export async function createSession({
     sameSite: "lax",
   });
 
-  // Set tokens in separate cookies
-  cookieStore.set("accessToken", accessToken, {
-    httpOnly: true,
-    secure: isSecure,
-    expires: expiresAt,
-    sameSite: "lax",
-  });
-
-  cookieStore.set("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: isSecure,
-    expires: expiresAt,
-    sameSite: "lax",
+  // Store tokens in server-side session (you might want to use Redis in production)
+  // For now, we'll store them in a Map (not recommended for production)
+  global.sessionStore = global.sessionStore || new Map();
+  global.sessionStore.set(sessionId, {
+    accessToken,
+    refreshToken,
+    userDetails: decodedAccessToken.userDetails,
+    subscription: decodedAccessToken.subscription,
+    tokenExp: decodedAccessToken.exp,
+    tokenIat: decodedAccessToken.iat,
   });
 }
 
 export async function deleteSession() {
   const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("session")?.value;
+  
+  if (sessionCookie) {
+    const session = await decrypt(sessionCookie);
+    if (session?.sessionId && global.sessionStore) {
+      global.sessionStore.delete(session.sessionId);
+    }
+  }
+  
   cookieStore.delete("session");
-  cookieStore.delete("accessToken");
-  cookieStore.delete("refreshToken");
 }
 
 type SessionPayload = {
+  // Session identification
+  sessionId?: string;
+  sub: string;
   // User identification
   userId: string;
   restaurantId: string;
-  email: string;
+  // email: string;
+  subscriptionId: string;
+  userType: string;
+  iat: number;
+  exp: number;
 
   // Personal information
-  firstName: string;
-  lastName: string;
-  gender?: string;
-  phoneNumber?: string;
-  profilePic?: any;
-
-  // Authorization
-  userType?: string;
-
-  // Subscription details
-  subscription?: {
-    _id: string;
-    restaurantId: string;
-    planId: string;
-    startDate: string;
-    endDate: string;
-    isActive: boolean;
-    addons: any[];
-    totalBill: number;
-    created_at: string;
-    updated_at: string;
-  };
+  // firstName: string;
+  // lastName: string;
 
   // Token metadata
   tokenExp?: number;
@@ -137,7 +148,7 @@ type SessionPayload = {
 
 type Session = SessionPayload & {
   accessToken?: string;
-  refreshToken?: string;
+  refreshToken?: string | undefined;
 };
 
 export async function encrypt(payload: SessionPayload, expiresAt?: Date) {
@@ -171,36 +182,27 @@ export async function decrypt(
 export async function getSession(): Promise<Session | null> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("session")?.value;
-  const accessToken = cookieStore.get("accessToken")?.value;
-  const refreshToken = cookieStore.get("refreshToken")?.value;
 
   if (!sessionCookie) return null;
 
   const session = await decrypt(sessionCookie);
-  if (!session) return null;
+  if (!session?.sessionId) return null;
+
+  // Get full session data from server-side store
+  const fullSessionData = global.sessionStore?.get(session.sessionId);
+  if (!fullSessionData) return null;
 
   return {
     ...session,
-    accessToken,
-    refreshToken,
+    accessToken: fullSessionData.accessToken,
+    refreshToken: fullSessionData.refreshToken,
+    // Add back user details from server store
+    // firstName: fullSessionData.userDetails.firstName,
+    // lastName: fullSessionData.userDetails.lastName,
+    tokenExp: fullSessionData.tokenExp,
+    tokenIat: fullSessionData.tokenIat,
   };
 }
 
-// Helper function to check if user has active subscription
-export function hasActiveSubscription(session: Session | null): boolean {
-  if (!session?.subscription) return false;
-  return session.subscription.isActive;
-}
-
-// Helper function to get subscription details
-export function getSubscriptionDetails(session: Session | null) {
-  if (!session?.subscription) return null;
-  return session.subscription;
-}
-
-// Helper function to check if subscription is expired
-export function isSubscriptionExpired(session: Session | null): boolean {
-  if (!session?.subscription) return true;
-  const endDate = new Date(session.subscription.endDate);
-  return endDate < new Date();
-}
+// Note: Subscription data is now fetched from the API when needed
+// These helper functions have been removed to keep session cookie size minimal

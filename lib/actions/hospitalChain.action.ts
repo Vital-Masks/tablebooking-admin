@@ -18,6 +18,8 @@ export const getHospitalChainList = async (): Promise<
       }
     );
 
+    console.log("response >>>", response);
+
     if (response?.error) {
       throw new Error(`Failed to fetch: ${response.error}`);
     }

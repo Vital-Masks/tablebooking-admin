@@ -25,6 +25,7 @@ const ReservationTableHead = ({
     endDate: "",
     status: [] as string[],
     table: [] as string[],
+    restaurantId: restaurantId,
   });
 
   // Get current restaurant name for display
@@ -38,7 +39,11 @@ const ReservationTableHead = ({
     });
   };
 
-  const handleFilterChange = (groupTitle: string, value: string, checked: boolean) => {
+  const handleFilterChange = (
+    groupTitle: string,
+    value: string,
+    checked: boolean
+  ) => {
     setFilterValues((prev) => {
       const newValues = { ...prev };
 
@@ -49,12 +54,12 @@ const ReservationTableHead = ({
           newValues.endDate = "";
         }
       } else if (groupTitle === "Status") {
-        newValues.status = checked 
-          ? [...newValues.status, value] 
+        newValues.status = checked
+          ? [...newValues.status, value]
           : newValues.status.filter((item) => item !== value);
       } else if (groupTitle === "Table") {
-        newValues.table = checked 
-          ? [...newValues.table, value] 
+        newValues.table = checked
+          ? [...newValues.table, value]
           : newValues.table.filter((item) => item !== value);
       }
       return newValues;
@@ -69,6 +74,7 @@ const ReservationTableHead = ({
       endDate: "",
       status: [],
       table: [],
+      restaurantId: restaurantId,
     });
 
     // Reset search
@@ -99,11 +105,10 @@ const ReservationTableHead = ({
         endDate: filterValues.endDate,
         status: filterValues.status,
         table: filterValues.table,
+        restaurantId: filterValues.restaurantId,
       };
 
-      
       const filteredReservations = await filterReservations(filterData);
-     
 
       if (filteredReservations) {
         const formattedData = filteredReservations.map((res: any) => ({
@@ -245,14 +250,49 @@ const ReservationTableHead = ({
             />
           </div>
         </div>
-        {currentRestaurant && (
-          <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0">
-            Restaurant:{" "}
-            <span className="font-medium">
-              {currentRestaurant.restaurantName}
-            </span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {currentRestaurant && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0">
+              Restaurant:{" "}
+              <span className="font-medium">
+                {currentRestaurant.restaurantName}
+              </span>
+            </div>
+          )}
+          {filterValues.status.length > 0 && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0 flex items-center gap-2">
+              Status: <span className="font-medium">{filterValues.status}</span>{" "}
+              {/* <button
+                className="text-gray-500 hover:text-gray-700"
+                onClick={() => {
+                  setFilterValues({ ...filterValues, status: [] });
+                  handleApplyFilters();
+                }}
+              >
+                x
+              </button> */}
+            </div>
+          )}
+          {filterValues.table.length > 0 && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0 flex items-center gap-2">
+              Table: <span className="font-medium">{filterValues.table}</span>
+            </div>
+          )}
+          {filterValues.dateType && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0 flex items-center gap-2">
+              Date Type:{" "}
+              <span className="font-medium">{filterValues.dateType}</span>
+            </div>
+          )}
+          {filterValues.startDate && filterValues.endDate && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0 flex items-center gap-2">
+              Date Range:{" "}
+              <span className="font-medium">
+                {filterValues.startDate} - {filterValues.endDate}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
       <FormSlider isOpen={open}>
         <div className="relative p-6 bg-white">
