@@ -44,7 +44,7 @@ const RestaurantTable = () => {
             ([key, value]) => ({
               type: "checkbox",
               title: value,
-              value: key,
+              value: value,
             })
           );
           setRestaurantType(typeOptions);

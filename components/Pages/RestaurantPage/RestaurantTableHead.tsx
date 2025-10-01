@@ -44,20 +44,22 @@ const RestaurantTableHead = ({
       availabilityStatus: [],
       subscription: [],
     });
-    
+
     // Reset search
     setSearch("");
     onSearchChange("");
-    
+
     // Reset all form inputs
-    const inputs = document.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+    const inputs = document.querySelectorAll(
+      'input[type="radio"], input[type="checkbox"]'
+    );
     inputs.forEach((input: any) => {
       input.checked = false;
     });
-    
+
     // Reset table to initial data
     onResetToInitial();
-    
+
     // Close the form
     setOpen(false);
   };
@@ -68,10 +70,14 @@ const RestaurantTableHead = ({
     });
   };
 
-  const handleFilterChange = (groupTitle: string, value: string, checked: boolean) => {
-    setFilterValues(prev => {
+  const handleFilterChange = (
+    groupTitle: string,
+    value: string,
+    checked: boolean
+  ) => {
+    setFilterValues((prev) => {
       const newValues = { ...prev };
-      
+
       if (groupTitle === "Timeframe") {
         newValues.dateType = checked ? value : "";
         if (value === "customDates") {
@@ -82,7 +88,7 @@ const RestaurantTableHead = ({
       } else if (groupTitle === "Restaurant Type") {
         if (checked) {
           if (value === "all") {
-            newValues.restaurantType = restaurantType.map(item => item.value);
+            newValues.restaurantType = restaurantType.map((item) => item.value);
           } else {
             newValues.restaurantType = [...prev.restaurantType, value];
           }
@@ -90,7 +96,9 @@ const RestaurantTableHead = ({
           if (value === "all") {
             newValues.restaurantType = [];
           } else {
-            newValues.restaurantType = prev.restaurantType.filter(item => item !== value);
+            newValues.restaurantType = prev.restaurantType.filter(
+              (item) => item !== value
+            );
           }
         }
       } else if (groupTitle === "Availability") {
@@ -104,13 +112,20 @@ const RestaurantTableHead = ({
           if (value === "all") {
             newValues.availabilityStatus = [];
           } else {
-            newValues.availabilityStatus = prev.availabilityStatus.filter(item => item !== value);
+            newValues.availabilityStatus = prev.availabilityStatus.filter(
+              (item) => item !== value
+            );
           }
         }
       } else if (groupTitle === "Subscription") {
         if (checked) {
           if (value === "all") {
-            newValues.subscription = ["Free", "Classic", "Signature", "Premium"];
+            newValues.subscription = [
+              "Free",
+              "Classic",
+              "Signature",
+              "Premium",
+            ];
           } else {
             newValues.subscription = [...prev.subscription, value];
           }
@@ -118,11 +133,13 @@ const RestaurantTableHead = ({
           if (value === "all") {
             newValues.subscription = [];
           } else {
-            newValues.subscription = prev.subscription.filter(item => item !== value);
+            newValues.subscription = prev.subscription.filter(
+              (item) => item !== value
+            );
           }
         }
       }
-      
+
       return newValues;
     });
   };
@@ -142,7 +159,7 @@ const RestaurantTableHead = ({
       console.log(">>", filterData);
 
       const filteredRestaurants = await filterRestaurants(filterData);
-      
+
       if (filteredRestaurants) {
         const formattedData = filteredRestaurants.map((res: any) => ({
           id: res._id,
@@ -156,13 +173,13 @@ const RestaurantTableHead = ({
           createdOn: res.created_at,
           hospitalityChainId: res.hospitalityChainId?._id,
         }));
-        
+
         onFilterChange(formattedData);
       }
-      
+
       setOpen(false);
     } catch (error) {
-      console.error('Error applying filters:', error);
+      console.error("Error applying filters:", error);
     } finally {
       setIsLoading(false);
     }
@@ -208,22 +225,22 @@ const RestaurantTableHead = ({
     {
       title: "Restaurant Type",
       items: [
-        {
-          type: "checkbox",
-          title: "All",
-          value: "all",
-        },
+        // {
+        //   type: "checkbox",
+        //   title: "All",
+        //   value: "all",
+        // },
         ...restaurantType,
       ],
     },
     {
       title: "Availability",
       items: [
-        {
-          type: "checkbox",
-          title: "All",
-          value: "all",
-        },
+        // {
+        //   type: "checkbox",
+        //   title: "All",
+        //   value: "all",
+        // },
         {
           type: "checkbox",
           title: "Available",
@@ -240,11 +257,11 @@ const RestaurantTableHead = ({
     {
       title: "Subscription",
       items: [
-        {
-          type: "checkbox",
-          title: "All",
-          value: "all",
-        },
+        // {
+        //   type: "checkbox",
+        //   title: "All",
+        //   value: "all",
+        // },
         {
           type: "checkbox",
           title: "Free",
@@ -306,6 +323,46 @@ const RestaurantTableHead = ({
               onChange={handleSearchChange}
             />
           </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {filterValues.restaurantType.length > 0 && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0">
+              Restaurant:{" "}
+              <span className="font-medium">
+                {filterValues.restaurantType.join(", ")}
+              </span>
+            </div>
+          )}
+          {filterValues.availabilityStatus.length > 0 && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0">
+              Availability:{" "}
+              <span className="font-medium">
+                {filterValues.availabilityStatus.join(", ")}
+              </span>
+            </div>
+          )}
+          {filterValues.subscription.length > 0 && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0">
+              Subscription:{" "}
+              <span className="font-medium">
+                {filterValues.subscription.join(", ")}
+              </span>
+            </div>
+          )}
+          {filterValues.dateType && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0">
+              Date Type:{" "}
+              <span className="font-medium">{filterValues.dateType}</span>
+            </div>
+          )}
+          {filterValues.startDate && filterValues.endDate && (
+            <div className="text-xs text-gray-600 bg-gray-100 p-2 rounded-lg w-fit grow-0">
+              Date Range:{" "}
+              <span className="font-medium">
+                {filterValues.startDate} - {filterValues.endDate}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -374,7 +431,13 @@ const RestaurantTableHead = ({
                                 ? "w-4 h-4 text-primary border-gray-300 focus:ring-primary"
                                 : "w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
                             }`}
-                            onChange={(e) => handleFilterChange(group.title, item.value, e.target.checked)}
+                            onChange={(e) =>
+                              handleFilterChange(
+                                group.title,
+                                item.value,
+                                e.target.checked
+                              )
+                            }
                           />
                           <label
                             htmlFor={`${group.title}-${item.value}`}
