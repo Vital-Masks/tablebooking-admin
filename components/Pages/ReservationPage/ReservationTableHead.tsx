@@ -66,7 +66,7 @@ const ReservationTableHead = ({
     });
   };
 
-  const handleClearFilters = () => {
+  const handleClearFilters = async () => {
     // Reset all filter values
     setFilterValues({
       dateType: "",
@@ -89,7 +89,7 @@ const ReservationTableHead = ({
       input.checked = false;
     });
 
-    // Reset table to initial data
+    // Reset table to initial data (this should load unfiltered data from API)
     onResetToInitial();
 
     // Close the form
@@ -246,7 +246,7 @@ const ReservationTableHead = ({
               className="w-full form-input"
               placeholder="Search..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={handleSearchChange}
             />
           </div>
         </div>

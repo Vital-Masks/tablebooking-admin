@@ -105,8 +105,9 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
   };
 
   const handleResetToInitial = () => {
-    setRowData(initialData);
     setSearch("");
+    // Fetch fresh data from API to reset all filters
+    fetchReservations();
   };
 
   // If no restaurantId is provided, show empty state
