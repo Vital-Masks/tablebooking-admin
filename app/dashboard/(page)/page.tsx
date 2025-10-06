@@ -24,15 +24,18 @@ export default async function Home({ searchParams }: DashboardPageProps) {
     (searchParams.restaurantId as string) || 
     restaurants?.[0]?._id;
 
+  const customStart = searchParams.customStart as string;
+  const customEnd = searchParams.customEnd as string;
+
   const stats = await getStats({
     userType: "VreservSuperAdmin",
     hospitalityChainId,
     restaurantId,
     dateType: "customRange",
-    customStart: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
+    customStart: customStart || new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
       .toISOString()
       .split("T")[0],
-    customEnd: new Date().toISOString().split("T")[0],
+    customEnd: customEnd || new Date().toISOString().split("T")[0],
   });
 
   return <DashboardContent stats={stats ?? {}} hospitalityChains={hospitalityChains} />;

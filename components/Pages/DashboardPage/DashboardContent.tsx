@@ -10,6 +10,7 @@ import VanillaCalendar from "@/components/Common/Fields/VanillaCalendar";
 import { Options } from "vanilla-calendar-pro";
 import { useState, useCallback, useEffect } from "react";
 import { getRestaurantsListByHospitalityChain } from "@/lib/actions/restaurant.actions";
+import IconCalendar from "@/components/Icons/IconCalendar";
 
 export default function DashboardContent({
   stats,
@@ -23,8 +24,17 @@ export default function DashboardContent({
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const hospitalityChainId = searchParams.get("hospitalityChainId");
+  const today = new Date();
+  const lastWeek = new Date();
+  lastWeek.setDate(today.getDate() - 7);
 
- 
+  const todayFormatted = today.toISOString().slice(0, 10);
+  const lastWeekFormatted = lastWeek.toISOString().slice(0, 10);
+
+  const [selectedDates, setSelectedDates] = useState<string[]>([
+    lastWeekFormatted,
+    todayFormatted,
+  ]);
 
   const loadRestaurants = async ({
     hospitalityChainId,
@@ -116,30 +126,25 @@ export default function DashboardContent({
   );
 
   const calendarOptions: Options = {
+    type: "multiple",
+    displayMonthsCount: 2,
     inputMode: true,
+    enableEdgeDatesOnly: true,
+    selectionDatesMode: "multiple-ranged",
+    selectedDates: [lastWeekFormatted , todayFormatted],
+    selectedMonth: lastWeek.getMonth() as 0 | 2 | 1 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | undefined,
+    selectedYear: lastWeek.getFullYear(),
     onChangeToInput(self) {
       if (!self.context.inputElement) return;
       if (self.context.selectedDates[0]) {
-        self.context.inputElement.value = self.context.selectedDates[0];
+        setSelectedDates(self.context.selectedDates);
+        router.push(`/dashboard?${new URLSearchParams(buildQueryParams({
+          customStart: self.context.selectedDates[0],
+          customEnd: self.context.selectedDates[1],
+        })).toString()}`);
       } else {
-        self.context.inputElement.value = "";
+        setSelectedDates([lastWeekFormatted, todayFormatted]);
       }
-    },
-    onInit(self) {
-      const handleClickMainElement = (e: MouseEvent) => {
-        if ((e.target as HTMLElement).closest("#btn-close")) {
-          self.hide();
-        }
-      };
-      self.context.mainElement.addEventListener(
-        "click",
-        handleClickMainElement
-      );
-      return () =>
-        self.context.mainElement.removeEventListener(
-          "click",
-          handleClickMainElement
-        );
     },
     layouts: {
       default: `
@@ -166,10 +171,9 @@ export default function DashboardContent({
   };
 
   useEffect(() => {
-    if(hospitalityChainId){
+    if (hospitalityChainId) {
       loadRestaurants({ hospitalityChainId: hospitalityChainId });
-    }
-    else if (hospitalityChains) {
+    } else if (hospitalityChains) {
       loadRestaurants({ hospitalityChainId: hospitalityChains?.[0]?._id });
     }
   }, [hospitalityChainId]);
@@ -243,13 +247,17 @@ export default function DashboardContent({
               </Dropdown>
             </div>
 
-            <div className="p-4 w-[200px]">
+            <div className="w-[250px]">
               <VanillaCalendar
                 config={calendarOptions}
-                className="w-full mx-auto border rounded-md h-10"
-              />
+                className="w-full mx-auto border rounded-md h-10 flex items-center text-xs py-2 px-2 cursor-pointer text-gray-600 font-bold"
+              >
+                <IconCalendar className="mr-2 inline-block w-4 h-4" />
+                <span>
+                  {selectedDates[0]} - {selectedDates[1]}
+                </span>
+              </VanillaCalendar>
             </div>
-            <Button type="outlined">Export</Button>
           </div>
         </div>
 
