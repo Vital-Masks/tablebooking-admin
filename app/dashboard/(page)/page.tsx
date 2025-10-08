@@ -16,27 +16,40 @@ export default async function Home({ searchParams }: DashboardPageProps) {
   const hospitalityChains = await getHospitalChainList();
 
   // Extract URL parameters with fallbacks
-  const hospitalityChainId = 
-    (searchParams.hospitalityChainId as string) || 
-    hospitalityChains?.[0]?._id;
-  
-  const restaurantId = 
-    (searchParams.restaurantId as string) || 
-    restaurants?.[0]?._id;
+  const hospitalityChainId =
+    (searchParams.hospitalityChainId as string) || hospitalityChains?.[0]?._id;
+
+  const restaurantId =
+    (searchParams.restaurantId as string) || restaurants?.[0]?._id;
 
   const customStart = searchParams.customStart as string;
   const customEnd = searchParams.customEnd as string;
+
+  const today = new Date();
+  const lastWeek = new Date();
+  lastWeek.setDate(today.getDate() - 7);
+
+  const todayFormatted = today.toISOString().slice(0, 10);
+  const lastWeekFormatted = lastWeek.toISOString().slice(0, 10);
 
   const stats = await getStats({
     userType: "VreservSuperAdmin",
     hospitalityChainId,
     restaurantId,
     dateType: "customRange",
-    customStart: customStart || new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .split("T")[0],
-    customEnd: customEnd || new Date().toISOString().split("T")[0],
+    customStart:
+      customStart ||
+      lastWeekFormatted,
+    customEnd: customEnd || todayFormatted,
   });
 
-  return <DashboardContent stats={stats ?? {}} hospitalityChains={hospitalityChains} />;
+  return (
+    <DashboardContent 
+      stats={stats ?? {}}
+      hospitalityChains={hospitalityChains}
+      lastWeek={lastWeek}
+      todayFormatted={todayFormatted}
+      lastWeekFormatted={lastWeekFormatted}
+    />
+  );
 }

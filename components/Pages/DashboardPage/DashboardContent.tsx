@@ -15,21 +15,21 @@ import IconCalendar from "@/components/Icons/IconCalendar";
 export default function DashboardContent({
   stats,
   hospitalityChains,
+  lastWeek,
+  todayFormatted,
+  lastWeekFormatted,
 }: {
   stats: any;
   hospitalityChains: any;
+  lastWeek: Date;
+  todayFormatted: string;
+  lastWeekFormatted: string;
 }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const hospitalityChainId = searchParams.get("hospitalityChainId");
-  const today = new Date();
-  const lastWeek = new Date();
-  lastWeek.setDate(today.getDate() - 7);
-
-  const todayFormatted = today.toISOString().slice(0, 10);
-  const lastWeekFormatted = lastWeek.toISOString().slice(0, 10);
 
   const [selectedDates, setSelectedDates] = useState<string[]>([
     lastWeekFormatted,
