@@ -183,7 +183,7 @@ export default function GeneralDetailForm({
     <main>
       <FormComponent
         fields={generalFormField}
-        // validationSchema={generalFormSchema}
+        validationSchema={generalFormSchema}
         initialValues={initialValues}
         handleSubmit={onSubmit}
       />
