@@ -17,7 +17,7 @@ declare global {
 }
 
 // Function to decode JWT token
-function decodeJWT(token: string) {
+export function decodeJWT(token: string) {
   try {
     // Split the token into parts
     const parts = token.split(".");
@@ -43,30 +43,17 @@ function decodeJWT(token: string) {
 export async function createSession({
   accessToken,
   refreshToken,
+  user,
 }: {
   accessToken: string;
   refreshToken: string;
+  user?: any;
 }) {
   // Get expiration from JWT token, fallback to 7 days if decoding fails
   const decodedAccessToken = decodeJWT(accessToken);
   const tokenExpiration = new Date(decodedAccessToken.exp * 1000);
   const expiresAt =
     tokenExpiration || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-  // Store minimal user data in session to keep cookie size under 4KB
-  // const sessionData = {
-  //   // Essential user details only
-  //   userId: decodedAccessToken.userDetails._id,
-  //   restaurantId: decodedAccessToken.restaurantId,
-  //   email: decodedAccessToken.userDetails.email,
-  //   firstName: decodedAccessToken.userDetails.firstName,
-  //   lastName: decodedAccessToken.userDetails.lastName,
-  //   userType: decodedAccessToken.userType,
-
-  //   // Token metadata
-  //   tokenExp: decodedAccessToken.exp,
-  //   tokenIat: decodedAccessToken.iat,
-  // };
 
   const cookieStore = cookies();
 
@@ -103,7 +90,7 @@ export async function createSession({
   global.sessionStore.set(sessionId, {
     accessToken,
     refreshToken,
-    userDetails: decodedAccessToken.userDetails,
+    userDetails: user || decodedAccessToken.userDetails,
     subscription: decodedAccessToken.subscription,
     tokenExp: decodedAccessToken.exp,
     tokenIat: decodedAccessToken.iat,
@@ -137,10 +124,6 @@ type SessionPayload = {
   iat: number;
   exp: number;
 
-  // Personal information
-  // firstName: string;
-  // lastName: string;
-
   // Token metadata
   tokenExp?: number;
   tokenIat?: number;
@@ -149,6 +132,8 @@ type SessionPayload = {
 type Session = SessionPayload & {
   accessToken?: string;
   refreshToken?: string | undefined;
+  userDetails?: any;
+  subscription?: any;
 };
 
 export async function encrypt(payload: SessionPayload, expiresAt?: Date) {
@@ -196,13 +181,9 @@ export async function getSession(): Promise<Session | null> {
     ...session,
     accessToken: fullSessionData.accessToken,
     refreshToken: fullSessionData.refreshToken,
-    // Add back user details from server store
-    // firstName: fullSessionData.userDetails.firstName,
-    // lastName: fullSessionData.userDetails.lastName,
+    userDetails: fullSessionData.userDetails,
+    subscription: fullSessionData.subscription,
     tokenExp: fullSessionData.tokenExp,
     tokenIat: fullSessionData.tokenIat,
   };
 }
-
-// Note: Subscription data is now fetched from the API when needed
-// These helper functions have been removed to keep session cookie size minimal

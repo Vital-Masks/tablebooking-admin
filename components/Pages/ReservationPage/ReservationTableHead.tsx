@@ -340,7 +340,7 @@ const ReservationTableHead = ({
                 duration={300}
                 height={active === "0" ? "auto" : 0}
               >
-                <div className="p-4 bg-gray-50 border-t border-gray-200">
+                <div className="p-4 bg-gray-50 border-t border-gray-200 max-h-[200px] overflow-y-auto">
                   <div className="space-y-3">
                     {restaurants.map((restaurant: any) => (
                       <div key={restaurant._id} className="flex items-center">
@@ -429,6 +429,47 @@ const ReservationTableHead = ({
                         </div>
                       ))}
                     </div>
+                    {filterValues.dateType === "customDates" &&
+                      group.title === "Timeframe" && (
+                        <>
+                          <div className="p-4 bg-gray-50 border-t border-gray-200 mt-4">
+                            <div className="space-y-3">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Start Date
+                                </label>
+                                <input
+                                  type="date"
+                                  value={filterValues.startDate}
+                                  onChange={(e) =>
+                                    setFilterValues((prev) => ({
+                                      ...prev,
+                                      startDate: e.target.value,
+                                    }))
+                                  }
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  End Date
+                                </label>
+                                <input
+                                  type="date"
+                                  value={filterValues.endDate}
+                                  onChange={(e) =>
+                                    setFilterValues((prev) => ({
+                                      ...prev,
+                                      endDate: e.target.value,
+                                    }))
+                                  }
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
                   </div>
                 </AnimateHeight>
               </div>

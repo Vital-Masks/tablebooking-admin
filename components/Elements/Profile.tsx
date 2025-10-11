@@ -30,6 +30,7 @@ const Profile = () => {
         const response = await fetch('/api/auth/user');
         if (response.ok) {
           const data = await response.json();
+          console.log("response >>", data)
           setUser(data.user);
         } else {
           // If not authenticated, redirect to login

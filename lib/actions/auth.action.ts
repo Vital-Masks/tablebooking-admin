@@ -1,6 +1,6 @@
 "use server";
 
-import { createSession } from "../session";
+import { createSession, decodeJWT } from "../session";
 
 const ENDPOINT = process.env.API_ENDPOINT;
 
