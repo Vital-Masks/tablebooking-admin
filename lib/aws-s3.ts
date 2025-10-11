@@ -27,50 +27,74 @@ export async function uploadFileToS3(
   imageCategory: string
 ): Promise<string | null> {
   try {
+    console.group(`🟡 Tize [S3 Upload Start] ${file.name}`);
+    console.log("1️⃣ Requesting pre-signed URL...");
+
     // Ask backend for a pre-signed URL
     const res: any = await fetcher("/aws/s3-presign", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+      body: {
         fileType: file.type,
         category: imageCategory,
-        fileName: file.name, // Optional: you can send the file name if needed
-      }),
-    });
-
-    if (res.error) {
-      console.error("Failed to get pre-signed URL:", res.error);
-      return null;
-    }
-
-    const { signedUrl, publicUrl, key } = await res.json();
-
-    //Upload directly to S3
-    const upload = await fetch(signedUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": file.type,
+        fileName: file.name,
       },
-      body: file,
     });
 
-    if (!upload.ok) {
-      console.error(
-        "Failed to upload file to S3:",
-        upload.status,
-        upload.statusText
-      );
+    // ⚠️ fetcher already returns parsed JSON, so no need for res.json()
+    if (!res || res.error) {
+      console.error("❌ Failed to get pre-signed URL:", res?.error || res);
       return null;
     }
 
-    console.log("Upload response:", upload);
-    console.log("File key uploaded successfully:", key);
-    return key; // Return the key of the uploaded file
+    const { signedUrl, publicUrl, key } = res;
+
+    console.log("✅ [Presign Response]");
+    console.log("🔗 signedUrl:", signedUrl);
+    console.log("🌍 publicUrl:", publicUrl);
+    console.log("🗝️ key:", key);
+
+    // Upload directly to S3
+  console.log("2️⃣ Uploading file to S3...");
+
+const upload = await fetch(signedUrl, {
+  method: "PUT",
+  headers: { "Content-Type": file.type },
+  body: file,
+});
+
+if (!upload.ok) {
+  // Read S3 error body (usually XML)
+  const text = await upload.text();
+
+  console.error("❌ Failed to upload file to S3:", {
+    status: upload.status,
+    statusText: upload.statusText,
+    responseBody: text, // This contains the detailed AWS error
+  });
+
+  return null;
+}
+
+console.log("✅ Upload succeeded:", {
+  status: upload.status,
+  statusText: upload.statusText,
+});
+
+
+    console.log("✅ File uploaded successfully to S3");
+    console.log("📁 File key:", key);
+    console.log("🌐 Public URL:", publicUrl);
+    console.groupEnd();
+
+    return key; // You could also return publicUrl if you want to store/display the image
   } catch (error) {
-    console.error("Error uploading file to S3:", error);
+    console.error("💥 Error uploading file to S3:", error);
+    console.groupEnd();
     return null;
   }
 }
+
 
 export async function uploadMultipleFilesToS3(
   files: File[],
