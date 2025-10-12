@@ -49,7 +49,8 @@ const ReservationTableHead = ({
 
       if (groupTitle === "Timeframe") {
         newValues.dateType = checked ? value : "";
-        if (value === "customDates") {
+        if (value !== "customDates" && checked) {
+          // Clear custom dates when other timeframes are selected
           newValues.startDate = "";
           newValues.endDate = "";
         }

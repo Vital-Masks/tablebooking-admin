@@ -75,13 +75,14 @@ const RestaurantTableHead = ({
     value: string,
     checked: boolean
   ) => {
+    
     setFilterValues((prev) => {
       const newValues = { ...prev };
 
       if (groupTitle === "Timeframe") {
         newValues.dateType = checked ? value : "";
-        if (value === "customDates") {
-          // Handle custom dates - you might want to add date pickers
+        if (value !== "customDates" && checked) {
+          // Clear custom dates when other timeframes are selected
           newValues.startDate = "";
           newValues.endDate = "";
         }
@@ -155,6 +156,8 @@ const RestaurantTableHead = ({
         availabilityStatus: filterValues.availabilityStatus,
         subscription: filterValues.subscription,
       };
+
+      console.log("filterData >>", filterData);
 
       const filteredRestaurants = await filterRestaurants(filterData);
 
