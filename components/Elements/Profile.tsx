@@ -28,13 +28,10 @@ const Profile = () => {
     const fetchUser = async () => {
       try {
         const response = await fetch('/api/auth/user');
+        console.log("response >>", response)
         if (response.ok) {
           const data = await response.json();
-          console.log("response >>", data)
           setUser(data.user);
-        } else {
-          // If not authenticated, redirect to login
-          router.push('/login');
         }
       } catch (error) {
         console.error('Error fetching user:', error);
