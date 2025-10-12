@@ -52,7 +52,7 @@ const Table = ({
           recordsPerPage={pagination?.limit}
           page={pagination?.page}
           paginationActiveTextColor="white"
-
+          
 
           onPageChange={(p) => {
             if (onPageChange) {

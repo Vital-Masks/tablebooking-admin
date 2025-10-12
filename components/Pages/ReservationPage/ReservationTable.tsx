@@ -11,8 +11,12 @@ import { Fragment } from "react";
 const ReservationTable = ({ restaurants, restaurantId }: any) => {
   const [rowData, setRowData] = useState<Reservation[]>([]);
   const [initialData, setInitialData] = useState<Reservation[]>([]);
-  const [systemReservations, setSystemReservations] = useState<Reservation[]>([]);
-  const [manualReservations, setManualReservations] = useState<Reservation[]>([]);
+  const [systemReservations, setSystemReservations] = useState<Reservation[]>(
+    []
+  );
+  const [manualReservations, setManualReservations] = useState<Reservation[]>(
+    []
+  );
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,8 +52,12 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
 
   // Filter reservations by type
   const filterReservationsByType = (reservations: Reservation[]) => {
-    const system = rowData.filter(res => res.reservationType?.toLowerCase() === 'system');
-    const manual = rowData.filter(res => res.reservationType?.toLowerCase() === 'manual');
+    const system = rowData.filter(
+      (res) => res.reservationType?.toLowerCase() === "system"
+    );
+    const manual = rowData.filter(
+      (res) => res.reservationType?.toLowerCase() === "manual"
+    );
     setSystemReservations(system);
     setManualReservations(manual);
   };
@@ -94,8 +102,12 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
 
   const handleFilterChange = (filteredData: Reservation[]) => {
     setRowData(filteredData);
-    const system = filteredData.filter(res => res.reservationType?.toLowerCase() === 'system');
-    const manual = filteredData.filter(res => res.reservationType?.toLowerCase() === 'manual');
+    const system = filteredData.filter(
+      (res) => res.reservationType?.toLowerCase() === "system"
+    );
+    const manual = filteredData.filter(
+      (res) => res.reservationType?.toLowerCase() === "manual"
+    );
     setSystemReservations(system);
     setManualReservations(manual);
   };
@@ -199,12 +211,28 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
         <TabPanels>
           <TabPanel>
             <div className="active">
-              <Table columns={columns} rowData={systemReservations} />
+              <Table
+                columns={columns}
+                rowData={systemReservations}
+                pagination={{
+                  total: systemReservations.length,
+                  limit: 10,
+                  page: 1,
+                }}
+              />
             </div>
           </TabPanel>
           <TabPanel>
             <div className="active">
-              <Table columns={columns} rowData={manualReservations} />
+              <Table
+                columns={columns}
+                rowData={manualReservations}
+                pagination={{
+                  total: manualReservations.length,
+                  limit: 10,
+                  page: 1,
+                }}
+              />
             </div>
           </TabPanel>
         </TabPanels>

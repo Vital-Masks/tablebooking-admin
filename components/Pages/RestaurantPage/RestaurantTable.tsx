@@ -92,7 +92,15 @@ const RestaurantTable = () => {
         onSearchChange={handleSearchChange}
         onResetToInitial={handleResetToInitial}
       />
-      <Table columns={columns} rowData={filteredRestaurants} />
+      <Table 
+        columns={columns} 
+        rowData={filteredRestaurants}
+        pagination={{
+          total: filteredRestaurants.length,
+          limit: 10,
+          page: 1
+        }}
+      />
     </>
   );
 };
