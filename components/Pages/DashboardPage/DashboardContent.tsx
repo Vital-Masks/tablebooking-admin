@@ -3,7 +3,7 @@
 import Button from "@/components/Elements/Button";
 import AnalyticsCard from "@/components/Elements/AnalyticsCard";
 import Dropdown from "@/components/Elements/Dropdown";
-import { IconFilter } from "@/components/Icons";
+import { IconFilter, IconX } from "@/components/Icons";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import VanillaCalendar from "@/components/Common/Fields/VanillaCalendar";
@@ -44,6 +44,70 @@ export default function DashboardContent({
     const restaurantsData =
       await getRestaurantsListByHospitalityChain(hospitalityChainId);
     setRestaurants(restaurantsData || []);
+  };
+
+  // Get active filters
+  const getActiveFilters = () => {
+    const filters = [];
+    const restaurantId = searchParams.get("restaurantId");
+    const city = searchParams.get("city");
+    const customStart = searchParams.get("customStart");
+    const customEnd = searchParams.get("customEnd");
+
+    if (hospitalityChainId) {
+      const chain = hospitalityChains?.find((c: any) => c._id === hospitalityChainId);
+      filters.push({
+        key: "hospitalityChainId",
+        label: "Chain",
+        value: chain?.chainName || hospitalityChainId,
+      });
+    }
+
+    if (restaurantId) {
+      const restaurant = restaurants?.find((r: any) => r._id === restaurantId);
+      filters.push({
+        key: "restaurantId",
+        label: "Restaurant",
+        value: restaurant?.restaurantName || restaurantId,
+      });
+    }
+
+    if (city) {
+      filters.push({
+        key: "city",
+        label: "City",
+        value: city,
+      });
+    }
+
+    if (customStart && customEnd) {
+      filters.push({
+        key: "dateRange",
+        label: "Date Range",
+        value: `${customStart} - ${customEnd}`,
+      });
+    }
+
+    return filters;
+  };
+
+  // Clear specific filter
+  const clearFilter = (filterKey: string) => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    
+    if (filterKey === "dateRange") {
+      currentParams.delete("customStart");
+      currentParams.delete("customEnd");
+    } else {
+      currentParams.delete(filterKey);
+    }
+    
+    router.push(`/dashboard?${currentParams.toString()}`);
+  };
+
+  // Clear all filters
+  const clearAllFilters = () => {
+    router.push("/dashboard");
   };
 
   // Transform the stats data to match the analytics card format
@@ -131,17 +195,34 @@ export default function DashboardContent({
     inputMode: true,
     enableEdgeDatesOnly: true,
     selectionDatesMode: "multiple-ranged",
-    selectedDates: [lastWeekFormatted , todayFormatted],
-    selectedMonth: lastWeek.getMonth() as 0 | 2 | 1 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | undefined,
+    selectedDates: [lastWeekFormatted, todayFormatted],
+    selectedMonth: lastWeek.getMonth() as
+      | 0
+      | 2
+      | 1
+      | 3
+      | 4
+      | 5
+      | 6
+      | 7
+      | 8
+      | 9
+      | 10
+      | 11
+      | undefined,
     selectedYear: lastWeek.getFullYear(),
     onChangeToInput(self) {
       if (!self.context.inputElement) return;
       if (self.context.selectedDates[0]) {
         setSelectedDates(self.context.selectedDates);
-        router.push(`/dashboard?${new URLSearchParams(buildQueryParams({
-          customStart: self.context.selectedDates[0],
-          customEnd: self.context.selectedDates[1],
-        })).toString()}`);
+        router.push(
+          `/dashboard?${new URLSearchParams(
+            buildQueryParams({
+              customStart: self.context.selectedDates[0],
+              customEnd: self.context.selectedDates[1],
+            })
+          ).toString()}`
+        );
       } else {
         setSelectedDates([lastWeekFormatted, todayFormatted]);
       }
@@ -176,7 +257,7 @@ export default function DashboardContent({
     } else if (hospitalityChains) {
       loadRestaurants({ hospitalityChainId: hospitalityChains?.[0]?._id });
     }
-  }, [hospitalityChainId]);
+  }, [hospitalityChainId, hospitalityChains]);
 
   return (
     <main>
@@ -246,6 +327,47 @@ export default function DashboardContent({
                 </ul>
               </Dropdown>
             </div>
+            <div className="dropdown">
+              <Dropdown
+                placement="bottom-start"
+                btnClassName="btn btn-primary dropdown-toggle shadow-none"
+                button={
+                  <>
+                    <span>
+                      <IconFilter className="mr-2 inline-block w-4 h-4" />
+                    </span>
+                    <span>City</span>
+                  </>
+                }
+              >
+                <ul className="!min-w-[170px] max-h-[150px] overflow-y-auto">
+                  <li>
+                    <Link
+                      href={{
+                        pathname: "/dashboard",
+                        query: buildQueryParams({
+                          city: "Jaffna",
+                        }),
+                      }}
+                    >
+                      Jaffna
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={{
+                        pathname: "/dashboard",
+                        query: buildQueryParams({
+                          city: "Colombo",
+                        }),
+                      }}
+                    >
+                      Colombo
+                    </Link>
+                  </li>
+                </ul>
+              </Dropdown>
+            </div>
 
             <div className="w-[250px]">
               <VanillaCalendar
@@ -260,6 +382,39 @@ export default function DashboardContent({
             </div>
           </div>
         </div>
+
+        {/* Active Filters Section */}
+        {getActiveFilters().length > 0 && (
+          <div className="panel p-3 mb-6">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm font-semibold text-gray-700">
+                Active Filters:
+              </span>
+              {getActiveFilters().map((filter) => (
+                <div
+                  key={filter.key}
+                  className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
+                >
+                  <span className="font-medium">{filter.label}:</span>
+                  <span>{filter.value}</span>
+                  <button
+                    onClick={() => clearFilter(filter.key)}
+                    className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                    aria-label={`Clear ${filter.label} filter`}
+                  >
+                    <IconX className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={clearAllFilters}
+                className="text-sm text-red-600 hover:text-red-700 font-medium underline ml-2"
+              >
+                Clear All
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-3 items-start gap-5">
           <div className={`col-span-3`}>

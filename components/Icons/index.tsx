@@ -36,6 +36,7 @@ export {
   IconEye,
   IconEyeOff,
   IconFilter,
+  IconX,
   IconUserRole,
   IconChefHat,
   IconSettings,
