@@ -200,6 +200,7 @@ const RestaurantTableHead = ({
           type: "radio",
           title: "All Time",
           value: "allTime",
+          checked: true,
         },
         {
           type: "radio",
@@ -226,22 +227,24 @@ const RestaurantTableHead = ({
     {
       title: "Restaurant Type",
       items: [
-        // {
-        //   type: "checkbox",
-        //   title: "All",
-        //   value: "all",
-        // },
+         {
+           type: "checkbox",
+           title: "All",
+           value: "all",
+           checked: true,
+         },
         ...restaurantType,
       ],
     },
     {
       title: "Availability",
       items: [
-        // {
-        //   type: "checkbox",
-        //   title: "All",
-        //   value: "all",
-        // },
+         {
+           type: "checkbox",
+           title: "All",
+           value: "all",
+           checked: true,
+         },
         {
           type: "checkbox",
           title: "Available",
@@ -258,11 +261,12 @@ const RestaurantTableHead = ({
     {
       title: "Subscription",
       items: [
-        // {
-        //   type: "checkbox",
-        //   title: "All",
-        //   value: "all",
-        // },
+         {
+           type: "checkbox",
+           title: "All",
+           value: "all",
+           checked: true,
+         },
         {
           type: "checkbox",
           title: "Free",
@@ -432,6 +436,7 @@ const RestaurantTableHead = ({
                                 ? "w-4 h-4 text-primary border-gray-300 focus:ring-primary"
                                 : "w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
                             }`}
+                            checked={item.checked}
                             onChange={(e) =>
                               handleFilterChange(
                                 group.title,

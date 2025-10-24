@@ -155,6 +155,7 @@ const ReservationTableHead = ({
           type: "radio",
           title: "All Time",
           value: "allTime",
+          checked: true,
         },
         {
           type: "radio",
@@ -181,6 +182,12 @@ const ReservationTableHead = ({
     {
       title: "Status",
       items: [
+        {
+          type: "checkbox",
+          title: "All",
+          value: "all",
+          checked: true,
+        },
         {
           type: "checkbox",
           title: "Booked",
@@ -212,6 +219,12 @@ const ReservationTableHead = ({
     {
       title: "Table",
       items: [
+        {
+          type: "checkbox",
+          title: "All",
+          value: "all",
+          checked: true,
+        },
         {
           type: "checkbox",
           title: "Assigned",
@@ -350,12 +363,13 @@ const ReservationTableHead = ({
                           id={`restaurant-${restaurant._id}`}
                           className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
                           checked={restaurantId === restaurant._id}
+
                         />
                         <Link
                           href={`${ROUTE_RESERVATIONS}/${restaurant._id}`}
                           className="ml-3 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 transition-colors duration-200"
                         >
-                          {restaurant.restaurantName}
+                          {restaurant.restaurantName} 
                         </Link>
                       </div>
                     ))}
@@ -413,6 +427,7 @@ const ReservationTableHead = ({
                                 ? "w-4 h-4 text-primary border-gray-300 focus:ring-primary"
                                 : "w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
                             }`}
+                            checked={item.checked}
                             onChange={(e) =>
                               handleFilterChange(
                                 group.title,
