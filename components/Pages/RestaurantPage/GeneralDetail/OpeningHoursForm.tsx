@@ -334,12 +334,11 @@ const transformApiDataToFormValues = (
 };
 
 const OpeningHoursForm = ({ params, openingTimes }: any) => {
-  console.log("Opening times:", openingTimes);
-
   const { restaurantId } = params;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formValues, setFormValues] = useState<OpeningHours>(initialValues);
+  const [isCustomDaysExpanded, setIsCustomDaysExpanded] = useState(false);
 
   // Transform openingTimes to form values when component mounts or openingTimes changes
   useEffect(() => {
@@ -362,62 +361,28 @@ const OpeningHoursForm = ({ params, openingTimes }: any) => {
         closeTime: string;
       }> = [];
 
-      // Create a map of custom days for easy lookup
-      const customDaysMap = new Map();
+      // Add default weekday times
+      openingTimes.push({
+        day: "Weekdays",
+        openTime: values.weekdays.openTime.replace(":", "."),
+        closeTime: values.weekdays.closeTime.replace(":", "."),
+      });
+
+      // Add default weekend times
+      openingTimes.push({
+        day: "Weekends",
+        openTime: values.weekends.openTime.replace(":", "."),
+        closeTime: values.weekends.closeTime.replace(":", "."),
+      });
+
+      // Add only enabled custom days
       Object.entries(values.customDays).forEach(([dayKey, dayData]) => {
         if (dayData.enabled) {
           const dayName = dayKey.charAt(0).toUpperCase() + dayKey.slice(1);
-          customDaysMap.set(dayName, {
+          openingTimes.push({
+            day: dayName,
             openTime: dayData.openTime.replace(":", "."),
             closeTime: dayData.closeTime.replace(":", "."),
-          });
-        }
-      });
-
-      // Add weekdays (Monday - Friday) - use custom times if available
-      const weekdaysList = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-      ];
-      weekdaysList.forEach((day) => {
-        const customDay = customDaysMap.get(day);
-        if (customDay) {
-          // Use custom time for this day
-          openingTimes.push({
-            day,
-            openTime: customDay.openTime,
-            closeTime: customDay.closeTime,
-          });
-        } else {
-          // Use default weekday time
-          openingTimes.push({
-            day,
-            openTime: values.weekdays.openTime.replace(":", "."),
-            closeTime: values.weekdays.closeTime.replace(":", "."),
-          });
-        }
-      });
-
-      // Add weekends (Saturday - Sunday) - use custom times if available
-      const weekendsList = ["Saturday", "Sunday"];
-      weekendsList.forEach((day) => {
-        const customDay = customDaysMap.get(day);
-        if (customDay) {
-          // Use custom time for this day
-          openingTimes.push({
-            day,
-            openTime: customDay.openTime,
-            closeTime: customDay.closeTime,
-          });
-        } else {
-          // Use default weekend time
-          openingTimes.push({
-            day,
-            openTime: values.weekends.openTime.replace(":", "."),
-            closeTime: values.weekends.closeTime.replace(":", "."),
           });
         }
       });
@@ -576,15 +541,45 @@ const OpeningHoursForm = ({ params, openingTimes }: any) => {
 
               {/* Custom Days Section */}
               <div className="bg-gray-50 rounded-lg p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Custom Days
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  Select specific days and set custom opening hours. Leave
-                  unchecked to use default weekday/weekend times.
-                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Custom Days
+                    </h2>
+                    <p className="text-gray-600 text-sm mt-1">
+                      Set custom opening hours for specific days
+                    </p>
+                  </div>
+                  {/* Toggle Switch for Section */}
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={isCustomDaysExpanded}
+                    onClick={() => setIsCustomDaysExpanded(!isCustomDaysExpanded)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                      isCustomDaysExpanded
+                        ? "bg-blue-600"
+                        : "bg-gray-300"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        isCustomDaysExpanded
+                          ? "translate-x-6"
+                          : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
 
-                <div className="space-y-4">
+                {isCustomDaysExpanded && (
+                  <>
+                    <p className="text-gray-600 mb-6 text-sm">
+                      Select specific days and set custom opening hours. Leave
+                      unchecked to use default weekday/weekend times.
+                    </p>
+
+                    <div className="space-y-4">
                   {weekDays.map((day) => (
                     <div
                       key={day.value}
@@ -596,17 +591,39 @@ const OpeningHoursForm = ({ params, openingTimes }: any) => {
                     >
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center">
-                          <input
-                            type="checkbox"
+                          <label
+                            htmlFor={`custom-${day.value}`}
+                            className="text-sm font-medium text-gray-900"
+                          >
+                            {day.label}
+                          </label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full ${
+                              values.customDays[day.value].enabled
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-gray-100 text-gray-600"
+                            }`}
+                          >
+                            {values.customDays[day.value].enabled
+                              ? "Custom"
+                              : "Default"}
+                          </span>
+                          {/* Toggle Switch */}
+                          <button
+                            type="button"
                             id={`custom-${day.value}`}
-                            checked={values.customDays[day.value].enabled}
-                            onChange={(e) => {
+                            role="switch"
+                            aria-checked={values.customDays[day.value].enabled}
+                            onClick={() => {
+                              const newValue = !values.customDays[day.value].enabled;
                               setFieldValue(
                                 `customDays.${day.value}.enabled`,
-                                e.target.checked
+                                newValue
                               );
-                              if (!e.target.checked) {
-                                // Reset times when unchecked
+                              if (!newValue) {
+                                // Reset times when disabled
                                 setFieldValue(
                                   `customDays.${day.value}.openTime`,
                                   ""
@@ -617,26 +634,21 @@ const OpeningHoursForm = ({ params, openingTimes }: any) => {
                                 );
                               }
                             }}
-                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                          />
-                          <label
-                            htmlFor={`custom-${day.value}`}
-                            className="ml-3 text-sm font-medium text-gray-900"
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                              values.customDays[day.value].enabled
+                                ? "bg-blue-600"
+                                : "bg-gray-300"
+                            }`}
                           >
-                            {day.label}
-                          </label>
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                values.customDays[day.value].enabled
+                                  ? "translate-x-6"
+                                  : "translate-x-1"
+                              }`}
+                            />
+                          </button>
                         </div>
-                        <span
-                          className={`text-xs px-2 py-1 rounded-full ${
-                            values.customDays[day.value].enabled
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-gray-100 text-gray-600"
-                          }`}
-                        >
-                          {values.customDays[day.value].enabled
-                            ? "Custom"
-                            : "Default"}
-                        </span>
                       </div>
 
                       {values.customDays[day.value].enabled && (
@@ -685,7 +697,9 @@ const OpeningHoursForm = ({ params, openingTimes }: any) => {
                       )}
                     </div>
                   ))}
-                </div>
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Submit Button */}
