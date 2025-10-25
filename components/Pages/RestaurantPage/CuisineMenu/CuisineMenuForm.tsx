@@ -8,6 +8,7 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import FormComponent from "@/components/Common/Form";
 import FormSlider from "@/components/Common/Form/FormSlider";
 import Button from "@/components/Elements/Button";
@@ -20,23 +21,20 @@ import {
   getRestaurantCuisineMenuById,
   updateRestaurantCuisineMenu,
 } from "@/lib/actions/restaurant.actions";
-import {
-  findField,
-  handleError,
-  returnCommonObject,
-} from "@/lib/utils";
+import { findField, handleError, returnCommonObject } from "@/lib/utils";
 import toast from "react-hot-toast";
 import ToastBanner from "@/components/Elements/ToastBanner";
 import { getUtilities } from "@/lib/actions/utilities.actions";
 import { uploadMultipleFilesToS3 } from "@/lib/aws-s3";
 
-const CuisineMenuForm = ({ params }: any) => {
+const CuisineMenuForm = ({ params, pdfData }: any) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const cuisineId = searchParams.get("edit");
 
   const [modal1, setModal1] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
 
   const defaultInitialValues = useMemo(
     () => ({
@@ -124,7 +122,7 @@ const CuisineMenuForm = ({ params }: any) => {
     const formData = new FormData(event.target as HTMLFormElement);
     const url = formData.get("url") as string | null;
     const files: any = formData.getAll("imgFile") as File[];
-   
+
     if (files.length > 0) {
       const imageUrls = await uploadMultipleFilesToS3(
         files,
@@ -142,6 +140,34 @@ const CuisineMenuForm = ({ params }: any) => {
           message="Please upload an image or enter a URL"
         />
       ));
+    }
+  };
+
+  const handleDeleteImage = async (indexToDelete: number) => {
+    if (!pdfData?._id || !pdfData?.pdf) return;
+
+    try {
+      const updatedPdfArray = pdfData.pdf.filter(
+        (_: string, index: number) => index !== indexToDelete
+      );
+
+      await updateRestaurantCuisineMenu(pdfData._id, {
+        restaurantId: params.restaurantId,
+        pdf: updatedPdfArray,
+      });
+
+      toast.custom((t) => (
+        <ToastBanner t={t} type="SUCCESS" message="Image deleted successfully!" />
+      ));
+
+      // Close modal and reload the page to reflect changes
+      setViewModal(false);
+      router.refresh();
+    } catch (error) {
+      toast.custom((t) => (
+        <ToastBanner t={t} type="ERROR" message="Failed to delete image!" />
+      ));
+      handleError("An error occurred while deleting the image:", error);
     }
   };
 
@@ -268,9 +294,94 @@ const CuisineMenuForm = ({ params }: any) => {
           </div>
         </Dialog>
       </Transition>
+      <Transition appear show={viewModal} as={Fragment}>
+        <Dialog as="div" open={viewModal} onClose={() => setViewModal(false)}>
+          <TransitionChild
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0" />
+          </TransitionChild>
+          <div className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+            <div className="flex items-start justify-center min-h-screen px-4 ">
+              <TransitionChild
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <DialogPanel
+                  as="div"
+                  className="panel border-0 p-0 rounded-lg overflow-hidden my-8 w-full max-w-4xl text-black"
+                >
+                  <div className="flex bg-[#fbfbfb] items-center justify-between px-5 py-3">
+                    <div className="text-lg font-bold">Menu PDF</div>
+                    <button
+                      type="button"
+                      className="text-white-dark hover:text-dark"
+                      onClick={() => setViewModal(false)}
+                    >
+                      x
+                    </button>
+                  </div>
+                  <div className="p-5">
+                    <div className="flex w-full h-full overflow-x-auto border border-gray-300 rounded-md snap-x snap-mandatory touch-pan-x">
+                      {pdfData?.pdf?.map((url: string, index: number) => (
+                        <div
+                          key={index}
+                          className="min-w-full h-full flex-1 p-2 snap-start relative"
+                        >
+                          <Image
+                            src={url}
+                            alt={`PDF Page ${index + 1}`}
+                            width={800}
+                            height={700}
+                            className="w-full h-full object-contain bg-gray-200"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteImage(index)}
+                            className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-colors"
+                            title="Delete image"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
       <div className="absolute top-5 right-5 flex items-center gap-2">
-        <Button type="filled" className="" onClick={() => setModal1(true)}>
-          + Upload PDF
+        <Button
+          type="filled"
+          className=""
+          onClick={() => (pdfData ? setViewModal(true) : setModal1(true))}
+        >
+          {pdfData ? "View File" : "+ Upload PDF"}
         </Button>
         <Button type="filled" className="" onClick={() => setIsFormOpen(true)}>
           + Create new
