@@ -38,7 +38,6 @@ const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
     subscriptionType: "",
     period: "",
     startDate: new Date(),
-    endDate: new Date(),
     payment: 0,
     discountValue: 0,
     discountType: "percentage",
@@ -176,7 +175,6 @@ const SubscriptionForm = ({ params, subscriptionPlansOptions }: any) => {
         let data = returnCommonObject(initialValues, response);
         data["planId"] = response.planId._id;
         data["startDate"] = moment(data["startDate"]).format("YYYY-MM-DD");
-        data["endDate"] = moment(data["endDate"]).format("YYYY-MM-DD");
         data["discountType"] = response.discount?.type;
         data["discountValue"] = response?.discount?.value;
         setInitialValues(data);

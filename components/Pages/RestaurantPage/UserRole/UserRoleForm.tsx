@@ -126,7 +126,7 @@ const UserRoleForm = ({ params }: any) => {
       </Button>
       <FormSlider isOpen={isFormOpen}>
         <FormComponent
-          title="Create dining area"
+          title={userRoleId ? "Edit User Role" : "Create User Role"}
           fields={userroleFormField}
           initialValues={initialValues}
           validationSchema={userroleFormSchema}

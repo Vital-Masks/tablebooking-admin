@@ -75,13 +75,6 @@ export const subscriptionFormFields: FormField[] = [
     placeholder: "Select from date",
   },
   {
-    id: "endDate",
-    name: "endDate",
-    label: "To Date",
-    type: "date",
-    placeholder: "Select to date",
-  },
-  {
     id: "payment",
     name: "payment",
     label: "Payment",
@@ -138,7 +131,6 @@ export const subscriptionFormSchema = Yup.object().shape({
   subscriptionType: Yup.string().required("Subscription type is required"),
   period: Yup.number().required("Period is required"),
   startDate: Yup.date().required("From date is required"),
-  endDate: Yup.date().required("To date is required"),
   payment: Yup.string().required("Payment is required"),
   discountValue: Yup.number().required("Discount value is required"),
   discountType: Yup.string().required("Discount type is required"),
