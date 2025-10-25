@@ -6,12 +6,18 @@ import { fetcher, revalidate } from './fetcher';
 
 // GET ALL RESTAURANTS
 export const getRestaurantsList = async (): Promise<Restaurant[] | null> => {
-  return await fetcher<Restaurant[]>('/restaurant/getAllRestaurants');
+  return await fetcher<Restaurant[]>('/restaurant/getAllRestaurants', {
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['restaurants-list'],
+  });
 };
 
 // GET ALL RESTAURANTS
 export const getRestaurantsListByHospitalityChain = async (hospitalityChainId: string): Promise<Restaurant[] | null> => {
-  return await fetcher<Restaurant[]>(`/hospitalityChain/${hospitalityChainId}/restaurant/getAllRestaurants`);
+  return await fetcher<Restaurant[]>(`/hospitalityChain/${hospitalityChainId}/restaurant/getAllRestaurants`, {
+    revalidate: 3600, // Cache for 1 hour
+    tags: [`hospitality-chain-${hospitalityChainId}-restaurants`],
+  });
 };
 
 // FILTER RESTAURANTS
@@ -56,6 +62,8 @@ export const createRestaurantGeneral = async (
 export const getRestaurantGeneral = async (restaurantId: string) => {
   return await fetcher<Restaurant>(`/restaurant/${restaurantId}`, {
     method: 'GET',
+    revalidate: 3600, // Cache for 1 hour
+    tags: [`restaurant-${restaurantId}`],
   });
 };
 
@@ -86,6 +94,8 @@ export const getRestaurantCuisineMenu = async (restaurantId: string) => {
     `/restaurant/${restaurantId}/cuisineMenu/getAllCuisineForRestaurant`,
     {
       method: 'GET',
+      revalidate: 3600, // Cache for 1 hour
+      tags: [`restaurant-${restaurantId}-cuisine-menu`],
     }
   );
 };
@@ -99,6 +109,8 @@ export const getRestaurantCuisineMenuById = async (
     `/restaurant/${restaurantId}/cuisineMenu/${cuisineMenuId}`,
     {
       method: 'GET',
+      revalidate: 3600, // Cache for 1 hour
+      tags: [`restaurant-${restaurantId}-cuisine-menu`, `cuisine-menu-${cuisineMenuId}`],
     }
   );
 };
@@ -150,6 +162,8 @@ export const getRestaurantDiningTiming = async (restaurantId: string) => {
     `/restaurant/${restaurantId}/diningTiming/getAllDiningTimingForRestaurant`,
     {
       method: 'GET',
+      revalidate: 3600, // Cache for 1 hour
+      tags: [`restaurant-${restaurantId}-dining-timing`],
     }
   );
 };
@@ -163,6 +177,8 @@ export const getRestaurantDiningTimingById = async (
     `/restaurant/${restaurantId}/diningTiming/${cuisineMenuId}`,
     {
       method: 'GET',
+      revalidate: 3600, // Cache for 1 hour
+      tags: [`restaurant-${restaurantId}-dining-timing`, `dining-timing-${cuisineMenuId}`],
     }
   );
 };
@@ -248,6 +264,8 @@ export const getRestaurantDiningAreas = async (restaurantId: string) => {
     `/restaurant/${restaurantId}/diningArea/getAllDiningAreaForRestaurant`,
     {
       method: 'GET',
+      revalidate: 3600, // Cache for 1 hour
+      tags: [`restaurant-${restaurantId}-dining-areas`],
     }
   );
 };
@@ -261,6 +279,8 @@ export const getRestaurantDiningAreaById = async (
     `/restaurant/${restaurantId}/diningArea/${diningId}`,
     {
       method: 'GET',
+      revalidate: 3600, // Cache for 1 hour
+      tags: [`restaurant-${restaurantId}-dining-areas`, `dining-area-${diningId}`],
     }
   );
 };
@@ -315,6 +335,8 @@ export const getRestaurantUserRoles = async (restaurantId: string) => {
     `/restaurant/${restaurantId}/restaurentAdmin/getAllrestaurentAdminsForRestaurant`,
     {
       method: 'GET',
+      revalidate: 3600, // Cache for 1 hour
+      tags: [`restaurant-${restaurantId}-user-roles`],
     }
   );
 };
@@ -328,6 +350,8 @@ export const getRestaurantUserRoleById = async (
     `/restaurant/${restaurantId}/userRole/${userRoleId}`,
     {
       method: 'GET',
+      revalidate: 3600, // Cache for 1 hour
+      tags: [`restaurant-${restaurantId}-user-roles`, `user-role-${userRoleId}`],
     }
   );
 };

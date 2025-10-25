@@ -34,7 +34,10 @@ export const getNotificationList = async (): Promise<
   NotificationType[] | null
 > => {
   try {
-    const response: any = await fetcher(`/notification/getAll/custom`);
+    const response: any = await fetcher(`/notification/getAll/custom`, {
+      revalidate: 3600, // Cache for 1 hour
+      tags: ['notifications'],
+    });
     if (response.error) {
       throw new Error(`Failed to fetch: ${response.error}`);
     }
@@ -54,6 +57,8 @@ export const getNotification = async (id: string) => {
     `/notification/custom/${id}`,
     {
       method: "GET",
+      revalidate: 3600, // Cache for 1 hour
+      tags: ['notifications', `notification-${id}`],
     }
   );
 
@@ -65,7 +70,10 @@ export const getAutoNotificationList = async (): Promise<
   AutoNotificationType[] | null
 > => {
   try {
-    const response: any = await fetcher(`/notification/getAll/automative`);
+    const response: any = await fetcher(`/notification/getAll/automative`, {
+      revalidate: 3600, // Cache for 1 hour
+      tags: ['auto-notifications'],
+    });
     if (response.error) {
       throw new Error(`Failed to fetch: ${response.error}`);
     }
@@ -105,6 +113,8 @@ export const getAutoNotification = async (id: string) => {
     `/notification/automative/${id}`,
     {
       method: "GET",
+      revalidate: 3600, // Cache for 1 hour
+      tags: ['auto-notifications', `auto-notification-${id}`],
     }
   );
 
@@ -114,7 +124,10 @@ export const getAutoNotification = async (id: string) => {
 // GET ALL Notification List
 export const getPromoList = async (): Promise<any[] | null> => {
   try {
-    const response: any = await fetcher(`/promocodes/getAllPromocodes`);
+    const response: any = await fetcher(`/promocodes/getAllPromocodes`, {
+      revalidate: 3600, // Cache for 1 hour
+      tags: ['promo-codes'],
+    });
     if (response.error) {
       throw new Error(`Failed to fetch: ${response.error}`);
     }
@@ -131,6 +144,8 @@ export const getPromoList = async (): Promise<any[] | null> => {
 export const getPromo = async (id: string) => {
   return await fetcher<any>(`/promocodes/${id}`, {
     method: "GET",
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['promo-codes', `promo-code-${id}`],
   });
 };
 

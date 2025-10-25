@@ -20,7 +20,10 @@ export const bannerImageAction = async (body: any, id?: string) => {
 // GET ALL Notification List
 export const getBannerImageList = async () => {
   try {
-    const response: any = await fetcher(`/bannerImages/getAllBannerImages`);
+    const response: any = await fetcher(`/bannerImages/getAllBannerImages`, {
+      revalidate: 3600, // Cache for 1 hour
+      tags: ['banner-images'],
+    });
 
     if (response.error) {
       throw new Error(`Failed to fetch: ${response.error}`);
@@ -40,6 +43,8 @@ export const getBannerImageList = async () => {
 export const getBannerImage = async (id: string) => {
   const result: any = await fetcher(`/bannerImages/${id}`, {
     method: "GET",
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['banner-images', `banner-image-${id}`],
   });
 
   return result;

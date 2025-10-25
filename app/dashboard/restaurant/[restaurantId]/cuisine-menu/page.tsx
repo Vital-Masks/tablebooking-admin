@@ -10,8 +10,6 @@ const CuisinePage = async ({ params }: any) => {
     PDF_RES = cuisines?.findLast((res: any) => res.pdf.length);
   }
 
-  console.log("PDF_RES >>>>", PDF_RES.pdf.length);
-
   return (
     <div>
       <CuisineMenuTable params={params} />

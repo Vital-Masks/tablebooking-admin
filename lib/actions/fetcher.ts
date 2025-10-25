@@ -9,6 +9,8 @@ export interface FetcherOptions extends RequestInit {
   headers?: HeadersInit;
   body?: any;
   requireAuth?: boolean; // Set to false if the endpoint doesn't require authentication
+  revalidate?: number | false; // Next.js revalidation time in seconds, false for no cache
+  tags?: string[]; // Next.js cache tags for on-demand revalidation
 }
 
 export async function fetcher<T>(
@@ -20,6 +22,8 @@ export async function fetcher<T>(
       method = "GET",
       body,
       requireAuth = true,
+      revalidate,
+      tags,
       ...restOptions
     } = options;
 
@@ -52,6 +56,14 @@ export async function fetcher<T>(
       headers,
       body: body ? JSON.stringify(body) : undefined,
     };
+
+    // Add Next.js cache configuration
+    if (revalidate !== undefined || tags) {
+      fetchOptions.next = {
+        ...(revalidate !== undefined && { revalidate }),
+        ...(tags && { tags }),
+      };
+    }
     
     const response = await fetch(ENDPOINT + url, fetchOptions);
    

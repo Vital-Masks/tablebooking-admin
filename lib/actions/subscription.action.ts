@@ -3,12 +3,16 @@ import { fetcher, revalidate } from "./fetcher";
 export const getAllRSubscriptionPlans = async () => {
   return await fetcher<[]>(`/subscriptionPlans`, {
     method: "GET",
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['subscription-plans'],
   });
 };
 
 export const getSubscriptionPlanById = async (id: string) => {
   return await fetcher<CreateSubscriptionParams>(`/subscriptionPlans/${id}`, {
     method: "GET",
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['subscription-plans', `subscription-plan-${id}`],
   });
 };
 
@@ -22,6 +26,8 @@ export const getAllRestaurantSubscriptions = async ({
     `/restaurantSubscription/restaurant/${restaurantId}`,
     {
       method: "GET",
+      revalidate: 3600, // Cache for 1 hour
+      tags: [`restaurant-${restaurantId}-subscriptions`],
     }
   );
 };
@@ -31,6 +37,8 @@ export const getRestaurantSubscriptionById = async (subscriptionId: string) => {
     `/restaurantSubscription/${subscriptionId}`,
     {
       method: "GET",
+      revalidate: 3600, // Cache for 1 hour
+      tags: ['restaurant-subscriptions', `restaurant-subscription-${subscriptionId}`],
     }
   );
 };

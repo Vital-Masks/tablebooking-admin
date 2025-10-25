@@ -10,7 +10,11 @@ export const getReservationList = async (
 ): Promise<Reservation[] | null> => {
   try {
     const response: any = await fetcher(
-      `/restaurant/${restaurantId}/reservation/getAllForRestaurant`
+      `/restaurant/${restaurantId}/reservation/getAllForRestaurant`,
+      {
+        revalidate: 300, // Cache for 5 minutes (reservations change frequently)
+        tags: [`restaurant-${restaurantId}-reservations`],
+      }
     );
     if (response.error) {
       throw new Error(`Failed to fetch: ${response.error}`);
@@ -28,6 +32,8 @@ export const getReservationList = async (
 export const getReservation = async (id: string) => {
   return await fetcher<Reservation>(`/reservation/${id}`, {
     method: "GET",
+    revalidate: 300, // Cache for 5 minutes (reservations change frequently)
+    tags: ['reservations', `reservation-${id}`],
   });
 };
 

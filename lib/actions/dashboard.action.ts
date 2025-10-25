@@ -7,5 +7,7 @@ export const getStats = async (queryParams: Record<string, any>): Promise<any[] 
     const queryString = new URLSearchParams(queryParams).toString();
     return await fetcher<any[]>(`/dashboard/stats?${queryString}`, {
         method: 'GET',
+        revalidate: 300, // Cache for 5 minutes (stats change frequently)
+        tags: ['dashboard-stats'],
     });
 };

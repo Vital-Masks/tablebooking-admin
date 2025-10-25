@@ -15,6 +15,8 @@ export const getHospitalChainList = async (): Promise<
       `/hospitalityChain/getAllHospitalityChains`,
       {
         method: "GET",
+        revalidate: 3600, // Cache for 1 hour
+        tags: ['hospitality-chains'],
       }
     );
 
@@ -52,6 +54,8 @@ export const createHospitalChain = async (
 export const getHospitalChain = async (id: string) => {
   return await fetcher<HospitalChain>(`/hospitalityChain/${id}`, {
     method: "GET",
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['hospitality-chains', `hospitality-chain-${id}`],
   });
 };
 

@@ -9,7 +9,10 @@ const ENDPOINT = process.env.API_ENDPOINT;
 // GET ALL AUTOMATIC NOTIFICATION LIST
 export const getInquiryList = async (): Promise<InquiryType[] | null> => {
   try {
-    const response: any = await fetcher(`/demoInquiry/getAll`);
+    const response: any = await fetcher(`/demoInquiry/getAll`, {
+      revalidate: 3600, // Cache for 1 hour
+      tags: ['inquiries'],
+    });
     if (response.error) {
       throw new Error(`Failed to fetch: ${response.error}`);
     }
@@ -24,6 +27,8 @@ export const getInquiryList = async (): Promise<InquiryType[] | null> => {
 export const getInquiry = async (id: string) => {
   const result = await fetcher<InquiryType[]>(`/demoInquiry/${id}`, {
     method: "GET",
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['inquiries', `inquiry-${id}`],
   });
 
   return result?.[0];
@@ -59,7 +64,11 @@ export const getRestaurantInquiryList = async (): Promise<
 > => {
   try {
     const response: any = await fetcher(
-      `/restaurantInquiry/getAllRestaurantInquirys`
+      `/restaurantInquiry/getAllRestaurantInquirys`,
+      {
+        revalidate: 3600, // Cache for 1 hour
+        tags: ['restaurant-inquiries'],
+      }
     );
     if (response.error) {
       throw new Error(`Failed to fetch: ${response.error}`);
@@ -76,6 +85,8 @@ export const getRestaurantInquiry = async (id: string) => {
     `/restaurantInquiry/${id}`,
     {
       method: "GET",
+      revalidate: 3600, // Cache for 1 hour
+      tags: ['restaurant-inquiries', `restaurant-inquiry-${id}`],
     }
   );
 
