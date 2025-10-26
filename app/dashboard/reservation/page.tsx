@@ -19,7 +19,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const ReservationPage = async () => {
-  const restaurants = await getRestaurantsList();
+  const restaurants: any = await getRestaurantsList();
   
   // If no restaurants exist, show an empty state
   if (!restaurants || restaurants.length === 0) {
@@ -34,7 +34,7 @@ const ReservationPage = async () => {
   }
 
   // Redirect to the first restaurant's reservation page
-  redirect(`/dashboard/reservation/${restaurants[0]._id}`);
+  redirect(`/dashboard/reservation/${restaurants.data[0]._id}`);
 };
 
 export default ReservationPage;

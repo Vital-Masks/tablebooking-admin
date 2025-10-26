@@ -29,7 +29,7 @@ const ReservationTableHead = ({
   });
 
   // Get current restaurant name for display
-  const currentRestaurant = restaurants.find(
+  const currentRestaurant = restaurants.data.find(
     (r: any) => r._id === restaurantId
   );
 
@@ -356,7 +356,7 @@ const ReservationTableHead = ({
               >
                 <div className="p-4 bg-gray-50 border-t border-gray-200 max-h-[200px] overflow-y-auto">
                   <div className="space-y-3">
-                    {restaurants.map((restaurant: any) => (
+                    {restaurants.data.map((restaurant: any) => (
                       <div key={restaurant._id} className="flex items-center">
                         <input
                           type="checkbox"

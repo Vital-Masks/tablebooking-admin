@@ -68,6 +68,7 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
 
     try {
       const reservations = await getReservationList(restaurantId);
+
       const formattedData: Reservation[] =
         reservations?.map((res: any) => ({
           id: res._id,
