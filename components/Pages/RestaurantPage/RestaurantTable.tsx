@@ -9,36 +9,55 @@ import { useState, useEffect } from "react";
 
 const RestaurantTable = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
-  const [filteredRestaurants, setFilteredRestaurants] = useState<any[]>([]);
   const [restaurantType, setRestaurantType] = useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0
+  });
+
+  const fetchRestaurants = async (page: number = 1, limit: number = 10) => {
+    setIsLoading(true);
+    try {
+      const params = `page=${page}&limit=${limit}`;
+      const restaurantsData: any = await getRestaurantsList(params);
+
+      if (restaurantsData?.data) {
+        const formattedData = restaurantsData.data.map((res: any) => ({
+          id: res._id,
+          name: res.restaurantName,
+          type: res.restaurantType,
+          phone: res.contactNo,
+          email: res.email,
+          address: res.address,
+          subscription: "Free plan",
+          availability: res.availabilityStatus,
+          createdOn: res.created_at,
+          hospitalityChainId: res.hospitalityChainId?._id,
+        }));
+        
+        setRestaurants(formattedData);
+        setPagination({
+          page: restaurantsData.pagination?.page || page,
+          limit: restaurantsData.pagination?.limit || limit,
+          total: restaurantsData.pagination?.total || 0,
+          totalPages: restaurantsData.pagination?.totalPages || 0
+        });
+      }
+    } catch (error) {
+      console.error("Error loading restaurants:", error);
+      setRestaurants([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadUtils = async () => {
       try {
-        const [restaurantsData, utilsData] = await Promise.all([
-          getRestaurantsList(),
-          getUtilities()
-        ]);
-
-        if (restaurantsData) {
-          const formattedData = restaurantsData.map((res: any) => ({
-            id: res._id,
-            name: res.restaurantName,
-            type: res.restaurantType,
-            phone: res.contactNo,
-            email: res.email,
-            address: res.address,
-            subscription: "Free plan",
-            availability: res.availabilityStatus,
-            createdOn: res.created_at,
-            hospitalityChainId: res.hospitalityChainId?._id,
-          }));
-          setRestaurants(formattedData);
-          setFilteredRestaurants(formattedData);
-        }
-
+        const utilsData: any = await getUtilities();
         if (utilsData?.[0]?.restaurantType) {
           const typeOptions = Object.entries(utilsData[0].restaurantType).map(
             ([key, value]) => ({
@@ -50,56 +69,44 @@ const RestaurantTable = () => {
           setRestaurantType(typeOptions);
         }
       } catch (error) {
-        console.error('Error loading data:', error);
-      } finally {
-        setIsLoading(false);
+        console.error("Error loading utilities:", error);
       }
     };
 
-    loadData();
+    loadUtils();
+    fetchRestaurants();
   }, []);
 
-  useEffect(() => {
-    if (searchTerm) {
-      const filtered = restaurants.filter(restaurant =>
-        restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        restaurant.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        restaurant.phone.includes(searchTerm)
-      );
-      setFilteredRestaurants(filtered);
-    } else {
-      setFilteredRestaurants(restaurants);
-    }
-  }, [searchTerm, restaurants]);
-
   const handleFilterChange = (filteredData: any[]) => {
-    setFilteredRestaurants(filteredData);
+    setRestaurants(filteredData);
   };
 
   const handleSearchChange = (searchTerm: string) => {
-    setSearchTerm(searchTerm);
+    // Search will be handled by filtering logic in RestaurantTableHead
   };
 
   const handleResetToInitial = () => {
-    setFilteredRestaurants(restaurants);
+    fetchRestaurants(pagination.page, pagination.limit);
+  };
+
+  const handlePageChange = (page: number) => {
+    fetchRestaurants(page, pagination.limit);
   };
 
   return (
     <>
-      <RestaurantTableHead 
-        restaurantType={restaurantType} 
+      <RestaurantTableHead
+        restaurantType={restaurantType}
         onFilterChange={handleFilterChange}
         onSearchChange={handleSearchChange}
         onResetToInitial={handleResetToInitial}
       />
-      <Table 
-        columns={columns} 
-        rowData={filteredRestaurants}
-        pagination={{
-          total: filteredRestaurants.length,
-          limit: 10,
-          page: 1
-        }}
+      <Table
+        columns={columns}
+        rowData={restaurants}
+        pagination={pagination}
+        isLoading={isLoading}
+        onPageChange={handlePageChange}
       />
     </>
   );

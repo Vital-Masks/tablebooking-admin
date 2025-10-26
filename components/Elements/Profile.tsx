@@ -28,7 +28,6 @@ const Profile = () => {
     const fetchUser = async () => {
       try {
         const response = await fetch('/api/auth/user');
-        console.log("response >>", response)
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);

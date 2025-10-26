@@ -14,6 +14,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized user type" }, { status: 403 });
     }
 
+    if (!session.restaurantId || !session.userId) {
+      console.error("Missing restaurantId or userId in session:", { restaurantId: session.restaurantId, userId: session.userId });
+      return NextResponse.json({ error: "Invalid session data" }, { status: 400 });
+    }
+
     const response = await fetch(
       `${ENDPOINT}/restaurant/${session.restaurantId}/restaurentAdmin/${session.userId}`
     );

@@ -68,7 +68,7 @@ const RestaurantInquiryHeader = () => {
     try {
       setCreateForm(true);
       const response = await getRestaurantInquiry(id);
-      console.log("response >>", response);
+
       const commonObj = returnCommonObject(initialValues, response);
       setInitialValues({
         ...commonObj,

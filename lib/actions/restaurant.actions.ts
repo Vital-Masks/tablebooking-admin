@@ -5,8 +5,9 @@ import { parseStringify } from '../utils';
 import { fetcher, revalidate } from './fetcher';
 
 // GET ALL RESTAURANTS
-export const getRestaurantsList = async (): Promise<Restaurant[] | null> => {
-  return await fetcher<Restaurant[]>('/restaurant/getAllRestaurants', {
+export const getRestaurantsList = async (params?: string): Promise<Restaurant[] | null> => {
+  const url = params ? `/restaurant/getAllRestaurants?${params}` : '/restaurant/getAllRestaurants';
+  return await fetcher<Restaurant[]>(url, {
     revalidate: 3600, // Cache for 1 hour
     tags: ['restaurants-list'],
   });
