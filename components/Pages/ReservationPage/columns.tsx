@@ -10,7 +10,7 @@ export const columns = [
   { accessor: "contact", title: "Contact No" },
   { accessor: "restaurant", title: "Restaurant" },
   { accessor: "reservedfor", title: "Reserved For" },
-  { accessor: "date", title: "Date",  render: ({ date }: any) => <div>{formatDate(date)}</div> },
+  { accessor: "date", title: "Date", render: ({ date }: any) => <div>{formatDate(date)}</div> },
   { accessor: "time", title: "Time" },
   { accessor: "pax", title: "Pax" },
   { accessor: "diningarea", title: "Dining Area" },

@@ -6,11 +6,15 @@ import { fetcher, revalidate } from "./fetcher";
 
 // GET ALL RESERVATIONS
 export const getReservationList = async (
-  restaurantId: string
+  restaurantId: string,
+  params?: string
 ): Promise<Reservation[] | null> => {
   try {
+    const url = params 
+      ? `/restaurant/${restaurantId}/reservation/getAllForRestaurant?${params}`
+      : `/restaurant/${restaurantId}/reservation/getAllForRestaurant`;
     const response: any = await fetcher(
-      `/restaurant/${restaurantId}/reservation/getAllForRestaurant`,
+      url,
       {
         revalidate: 300, // Cache for 5 minutes (reservations change frequently)
         tags: [`restaurant-${restaurantId}-reservations`],
@@ -22,7 +26,7 @@ export const getReservationList = async (
     return response;
   } catch (error) {
     handleError(
-      "An error occurred while retrieving the hospital chains",
+      "An error occurred while retrieving the reservations",
       error
     );
     return null;

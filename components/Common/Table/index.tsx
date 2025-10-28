@@ -48,6 +48,7 @@ const Table = ({
           minHeight={400}
           records={recordsData}
           columns={columns}
+          idAccessor="id"
           totalRecords={pagination?.total}
           recordsPerPage={pagination?.limit}
           page={pagination?.page}

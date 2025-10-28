@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Table from "@/components/Common/Table";
 import { columns } from "./columns";
 import { getReservationList } from "@/lib/actions/reservation.action";
@@ -9,68 +9,39 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Fragment } from "react";
 
 const ReservationTable = ({ restaurants, restaurantId }: any) => {
-  const [rowData, setRowData] = useState<Reservation[]>([]);
-  const [initialData, setInitialData] = useState<Reservation[]>([]);
-  const [systemReservations, setSystemReservations] = useState<Reservation[]>(
-    []
-  );
-  const [manualReservations, setManualReservations] = useState<Reservation[]>(
-    []
-  );
-  const [search, setSearch] = useState("");
+  const [systemReservations, setSystemReservations] = useState<Reservation[]>([]);
+  const [manualReservations, setManualReservations] = useState<Reservation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [systemPagination, setSystemPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0
+  });
+  const [manualPagination, setManualPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0
+  });
 
-  // Fetch initial data when restaurantId changes
-  useEffect(() => {
-    if (restaurantId) {
-      fetchReservations();
-    } else {
-      setRowData([]);
-      setInitialData([]);
-      setSystemReservations([]);
-      setManualReservations([]);
-      setError(null);
-    }
-  }, [restaurantId]);
-
-  // Filter data based on search
-  useEffect(() => {
-    if (search.trim() === "") {
-      setRowData(initialData);
-      filterReservationsByType(initialData);
-    } else {
-      const filteredData = initialData.filter((reservation) =>
-        Object.values(reservation).some((value) =>
-          String(value).toLowerCase().includes(search.toLowerCase())
-        )
-      );
-      setRowData(filteredData);
-      filterReservationsByType(filteredData);
-    }
-  }, [search, initialData]);
-
-  // Filter reservations by type
-  const filterReservationsByType = (reservations: Reservation[]) => {
-    const system = rowData.filter(
-      (res) => res.reservationType?.toLowerCase() === "system"
-    );
-    const manual = rowData.filter(
-      (res) => res.reservationType?.toLowerCase() === "manual"
-    );
-    setSystemReservations(system);
-    setManualReservations(manual);
-  };
-
-  const fetchReservations = async () => {
+  const fetchReservations = useCallback(async (
+    page: number = 1, 
+    limit: number = 10,
+    type: 'system' | 'manual'
+  ) => {
+    if (!restaurantId) return;
+    
     setIsLoading(true);
     setError(null);
 
     try {
-      const reservations = await getReservationList(restaurantId);
-
+      const params = `page=${page}&limit=${limit}&reservationType=${type}`;
+      const reservations: any = await getReservationList(restaurantId, params);
+      
       const formattedData: Reservation[] =
-        reservations?.map((res: any) => ({
+        reservations?.data?.map((res: any) => ({
           id: res._id,
           restaurantId: res.restaurantId?._id,
           fullname:
@@ -88,39 +59,64 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
           reservationType: res.reservationType || "",
         })) || [];
 
-      setInitialData(formattedData);
-      setRowData(formattedData);
-      filterReservationsByType(formattedData);
+      const paginationData = {
+        page: reservations.pagination?.page || page,
+        limit: reservations.pagination?.limit || limit,
+        total: reservations.pagination?.total || 0,
+        totalPages: reservations.pagination?.totalPages || 0
+      };
+
+      if (type === 'system') {
+        setSystemReservations(formattedData);
+        setSystemPagination(paginationData);
+      } else {
+        setManualReservations(formattedData);
+        setManualPagination(paginationData);
+      }
     } catch (error) {
       console.error("Error fetching reservations:", error);
       setError("Error loading reservations. Please try again.");
-      setInitialData([]);
-      setRowData([]);
+      if (type === 'system') {
+        setSystemReservations([]);
+      } else {
+        setManualReservations([]);
+      }
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [restaurantId]);
+
+  // Fetch reservations when restaurantId changes
+  useEffect(() => {
+    if (restaurantId) {
+      fetchReservations(1, 10, 'system');
+      fetchReservations(1, 10, 'manual');
+    } else {
+      setSystemReservations([]);
+      setManualReservations([]);
+      setError(null);
+    }
+  }, [restaurantId, fetchReservations]);
 
   const handleFilterChange = (filteredData: Reservation[]) => {
-    setRowData(filteredData);
-    const system = filteredData.filter(
-      (res) => res.reservationType?.toLowerCase() === "system"
-    );
-    const manual = filteredData.filter(
-      (res) => res.reservationType?.toLowerCase() === "manual"
-    );
-    setSystemReservations(system);
-    setManualReservations(manual);
+    // Filter logic handled by server-side API
   };
 
   const handleSearchChange = (searchValue: string) => {
-    setSearch(searchValue);
+    // Search will be handled by server-side filtering if needed
   };
 
   const handleResetToInitial = () => {
-    setSearch("");
-    // Fetch fresh data from API to reset all filters
-    fetchReservations();
+    fetchReservations(1, 10, 'system');
+    fetchReservations(1, 10, 'manual');
+  };
+
+  const handleSystemPageChange = (page: number) => {
+    fetchReservations(page, systemPagination.limit, 'system');
+  };
+
+  const handleManualPageChange = (page: number) => {
+    fetchReservations(page, manualPagination.limit, 'manual');
   };
 
   // If no restaurantId is provided, show empty state
@@ -215,11 +211,9 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
               <Table
                 columns={columns}
                 rowData={systemReservations}
-                pagination={{
-                  total: systemReservations.length,
-                  limit: 10,
-                  page: 1,
-                }}
+                pagination={systemPagination}
+                isLoading={isLoading}
+                onPageChange={handleSystemPageChange}
               />
             </div>
           </TabPanel>
@@ -228,11 +222,9 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
               <Table
                 columns={columns}
                 rowData={manualReservations}
-                pagination={{
-                  total: manualReservations.length,
-                  limit: 10,
-                  page: 1,
-                }}
+                pagination={manualPagination}
+                isLoading={isLoading}
+                onPageChange={handleManualPageChange}
               />
             </div>
           </TabPanel>
