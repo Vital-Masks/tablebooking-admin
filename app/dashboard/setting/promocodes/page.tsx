@@ -5,7 +5,7 @@ import { getRestaurantsList } from "@/lib/actions/restaurant.actions";
 export const dynamic = 'force-dynamic';
 
 const PromoPage = async () => {
-    const restaurants = await getRestaurantsList();
+    const restaurants: any = await getRestaurantsList();
     const restaurantOptions = restaurants?.data?.map((res: any) => ({
       value: res._id,
       label: res.restaurantName,

@@ -28,7 +28,7 @@ export default function DashboardContent({
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [restaurants, setRestaurants] = useState<any[]>([]);
+  const [restaurants, setRestaurants] = useState<any>({});
   const hospitalityChainId = searchParams.get("hospitalityChainId");
 
   const [selectedDates, setSelectedDates] = useState<string[]>([
@@ -64,7 +64,7 @@ export default function DashboardContent({
     }
 
     if (restaurantId) {
-      const restaurant = restaurants?.find((r: any) => r._id === restaurantId);
+      const restaurant = restaurants.data?.find((r: any) => r._id === restaurantId);
       filters.push({
         key: "restaurantId",
         label: "Restaurant",

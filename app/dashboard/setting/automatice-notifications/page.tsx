@@ -6,7 +6,7 @@ import { getUtilities } from '@/lib/actions/utilities.actions';
 export const dynamic = 'force-dynamic';
 
 const AutomaticNotificationPage = async () => {
-  const restaurants = await getRestaurantsList();
+  const restaurants: any = await getRestaurantsList();
   const restaurantOptions = restaurants?.data?.map((res: any) => ({
     value: res._id,
     label: res.restaurantName,

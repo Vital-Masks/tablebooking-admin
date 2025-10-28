@@ -37,7 +37,7 @@ export const generateMetadata = async ({ params }: { params: { restaurantId: str
 };
 
 const ReservationByRestaurantPage = async ({params}: any) => {
-  const restaurants = await getRestaurantsList();
+  const restaurants: any = await getRestaurantsList();
 
   return (
     <main>

@@ -4,6 +4,9 @@ import { getStats } from "@/lib/actions/dashboard.action";
 import { getRestaurantsList } from "@/lib/actions/restaurant.actions";
 import { getHospitalChainList } from "@/lib/actions/hospitalChain.action";
 
+// Force dynamic rendering (uses cookies for auth)
+export const dynamic = 'force-dynamic';
+
 // Dynamic metadata generation using utility function
 export const generateMetadata = async () => DASHBOARD_METADATA;
 
@@ -12,7 +15,7 @@ interface DashboardPageProps {
 }
 
 export default async function Home({ searchParams }: DashboardPageProps) {
-  const restaurants = await getRestaurantsList();
+  const restaurants: any = await getRestaurantsList();
   const hospitalityChains = await getHospitalChainList();
 
   // Extract URL parameters with fallbacks
