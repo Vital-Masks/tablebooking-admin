@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 const NotificationPage = async () => {
   const restaurants = await getRestaurantsList();
-  const restaurantOptions = restaurants?.map((res: any) => ({
+  const restaurantOptions = restaurants?.data?.map((res: any) => ({
     value: res._id,
     label: res.restaurantName,
   }));

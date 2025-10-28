@@ -310,7 +310,7 @@ export default function DashboardContent({
                 }
               >
                 <ul className="!min-w-[170px] max-h-[150px] overflow-y-auto">
-                  {restaurants?.map((restaurant: any) => (
+                  {restaurants?.data?.map((restaurant: any) => (
                     <li key={restaurant._id}>
                       <Link
                         href={{

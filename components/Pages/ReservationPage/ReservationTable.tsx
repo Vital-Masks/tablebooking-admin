@@ -60,10 +60,10 @@ const ReservationTable = ({ restaurants, restaurantId }: any) => {
         })) || [];
 
       const paginationData = {
-        page: reservations.pagination?.page || page,
-        limit: reservations.pagination?.limit || limit,
-        total: reservations.pagination?.total || 0,
-        totalPages: reservations.pagination?.totalPages || 0
+        page: reservations?.pagination?.page || page,
+        limit: reservations?.pagination?.limit || limit,
+        total: reservations?.pagination?.total || 0,
+        totalPages: reservations?.pagination?.totalPages || 0
       };
 
       if (type === 'system') {

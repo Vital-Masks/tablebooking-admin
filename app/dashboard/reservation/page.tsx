@@ -9,7 +9,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return {
     title: 'Reservations | VReserve Admin',
     description: 'View and manage restaurant reservations, booking details, and customer information in VReserve Admin',
-    keywords: ['reservations', 'bookings', 'restaurant reservations', 'customer bookings', 'vreserve', 'admin'],
+    keywords: 'reservations, bookings, restaurant reservations, customer bookings, vreserve, admin',
     openGraph: {
       title: 'Reservations | VReserve Admin',
       description: 'View and manage restaurant reservations, booking details, and customer information in VReserve Admin',
@@ -34,7 +34,7 @@ const ReservationPage = async () => {
   }
 
   // Redirect to the first restaurant's reservation page
-  redirect(`/dashboard/reservation/${restaurants.data[0]._id}`);
+  redirect(`/dashboard/reservation/${restaurants?.data[0]._id}`);
 };
 
 export default ReservationPage;
