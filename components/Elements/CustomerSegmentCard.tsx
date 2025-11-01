@@ -45,7 +45,7 @@ const CustomerSegmentCard: React.FC<CustomerSegmentCardProps> = ({
 
       {/* Trend indicator - bottom */}
       {trend && (
-        <div className={`inline-flex items-center gap-1.5 w-fit w-fit ${
+        <div className={`inline-flex items-center gap-1.5 w-fit ${
           trend.isPositive ? 'bg-green-400/30 text-green-300' : 'bg-red-400/30 text-red-300'
         } px-3 py-1.5 rounded-full text-xs font-medium mt-auto`}>
           <svg
