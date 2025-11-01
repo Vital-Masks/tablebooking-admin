@@ -2,15 +2,24 @@
 
 import Button from "@/components/Elements/Button";
 import AnalyticsCard from "@/components/Elements/AnalyticsCard";
+import SubscriptionPlanCard from "@/components/Elements/SubscriptionPlanCard";
+import ReservationStatusCard from "@/components/Elements/ReservationStatusCard";
+import CustomerSegmentCard from "@/components/Elements/CustomerSegmentCard";
+import RevenueCard from "@/components/Elements/RevenueCard";
+import SubscriptionRevenueCard from "@/components/Elements/SubscriptionRevenueCard";
+import AddonRevenueCard from "@/components/Elements/AddonRevenueCard";
+import ReservationLeaderboardCard from "@/components/Elements/ReservationLeaderboardCard";
+import RevenueLeaderboardCard from "@/components/Elements/RevenueLeaderboardCard";
 import Dropdown from "@/components/Elements/Dropdown";
-import { IconFilter, IconX } from "@/components/Icons";
+import { IconFilter, IconX, IconChefHat, IconMenuCalendar, IconCustomer, IconPayment } from "@/components/Icons";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import VanillaCalendar from "@/components/Common/Fields/VanillaCalendar";
 import { Options } from "vanilla-calendar-pro";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, Fragment } from "react";
 import { getRestaurantsListByHospitalityChain } from "@/lib/actions/restaurant.actions";
 import IconCalendar from "@/components/Icons/IconCalendar";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
 export default function DashboardContent({
   stats,
@@ -110,57 +119,48 @@ export default function DashboardContent({
     router.push("/dashboard");
   };
 
-  // Transform the stats data to match the analytics card format
+  // Transform the stats data to match the analytics card format - only 4 main cards
   const analyticsData = [
+    {
+      title: "Total Restaurants",
+      value: stats?.restaurants?.total || 0,
+      icon: <IconChefHat className="w-6 h-6" />,
+      trend: {
+        value: 80,
+        isPositive: true,
+        label: "from last month"
+      }
+    },
     {
       title: "Total Reservations",
       value: stats?.reservations?.total || 0,
-      icon: "🍴",
+      icon: <IconMenuCalendar className="w-6 h-6" />,
+      trend: {
+        value: 80,
+        isPositive: true,
+        label: "from last month"
+      }
     },
     {
-      title: "Restaurants Listed",
-      value: stats?.restaurants?.total || 0,
-      icon: "🏢",
-    },
-    {
-      title: "Customers",
+      title: "Total Customers",
       value: stats?.customers?.total || 0,
-      icon: "👤",
+      icon: <IconCustomer className="w-6 h-6" />,
+      trend: {
+        value: 80,
+        isPositive: true,
+        label: "from last month"
+      }
     },
     {
-      title: "Booked Reservations",
-      value: stats?.reservations?.booked || 0,
-      icon: "📅",
-    },
-    {
-      title: "Active Restaurants",
-      value: stats?.restaurants?.active || 0,
-      icon: "✅",
-    },
-    {
-      title: "Active Customers",
-      value: stats?.customers?.active || 0,
-      icon: "👥",
-    },
-    {
-      title: "Confirmed Reservations",
-      value: stats?.reservations?.confirmed || 0,
-      icon: "✅",
-    },
-    {
-      title: "Inactive Restaurants",
-      value: stats?.restaurants?.inactive || 0,
-      icon: "❌",
-    },
-    {
-      title: "Inactive Customers",
-      value: stats?.customers?.inactive || 0,
-      icon: "🚫",
-    },
-    {
-      title: "Cancelled Reservations",
-      value: stats?.reservations?.cancelled || 0,
-      icon: "❌",
+      title: "Total Revenue",
+      value: stats?.revenue?.total || stats?.revenue || 0,
+      icon: <IconPayment className="w-6 h-6" />,
+      trend: {
+        value: 80,
+        isPositive: true,
+        label: "from last month"
+      },
+      isCurrency: true
     },
   ];
 
@@ -416,14 +416,367 @@ export default function DashboardContent({
           </div>
         )}
 
-        <div className="grid grid-cols-3 items-start gap-5">
-          <div className={`col-span-3`}>
-            <div className="grid grid-cols-3 mb-5 gap-5">
-              {analyticsData.map((stat) => (
-                <AnalyticsCard key={stat.title} {...stat} />
-              ))}
-            </div>
-          </div>
+        <div className="grid grid-cols-4 items-start gap-5 mb-8">
+          {analyticsData.map((stat) => (
+            <AnalyticsCard key={stat.title} {...stat} />
+          ))}
+        </div>
+
+        {/* Subscription Plan Metrics Section */}
+        <div className="mt-8">
+          <TabGroup>
+            <TabList className="flex flex-wrap bg-white border-b border-gray-200">
+              <Tab as={Fragment}>
+                {({ selected }) => (
+                  <button
+                    className={`${selected ? "!border-primary text-primary !outline-none" : ""} flex items-center border-b-2 border-transparent bg-white px-7 py-3 font-medium text-gray-700 hover:border-primary hover:text-primary transition-colors`}
+                  >
+                    Subscription Plans
+                  </button>
+                )}
+              </Tab>
+              <Tab as={Fragment}>
+                {({ selected }) => (
+                  <button
+                    className={`${selected ? "!border-primary text-primary !outline-none" : ""} flex items-center border-b-2 border-transparent bg-white px-7 py-3 font-medium text-gray-700 hover:border-primary hover:text-primary transition-colors`}
+                  >
+                    Reservations
+                  </button>
+                )}
+              </Tab>
+              <Tab as={Fragment}>
+                {({ selected }) => (
+                  <button
+                    className={`${selected ? "!border-primary text-primary !outline-none" : ""} flex items-center border-b-2 border-transparent bg-white px-7 py-3 font-medium text-gray-700 hover:border-primary hover:text-primary transition-colors`}
+                  >
+                    Customer
+                  </button>
+                )}
+              </Tab>
+              <Tab as={Fragment}>
+                {({ selected }) => (
+                  <button
+                    className={`${selected ? "!border-primary text-primary !outline-none" : ""} flex items-center border-b-2 border-transparent bg-white px-7 py-3 font-medium text-gray-700 hover:border-primary hover:text-primary transition-colors`}
+                  >
+                    Revenue
+                  </button>
+                )}
+              </Tab>
+              <Tab as={Fragment}>
+                {({ selected }) => (
+                  <button
+                    className={`${selected ? "!border-primary text-primary !outline-none" : ""} flex items-center border-b-2 border-transparent bg-white px-7 py-3 font-medium text-gray-700 hover:border-primary hover:text-primary transition-colors`}
+                  >
+                    Leaderboard
+                  </button>
+                )}
+              </Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <div className="mt-5">
+                  <div className="grid grid-cols-4 items-start gap-5">
+                    {[
+                      {
+                        title: "Free",
+                        total: stats?.subscriptions?.free?.total || 864,
+                        monthlySubscribed: stats?.subscriptions?.free?.monthly || 654,
+                        annuallySubscribed: stats?.subscriptions?.free?.annually || 210,
+                        trend: { value: 80, isPositive: true, label: "from last month" }
+                      },
+                      {
+                        title: "Classic",
+                        total: stats?.subscriptions?.classic?.total || 344,
+                        monthlySubscribed: stats?.subscriptions?.classic?.monthly || 300,
+                        annuallySubscribed: stats?.subscriptions?.classic?.annually || 44,
+                        trend: { value: 80, isPositive: true, label: "from last month" }
+                      },
+                      {
+                        title: "Signature",
+                        total: stats?.subscriptions?.signature?.total || 242,
+                        monthlySubscribed: stats?.subscriptions?.signature?.monthly || 160,
+                        annuallySubscribed: stats?.subscriptions?.signature?.annually || 82,
+                        trend: { value: 80, isPositive: true, label: "from last month" }
+                      },
+                      {
+                        title: "Premium",
+                        total: stats?.subscriptions?.premium?.total || 118,
+                        monthlySubscribed: stats?.subscriptions?.premium?.monthly || 76,
+                        annuallySubscribed: stats?.subscriptions?.premium?.annually || 42,
+                        trend: { value: 80, isPositive: true, label: "from last month" }
+                      },
+                    ].map((plan) => (
+                      <SubscriptionPlanCard key={plan.title} {...plan} />
+                    ))}
+                  </div>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div className="mt-5">
+                  <div className="grid grid-cols-5 items-start gap-5">
+                    {[
+                      {
+                        title: "Confirmed",
+                        value: stats?.reservations?.confirmed || 20564,
+                        trend: { value: 80, isPositive: true, label: "from last month" },
+                        icon: (
+                          <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" strokeWidth="2" fill="none" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                        )
+                      },
+                      {
+                        title: "Arrived",
+                        value: stats?.reservations?.arrived || 22168,
+                        trend: { value: 80, isPositive: true, label: "from last month" },
+                        icon: (
+                          <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                          </svg>
+                        )
+                      },
+                      {
+                        title: "Cancelled",
+                        value: stats?.reservations?.cancelled || 568,
+                        trend: { value: 80, isPositive: false, label: "from last month" },
+                        icon: (
+                          <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" strokeWidth="2" fill="none" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        )
+                      },
+                      {
+                        title: "No Show",
+                        value: stats?.reservations?.noShow || 1032,
+                        trend: { value: 25, isPositive: true, label: "from last month" },
+                        icon: (
+                          <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" strokeWidth="2" fill="none" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                          </svg>
+                        )
+                      },
+                      {
+                        title: "Pending",
+                        value: stats?.reservations?.pending || 800,
+                        trend: { value: 15, isPositive: true, label: "from last month" },
+                        icon: (
+                          <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" strokeWidth="2" fill="none" />
+                            <circle cx="12" cy="12" r="1" fill="currentColor" />
+                            <circle cx="7" cy="12" r="1" fill="currentColor" />
+                            <circle cx="17" cy="12" r="1" fill="currentColor" />
+                          </svg>
+                        )
+                      },
+                    ].map((status) => (
+                      <ReservationStatusCard key={status.title} {...status} />
+                    ))}
+                  </div>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div className="mt-5">
+                  <div className="grid grid-cols-4 items-start gap-5">
+                    {[
+                      {
+                        title: "Active Customers",
+                        value: stats?.customers?.active || 3003,
+                        trend: { value: 80, isPositive: true, label: "from last month" }
+                      },
+                      {
+                        title: "Newly Onboarded",
+                        value: stats?.customers?.newlyOnboarded || 334,
+                        trend: { value: 80, isPositive: true, label: "from last month" }
+                      },
+                      {
+                        title: "Repeated Customers",
+                        value: stats?.customers?.repeated || 764,
+                        trend: { value: 80, isPositive: true, label: "from last month" }
+                      },
+                      {
+                        title: "Inactive Customers",
+                        value: stats?.customers?.inactive || 60,
+                        trend: { value: 80, isPositive: true, label: "from last month" }
+                      },
+                    ].map((segment) => (
+                      <CustomerSegmentCard key={segment.title} {...segment} />
+                    ))}
+                  </div>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div className="mt-5 space-y-8">
+                  {/* Revenue from Subscriptions Section */}
+                  <div>
+                    <h4 className="text-base font-semibold text-gray-800 mb-5">Revenue from Subscriptions</h4>
+                    <div className="grid grid-cols-1 items-start gap-5 mb-6">
+                      <RevenueCard
+                        title="Revenue from Subscriptions (LKR)"
+                        revenue={stats?.revenue?.subscriptions?.total || 19270000}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-start gap-5">
+                      <SubscriptionRevenueCard
+                        title="Free"
+                        revenue={stats?.revenue?.subscriptions?.free || 0}
+                        monthlySubscribed={stats?.subscriptions?.free?.monthly || 654}
+                        annuallySubscribed={stats?.subscriptions?.free?.annually || 210}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                      <SubscriptionRevenueCard
+                        title="Classic"
+                        revenue={stats?.revenue?.subscriptions?.classic || 3480000}
+                        monthlySubscribed={stats?.subscriptions?.classic?.monthly || 300}
+                        annuallySubscribed={stats?.subscriptions?.classic?.annually || 44}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                      <SubscriptionRevenueCard
+                        title="Signature"
+                        revenue={stats?.revenue?.subscriptions?.signature || 8980000}
+                        monthlySubscribed={stats?.subscriptions?.signature?.monthly || 160}
+                        annuallySubscribed={stats?.subscriptions?.signature?.annually || 82}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                      <SubscriptionRevenueCard
+                        title="Premium"
+                        revenue={stats?.revenue?.subscriptions?.premium || 6810000}
+                        monthlySubscribed={stats?.subscriptions?.premium?.monthly || 76}
+                        annuallySubscribed={stats?.subscriptions?.premium?.annually || 42}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Revenue from Add-ons Section */}
+                  <div>
+                    <h4 className="text-base font-semibold text-gray-800 mb-5">Revenue from Add-ons</h4>
+                    <div className="grid grid-cols-1 items-start gap-5 mb-6">
+                      <RevenueCard
+                        title="Revenue from Add-ons (LKR)"
+                        revenue={stats?.revenue?.addons?.total || 688298}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-start gap-5">
+                      <AddonRevenueCard
+                        title="Dining Timing"
+                        revenue={stats?.revenue?.addons?.diningTiming || 93886}
+                        noOfRestaurants={stats?.addons?.diningTiming?.restaurants || 314}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                      <AddonRevenueCard
+                        title="Reservation History"
+                        revenue={stats?.revenue?.addons?.reservationHistory || 60099}
+                        noOfRestaurants={stats?.addons?.reservationHistory?.restaurants || 201}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                      <AddonRevenueCard
+                        title="User Roles"
+                        revenue={stats?.revenue?.addons?.userRoles || 81627}
+                        noOfRestaurants={stats?.addons?.userRoles?.restaurants || 273}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                      <AddonRevenueCard
+                        title="Booking Widget"
+                        revenue={stats?.revenue?.addons?.bookingWidget || 452686}
+                        noOfRestaurants={stats?.addons?.bookingWidget?.restaurants || 1514}
+                        trend={{ value: 80, isPositive: true, label: "from last month" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div className="mt-5 space-y-8">
+                  {/* Reservation Leaderboard Section */}
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-5">#Reservation Leaderboard</h3>
+                    <div className="grid grid-cols-4 items-start gap-5">
+                      {[
+                        {
+                          rank: 1,
+                          restaurantName: "The Central Restaurant",
+                          reservationsMade: stats?.leaderboard?.reservations?.[0]?.reservationsMade || 654,
+                          reservationsCompleted: stats?.leaderboard?.reservations?.[0]?.reservationsCompleted || 640,
+                          positionChange: stats?.leaderboard?.reservations?.[0]?.positionChange || 2,
+                          associatedGroup: stats?.leaderboard?.reservations?.[0]?.associatedGroup || "Shangri La"
+                        },
+                        {
+                          rank: 2,
+                          restaurantName: "Thalaipakatty Rajagiriya",
+                          reservationsMade: stats?.leaderboard?.reservations?.[1]?.reservationsMade || 654,
+                          reservationsCompleted: stats?.leaderboard?.reservations?.[1]?.reservationsCompleted || 590,
+                          positionChange: stats?.leaderboard?.reservations?.[1]?.positionChange || -1,
+                          associatedGroup: stats?.leaderboard?.reservations?.[1]?.associatedGroup || "Dindukal Thalaipakaty"
+                        },
+                        {
+                          rank: 3,
+                          restaurantName: "The Central Cafe",
+                          reservationsMade: stats?.leaderboard?.reservations?.[2]?.reservationsMade || 654,
+                          reservationsCompleted: stats?.leaderboard?.reservations?.[2]?.reservationsCompleted || 587,
+                          positionChange: stats?.leaderboard?.reservations?.[2]?.positionChange || 1,
+                          associatedGroup: stats?.leaderboard?.reservations?.[2]?.associatedGroup || "Shangri La"
+                        },
+                        {
+                          rank: 4,
+                          restaurantName: "Barista Bambalapity",
+                          reservationsMade: stats?.leaderboard?.reservations?.[3]?.reservationsMade || 654,
+                          reservationsCompleted: stats?.leaderboard?.reservations?.[3]?.reservationsCompleted || 512,
+                          positionChange: stats?.leaderboard?.reservations?.[3]?.positionChange || 6,
+                          associatedGroup: stats?.leaderboard?.reservations?.[3]?.associatedGroup || "Barista"
+                        },
+                      ].map((item) => (
+                        <ReservationLeaderboardCard key={item.rank} {...item} />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Revenue Leaderboard Section */}
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-5">#Revenue Leaderboard</h3>
+                    <div className="grid grid-cols-4 items-start gap-5">
+                      {[
+                        {
+                          rank: 1,
+                          restaurantName: "Thalaipakatty Rajagiriya",
+                          revenue: stats?.leaderboard?.revenue?.[0]?.revenue || 654500,
+                          positionChange: stats?.leaderboard?.revenue?.[0]?.positionChange || 2,
+                          associatedGroup: stats?.leaderboard?.revenue?.[0]?.associatedGroup || "Shangri La"
+                        },
+                        {
+                          rank: 2,
+                          restaurantName: "The Central Restaurant",
+                          revenue: stats?.leaderboard?.revenue?.[1]?.revenue || 564500,
+                          positionChange: stats?.leaderboard?.revenue?.[1]?.positionChange || 2,
+                          associatedGroup: stats?.leaderboard?.revenue?.[1]?.associatedGroup || "Shangri La"
+                        },
+                        {
+                          rank: 3,
+                          restaurantName: "Barista Jaffna",
+                          revenue: stats?.leaderboard?.revenue?.[2]?.revenue || 434500,
+                          positionChange: stats?.leaderboard?.revenue?.[2]?.positionChange || 2,
+                          associatedGroup: stats?.leaderboard?.revenue?.[2]?.associatedGroup || "Barista"
+                        },
+                        {
+                          rank: 4,
+                          restaurantName: "Northgate Jaffna",
+                          revenue: stats?.leaderboard?.revenue?.[3]?.revenue || 214500,
+                          positionChange: stats?.leaderboard?.revenue?.[3]?.positionChange || 2,
+                          associatedGroup: stats?.leaderboard?.revenue?.[3]?.associatedGroup || "Northgate Hotel"
+                        },
+                      ].map((item) => (
+                        <RevenueLeaderboardCard key={item.rank} {...item} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </TabPanel>
+            </TabPanels>
+          </TabGroup>
         </div>
       </div>
     </main>
